@@ -1,15 +1,16 @@
 /* (C) 2025 Maximilian Bollschweiler */
 package github.businessdirt.jasper.commands.builder;
 
+import github.businessdirt.jasper.commands.CommandSource;
 import github.businessdirt.jasper.commands.tree.LiteralCommandNode;
 
 /**
  * A builder for literal command arguments. A literal argument is a fixed string that must be present in the command.
  */
-public class LiteralArgumentBuilder extends AbstractArgumentBuilder<LiteralArgumentBuilder> {
+public class LiteralArgumentBuilder<S extends CommandSource> extends AbstractArgumentBuilder<S, LiteralArgumentBuilder<S>> {
 
     private LiteralArgumentBuilder(String literal) {
-        super(new LiteralCommandNode(literal));
+        super(new LiteralCommandNode<>(literal));
     }
 
     /**
@@ -18,8 +19,8 @@ public class LiteralArgumentBuilder extends AbstractArgumentBuilder<LiteralArgum
      * @param literal the literal
      * @return the new literal argument builder
      */
-    public static LiteralArgumentBuilder literal(String literal) {
-        return new LiteralArgumentBuilder(literal);
+    public static <S extends CommandSource> LiteralArgumentBuilder<S> literal(String literal) {
+        return new LiteralArgumentBuilder<>(literal);
     }
 
     /**
@@ -28,7 +29,7 @@ public class LiteralArgumentBuilder extends AbstractArgumentBuilder<LiteralArgum
      * @return the literal command node
      */
     @Override
-    public LiteralCommandNode build() {
-        return (LiteralCommandNode) node;
+    public LiteralCommandNode<S> build() {
+        return (LiteralCommandNode<S>) node;
     }
 }

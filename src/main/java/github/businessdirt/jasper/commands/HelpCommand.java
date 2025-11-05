@@ -2,6 +2,7 @@
 package github.businessdirt.jasper.commands;
 
 import github.businessdirt.jasper.commands.tree.CommandNode;
+import github.businessdirt.jasper.text.TextBoxBuilder;
 
 import java.util.Map;
 
@@ -10,7 +11,7 @@ import java.util.Map;
  *
  * @param commands the available commands
  */
-public record HelpCommand(Map<String, CommandNode> commands) implements Command {
+public record HelpCommand<S extends CommandSource>(Map<String, CommandNode<S>> commands) implements Command<S> {
 
     private static final int COMMANDS_PER_PAGE = 5;
 
@@ -21,7 +22,7 @@ public record HelpCommand(Map<String, CommandNode> commands) implements Command 
      * @return 0
      */
     @Override
-    public int run(CommandContext context) {
+    public int run(CommandContext<S> context) {
         Integer page = context.getArgument("page", Integer.class);
         if (page == null || page < 1) page = 1;
 
@@ -35,7 +36,7 @@ public record HelpCommand(Map<String, CommandNode> commands) implements Command 
         int index = 0;
         int startIndex = (page - 1) * COMMANDS_PER_PAGE;
         int endIndex = Math.min(startIndex + COMMANDS_PER_PAGE, totalCommands);
-        for (CommandNode command : commands.values()) {
+        for (CommandNode<S> command : commands.values()) {
             if (index >= startIndex && index < endIndex)
                 boxBuilder.literal(command.getUsage());
             index++;

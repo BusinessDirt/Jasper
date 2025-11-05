@@ -2,6 +2,7 @@
 package github.businessdirt.jasper.commands.tree;
 
 import github.businessdirt.jasper.commands.Command;
+import github.businessdirt.jasper.commands.CommandSource;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -9,16 +10,16 @@ import java.util.Map;
 /**
  * Represents a node in the command tree.
  */
-public abstract class CommandNode {
-    private final Map<String, CommandNode> children = new LinkedHashMap<>();
-    private Command command;
+public abstract class CommandNode<S extends CommandSource> {
+    private final Map<String, CommandNode<S>> children = new LinkedHashMap<>();
+    private Command<S> command;
 
     /**
      * Adds a child to this node.
      *
      * @param node the child to add
      */
-    public void addChild(CommandNode node) {
+    public void addChild(CommandNode<S> node) {
         children.put(node.getName(), node);
     }
 
@@ -27,7 +28,7 @@ public abstract class CommandNode {
      *
      * @param command the command to execute
      */
-    public void executes(Command command) {
+    public void executes(Command<S> command) {
         this.command = command;
     }
 
@@ -36,7 +37,7 @@ public abstract class CommandNode {
      *
      * @return the children of this node
      */
-    public Map<String, CommandNode> getChildren() {
+    public Map<String, CommandNode<S>> getChildren() {
         return children;
     }
 
@@ -45,7 +46,7 @@ public abstract class CommandNode {
      *
      * @return the command to be executed
      */
-    public Command getCommand() {
+    public Command<S> getCommand() {
         return command;
     }
 
@@ -83,12 +84,12 @@ public abstract class CommandNode {
         StringBuilder usage = new StringBuilder(base.equals("bye") ? "" : "/");
         usage.append(base);
 
-        CommandNode currentNode = this;
+        CommandNode<S> currentNode = this;
         while (!currentNode.getChildren().isEmpty()) {
             if (currentNode.getChildren().size() > 1) {
                 usage.append(" [");
                 boolean first = true;
-                for (CommandNode child : currentNode.getChildren().values()) {
+                for (CommandNode<S> child : currentNode.getChildren().values()) {
                     if (!first) {
                         usage.append("|");
                     }
@@ -99,7 +100,7 @@ public abstract class CommandNode {
                 break; // End after showing choices
             }
 
-            CommandNode child = currentNode.getChildren().values().iterator().next();
+            CommandNode<S> child = currentNode.getChildren().values().iterator().next();
             usage.append(" ").append(child.getUsageFragment());
             currentNode = child;
         }

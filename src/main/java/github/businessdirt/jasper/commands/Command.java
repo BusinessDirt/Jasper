@@ -3,7 +3,7 @@ package github.businessdirt.jasper.commands;
 
 /** Represents a command that can be executed. */
 @FunctionalInterface
-public interface Command {
+public interface Command<S extends CommandSource> {
 
     /**
      * Executes the command.
@@ -11,5 +11,5 @@ public interface Command {
      * @param context The context in which the command is executed.
      * @return an integer representing the command's execution status
      */
-    int run(CommandContext context);
+    int run(CommandContext<S> context);
 }

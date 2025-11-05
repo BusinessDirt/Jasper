@@ -1,6 +1,7 @@
 /* (C) 2025 Maximilian Bollschweiler */
 package github.businessdirt.jasper.commands.tree;
 
+import github.businessdirt.jasper.commands.CommandSource;
 import github.businessdirt.jasper.commands.arguments.ArgumentType;
 
 /**
@@ -8,7 +9,7 @@ import github.businessdirt.jasper.commands.arguments.ArgumentType;
  *
  * @param <T> the type of the argument
  */
-public class ArgumentCommandNode<T> extends CommandNode {
+public class ArgumentCommandNode<S extends CommandSource, T> extends CommandNode<S> {
     private final String name;
     private final ArgumentType<T> type;
 

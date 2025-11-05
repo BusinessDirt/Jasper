@@ -1,6 +1,7 @@
 /* (C) 2025 Maximilian Bollschweiler */
 package github.businessdirt.jasper.commands.builder;
 
+import github.businessdirt.jasper.commands.CommandSource;
 import github.businessdirt.jasper.commands.arguments.ArgumentType;
 import github.businessdirt.jasper.commands.tree.ArgumentCommandNode;
 
@@ -9,7 +10,7 @@ import github.businessdirt.jasper.commands.tree.ArgumentCommandNode;
  *
  * @param <T> the type of the argument
  */
-public class RequiredArgumentBuilder<T> extends AbstractArgumentBuilder<RequiredArgumentBuilder<T>> {
+public class RequiredArgumentBuilder<S extends CommandSource, T> extends AbstractArgumentBuilder<S, RequiredArgumentBuilder<S, T>> {
 
     private RequiredArgumentBuilder(String name, ArgumentType<T> type) {
         super(new ArgumentCommandNode<>(name, type));
@@ -23,7 +24,7 @@ public class RequiredArgumentBuilder<T> extends AbstractArgumentBuilder<Required
      * @param <T> the type of the argument
      * @return the new required argument builder
      */
-    public static <T> RequiredArgumentBuilder<T> argument(String name, ArgumentType<T> type) {
+    public static <S extends CommandSource, T> RequiredArgumentBuilder<S, T> argument(String name, ArgumentType<T> type) {
         return new RequiredArgumentBuilder<>(name, type);
     }
 
@@ -33,7 +34,7 @@ public class RequiredArgumentBuilder<T> extends AbstractArgumentBuilder<Required
      * @return the argument command node
      */
     @Override
-    public ArgumentCommandNode<T> build() {
-        return (ArgumentCommandNode<T>) node;
+    public ArgumentCommandNode<S, T> build() {
+        return (ArgumentCommandNode<S, T>) node;
     }
 }

@@ -1,10 +1,12 @@
 /* (C) 2025 Maximilian Bollschweiler */
 package github.businessdirt.jasper.commands.tree;
 
+import github.businessdirt.jasper.commands.CommandSource;
+
 /**
  * Represents a command node that is a literal.
  */
-public class LiteralCommandNode extends CommandNode {
+public class LiteralCommandNode<S extends CommandSource> extends CommandNode<S> {
     private final String literal;
 
     /**

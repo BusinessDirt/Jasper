@@ -7,6 +7,9 @@ import java.util.Map;
 /**
  * Simple command-line argument parser.
  *
+ * <p>This parser uses a type-safe approach by registering {@link Arg} instances.
+ * It supports arguments with values, as well as valueless flags.
+ *
  * <p>Supports arguments in the format:
  *
  * <pre>
@@ -17,68 +20,75 @@ import java.util.Map;
  * Example:
  *
  * <pre>
- * String[] args = { "--server", "localhost", "--port", "8080" };
- * ArgParser argParser = new ArgParser(args);
- * String server = argParser.getString("server", "default");
- * int port = argParser.getInt("port", 8080);
+ * String[] args = { "--server", "localhost", "--port", "8080", "--verbose" };
+ * ArgParser argParser = new ArgParser(
+ *     new StringArg("server", "default"),
+ *     new IntegerArg("port", 8080),
+ *     new FlagArg("verbose")
+ * );
+ * argParser.parse(args);
+ * String server = argParser.get("server");
+ * int port = argParser.get("port");
+ * boolean verbose = argParser.get("verbose");
  * </pre>
  */
 public class ArgParser {
-    private final Map<String, String> argsMap;
+    private final Map<String, Arg<?>> argumentMap = new HashMap<>();
+    private final Map<String, String> parsedArgs = new HashMap<>();
 
     /**
-     * Constructs a parser and parses the given arguments.
-     *
-     * @param args command-line arguments
+     * Constructs a new parser and registers the given arguments.
+     * @param args the {@link Arg} instances to register
      */
-    public ArgParser(String[] args) {
-        this.argsMap = new HashMap<>();
+    public ArgParser(Arg<?>... args) {
+        for (Arg<?> arg : args) {
+            this.argumentMap.put(arg.getKey(), arg);
+        }
+    }
 
+    /**
+     * Parses the command-line arguments from a string array.
+     * For each registered argument, its {@link Arg#parse(boolean, String)} method is called.
+     * @param args the string array from the main method
+     */
+    public void parse(String[] args) {
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
             if (arg.startsWith("--")) {
                 String key = arg.substring(2);
                 String value = (i + 1 < args.length && !args[i + 1].startsWith("--")) ? args[++i] : null;
-                argsMap.put(key, value);
+                this.parsedArgs.put(key, value);
             }
         }
-    }
 
-    /**
-     * Gets a string argument by key.
-     *
-     * @param key argument name (without "--")
-     * @param defaultValue value to return if the argument is missing
-     * @return the argument value or the default
-     */
-    public String getString(String key, String defaultValue) {
-        return argsMap.getOrDefault(key, defaultValue);
-    }
-
-    /**
-     * Gets an integer argument by key.
-     *
-     * @param key argument name (without "--")
-     * @param defaultValue value to return if the argument is missing or invalid
-     * @return the integer value or the default
-     */
-    public int getInt(String key, int defaultValue) {
-        String value = argsMap.get(key);
-        if (value == null) return defaultValue;
-        try {
-            return Integer.parseInt(value);
-        } catch (NumberFormatException e) {
-            return defaultValue;
+        for (Arg<?> arg : this.argumentMap.values()) {
+            String key = arg.getKey();
+            arg.parse(this.parsedArgs.containsKey(key), this.parsedArgs.get(key));
         }
     }
 
     /**
-     * Checks if a flag/argument is present.
-     *
-     * @param key argument name (without "--")
-     * @return true if the argument exists
+     * Gets the parsed value of a registered argument.
+     * @param key the key of the argument
+     * @return the parsed value, which can be of any type
+     * @param <T> the type of the value
+     * @throws IllegalArgumentException if no argument with the given key is registered
+     */
+    @SuppressWarnings("unchecked")
+    public <T> T get(String key) {
+        Arg<T> arg = (Arg<T>) this.argumentMap.get(key);
+        if (arg == null) {
+            throw new IllegalArgumentException("Argument with key '" + key + "' not registered.");
+        }
+        return arg.getValue();
+    }
+
+    /**
+     * Checks if an argument was present on the command line.
+     * @param key the key of the argument
+     * @return {@code true} if the argument was present, {@code false} otherwise
      */
     public boolean has(String key) {
-        return argsMap.containsKey(key);
+        return this.parsedArgs.containsKey(key);
     }
 }

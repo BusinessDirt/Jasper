@@ -1,0 +1,48 @@
+/* (C) 2025 Maximilian Bollschweiler */
+package bollschweiler.de.lmu.ifi.cip.gitlab2.commands;
+
+import bollschweiler.de.lmu.ifi.cip.gitlab2.commands.tree.CommandNode;
+import bollschweiler.de.lmu.ifi.cip.gitlab2.utils.text.TextBoxBuilder;
+import java.util.Map;
+
+/**
+ * A command that displays a help message with a list of available commands.
+ *
+ * @param commands the available commands
+ */
+public record HelpCommand(Map<String, CommandNode> commands) implements Command {
+
+    private static final int COMMANDS_PER_PAGE = 5;
+
+    /**
+     * Executes the command.
+     *
+     * @param context the command context
+     * @return 0
+     */
+    @Override
+    public int run(CommandContext context) {
+        Integer page = context.getArgument("page", Integer.class);
+        if (page == null || page < 1) page = 1;
+
+        int totalCommands = commands.size();
+        int totalPages = (int) Math.ceil((double) totalCommands / COMMANDS_PER_PAGE);
+
+        if (page > totalPages) page = totalPages;
+
+        TextBoxBuilder boxBuilder = new TextBoxBuilder("Showing help page %d of %d (/help <page>)", page, totalPages);
+
+        int index = 0;
+        int startIndex = (page - 1) * COMMANDS_PER_PAGE;
+        int endIndex = Math.min(startIndex + COMMANDS_PER_PAGE, totalCommands);
+        for (CommandNode command : commands.values()) {
+            if (index >= startIndex && index < endIndex)
+                boxBuilder.literal(command.getUsage());
+            index++;
+        }
+
+
+        System.out.println(boxBuilder.build());
+        return 0;
+    }
+}

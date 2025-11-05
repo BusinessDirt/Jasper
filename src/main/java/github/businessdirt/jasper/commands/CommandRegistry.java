@@ -5,6 +5,7 @@ import github.businessdirt.jasper.commands.arguments.IntegerArgumentType;
 import github.businessdirt.jasper.commands.builder.LiteralArgumentBuilder;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -16,7 +17,7 @@ import static github.businessdirt.jasper.commands.builder.LiteralArgumentBuilder
 @SuppressWarnings("unused")
 public class CommandRegistry<S extends CommandSource> {
 
-    private static final Map<Class<? extends CommandSource>, CommandRegistry<CommandSource>> INSTANCES = new HashMap<>();
+    private static final Map<Class<? extends CommandSource>, CommandRegistry<? extends CommandSource>> INSTANCES = new HashMap<>();
 
     private final CommandDispatcher<S> dispatcher = new CommandDispatcher<>();
 
@@ -37,17 +38,23 @@ public class CommandRegistry<S extends CommandSource> {
     public void register(String rootCommand, Consumer<LiteralArgumentBuilder<S>> builder) {
         LiteralArgumentBuilder<S> root = literal(rootCommand);
         builder.accept(root);
-        this.dispatcher.register(root.build());
+        this.dispatcher.register(root);
     }
 
     /**
      * Returns the command registry instance for the given command source type.
      *
-     * @param clazz the command source class
+     * @param type the class of the command source type
+     * @param <S> the command source type
      * @return the command registry instance
      */
-    public static synchronized CommandRegistry<? extends CommandSource> get(Class<? extends CommandSource> clazz) {
-        return INSTANCES.putIfAbsent(clazz, new CommandRegistry<>());
+    public static synchronized <S extends CommandSource> CommandRegistry<S> get(Class<S> type) {
+        if (!INSTANCES.containsKey(type)) {
+            INSTANCES.put(type, new CommandRegistry<>());
+        }
+
+        //noinspection unchecked
+        return (CommandRegistry<S>) INSTANCES.get(type);
     }
 
     /**

@@ -31,6 +31,6 @@ public class LiteralArgumentBuilder<S extends CommandSource> extends AbstractArg
      */
     @Override
     public LiteralCommandNode<S> build() {
-        return (LiteralCommandNode<S>) node;
+        return (LiteralCommandNode<S>) this.node;
     }
 }

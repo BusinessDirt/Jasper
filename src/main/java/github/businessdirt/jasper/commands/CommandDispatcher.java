@@ -1,6 +1,7 @@
 /* (C) 2025 Maximilian Bollschweiler */
 package github.businessdirt.jasper.commands;
 
+import github.businessdirt.jasper.commands.builder.LiteralArgumentBuilder;
 import github.businessdirt.jasper.commands.tree.ArgumentCommandNode;
 import github.businessdirt.jasper.commands.tree.CommandNode;
 import github.businessdirt.jasper.commands.tree.LiteralCommandNode;
@@ -21,8 +22,8 @@ public class CommandDispatcher<S extends CommandSource> {
      *
      * @param command the command to register
      */
-    public void register(LiteralCommandNode<S> command) {
-        root.addChild(command);
+    public void register(LiteralArgumentBuilder<S> command) {
+        root.addChild(command.build());
     }
 
     /**

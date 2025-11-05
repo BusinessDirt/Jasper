@@ -11,6 +11,7 @@ import java.util.function.Consumer;
 /**
  * An abstract builder for command arguments.
  *
+ * @param <S> the type of the command source
  * @param <B> the type of the builder
  */
 @SuppressWarnings("unused")
@@ -26,9 +27,7 @@ public abstract class AbstractArgumentBuilder<S extends CommandSource, B extends
         this.node = node;
     }
 
-    /**
-     * @noinspection unchecked
-     */
+    @SuppressWarnings("unchecked")
     private B then(CommandNode<S> child) {
         this.node.addChild(child);
         return (B) this;

@@ -40,21 +40,18 @@ public class CommandDispatcher<S extends CommandSource> {
      * @param input the command string to execute
      * @param source the source of the command
      * @return the result of the command execution
-     * @throws Exception if an error occurs during command execution
      */
-    public CommandResult execute(String input, S source) throws Exception {
+    public CommandResult execute(String input, S source) {
         StringReader reader = new StringReader(input);
         CommandNode<S> currentNode = root;
         Map<String, Object> arguments = new HashMap<>();
-        StringBuilder commandPath = new StringBuilder();
 
         // Find the initial command node
         String literal = reader.readString();
         CommandNode<S> nextNode = currentNode.getChildren().get(literal);
 
-        if (nextNode == null) throw new Exception("Unknown command");
+        if (nextNode == null) return CommandResult.UNKNOWN_COMMAND;
         currentNode = nextNode;
-        commandPath.append(literal);
 
         // Parse the arguments
         while (reader.canRead()) {
@@ -79,19 +76,16 @@ public class CommandDispatcher<S extends CommandSource> {
                     if (literalNode.getName().equals(nextLiteral)) {
                         currentNode = literalNode;
                         reader.setCursor(fork.getCursor());
-                        commandPath.append(" ").append(literalNode.getName());
                         found = true;
                         break;
                     }
                 }
             }
 
-            if (!found) return new CommandResult(CommandResult.ERROR_STATUS,
-                    "Usage: " + currentNode.getUsage(commandPath.toString()));
+            if (!found) return CommandResult.INVALID_ARGUMENT;
         }
 
-        if (currentNode.getCommand() == null) return new  CommandResult(CommandResult.ERROR_STATUS,
-                "Usage: " + currentNode.getUsage(commandPath.toString()));
+        if (currentNode.getCommand() == null) return CommandResult.INCOMPLETE_COMMAND;
 
         return currentNode.getCommand().run(new CommandContext<>(source, arguments));
     }

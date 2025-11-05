@@ -1,14 +1,12 @@
 /* (C) 2025 Maximilian Bollschweiler */
 package github.businessdirt.jasper.commands;
 
+import github.businessdirt.jasper.commands.arguments.IntegerArgumentType;
+import github.businessdirt.jasper.commands.builder.LiteralArgumentBuilder;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Consumer;
-
-import github.businessdirt.jasper.commands.arguments.IntegerArgumentType;
-import github.businessdirt.jasper.commands.builder.LiteralArgumentBuilder;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import static github.businessdirt.jasper.commands.builder.LiteralArgumentBuilder.literal;
 
@@ -19,7 +17,6 @@ import static github.businessdirt.jasper.commands.builder.LiteralArgumentBuilder
 public class CommandRegistry<S extends CommandSource> {
 
     private static final Map<Class<? extends CommandSource>, CommandRegistry<CommandSource>> INSTANCES = new HashMap<>();
-    private static final Logger LOGGER = LogManager.getLogger(CommandRegistry.class);
 
     private final CommandDispatcher<S> dispatcher = new CommandDispatcher<>();
 
@@ -58,18 +55,11 @@ public class CommandRegistry<S extends CommandSource> {
      *
      * @param source the command source
      * @param command the command to handle
-     * @return true if the client should continue running, false otherwise
+     * @return the {@code CommandResult} of the executed command
      */
-    public boolean handle(S source, String command) {
-        if (command.startsWith("/"))
-            command = command.substring(1);
-
-        try {
-            return dispatcher.execute(command, source) != -1;
-        } catch (Exception e) {
-            LOGGER.error(e);
-            return true;
-        }
+    public CommandResult handle(S source, String command) {
+        if (command.startsWith("/")) command = command.substring(1);
+        return dispatcher.execute(command, source);
     }
 
     /**

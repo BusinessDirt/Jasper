@@ -58,6 +58,7 @@ class ArgParserTest {
         assertThrows(IllegalArgumentException.class, () -> this.argParser.get("missing"));
     }
 
+    @Test
     @DisplayName("Should correctly report the presence of a flag")
     void testHasFlag() {
         this.argParser.parse(new String[] { "--debug" });

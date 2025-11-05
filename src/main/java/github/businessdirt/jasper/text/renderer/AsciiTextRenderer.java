@@ -7,7 +7,6 @@ import github.businessdirt.jasper.text.TextColor;
 import java.awt.Color;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * A text renderer that converts a {@link Text} component into a string with ASCII escape codes.

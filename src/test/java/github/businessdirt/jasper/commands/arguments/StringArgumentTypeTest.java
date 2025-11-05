@@ -1,14 +1,16 @@
 /* (C) 2025 Maximilian Bollschweiler */
-package bollschweiler.de.lmu.ifi.cip.gitlab2.commands.arguments;
+package github.businessdirt.jasper.commands.arguments;
+
+import github.businessdirt.jasper.commands.StringReader;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import bollschweiler.de.lmu.ifi.cip.gitlab2.commands.StringReader;
-import org.junit.jupiter.api.Test;
 
 class StringArgumentTypeTest {
 
     @Test
+    @DisplayName("Should parse a single word string")
     void parse() {
         StringArgumentType type = new StringArgumentType();
         StringReader reader = new StringReader("hello world");

@@ -19,7 +19,7 @@ public class AsciiTextRendererTest {
     }
 
     @Test
-    @DisplayName("Simple Literal Text Rendering should work")
+    @DisplayName("Should render simple literal text")
     public void testSimpleLiteral() {
         Text text = Text.literal("Hello, World!");
         String expected = "Hello, World!\033[0m";
@@ -27,7 +27,7 @@ public class AsciiTextRendererTest {
     }
 
     @Test
-    @DisplayName("Text Rendering with Color should work")
+    @DisplayName("Should render text with color")
     public void testColor() {
         Text text = Text.literal("Hello, World!").setStyle(Style.EMPTY.withColor(TextColor.fromRgb(255, 0, 0)));
         String expected = "\033[38;2;255;0;0mHello, World!\033[0m";
@@ -35,7 +35,7 @@ public class AsciiTextRendererTest {
     }
 
     @Test
-    @DisplayName("Text Rendering with Bold Style should work")
+    @DisplayName("Should render text with bold style")
     public void testBold() {
         Text text = Text.literal("Hello, World!").setStyle(Style.EMPTY.withBold(true));
         String expected = "\033[1mHello, World!\033[0m";
@@ -43,7 +43,7 @@ public class AsciiTextRendererTest {
     }
 
     @Test
-    @DisplayName("Text Rendering with Italic Style should work")
+    @DisplayName("Should render text with italic style")
     public void testItalic() {
         Text text = Text.literal("Hello, World!").setStyle(Style.EMPTY.withItalic(true));
         String expected = "\033[3mHello, World!\033[0m";
@@ -51,7 +51,7 @@ public class AsciiTextRendererTest {
     }
 
     @Test
-    @DisplayName("Text Rendering with Underlined Style should work")
+    @DisplayName("Should render text with underlined style")
     public void testUnderlined() {
         Text text = Text.literal("Hello, World!").setStyle(Style.EMPTY.withUnderlined(true));
         String expected = "\033[4mHello, World!\033[0m";
@@ -59,7 +59,7 @@ public class AsciiTextRendererTest {
     }
 
     @Test
-    @DisplayName("Text Rendering with Strikethrough Style should work")
+    @DisplayName("Should render text with strikethrough style")
     public void testStrikethrough() {
         Text text = Text.literal("Hello, World!").setStyle(Style.EMPTY.withStrikethrough(true));
         String expected = "\033[9mHello, World!\033[0m";
@@ -67,7 +67,7 @@ public class AsciiTextRendererTest {
     }
 
     @Test
-    @DisplayName("Text Rendering with Multiple Styles should work")
+    @DisplayName("Should render text with multiple styles")
     public void testMultipleStyles() {
         Text text = Text.literal("Hello, World!").setStyle(Style.EMPTY.withBold(true).withColor(TextColor.fromRgb(0, 255, 0)));
         String expected = "\033[1;38;2;0;255;0mHello, World!\033[0m";
@@ -75,7 +75,7 @@ public class AsciiTextRendererTest {
     }
 
     @Test
-    @DisplayName("Text Rendering with Siblings (Appended Texts) should work")
+    @DisplayName("Should render text with siblings (appended texts)")
     public void testSiblings() {
         Text text = Text.literal("Red ").setStyle(Style.EMPTY.withColor(TextColor.fromRgb(255, 0, 0)))
                 .append(Text.literal("Green ").setStyle(Style.EMPTY.withColor(TextColor.fromRgb(0, 255, 0))))

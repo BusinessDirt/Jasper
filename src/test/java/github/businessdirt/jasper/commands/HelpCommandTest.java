@@ -1,19 +1,21 @@
 /* (C) 2025 Maximilian Bollschweiler */
-package bollschweiler.de.lmu.ifi.cip.gitlab2.commands;
+package github.businessdirt.jasper.commands;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import github.businessdirt.jasper.commands.tree.CommandNode;
+import github.businessdirt.jasper.commands.tree.LiteralCommandNode;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
-import bollschweiler.de.lmu.ifi.cip.gitlab2.commands.tree.CommandNode;
-import bollschweiler.de.lmu.ifi.cip.gitlab2.commands.tree.LiteralCommandNode;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HelpCommandTest {
 
@@ -31,14 +33,15 @@ class HelpCommandTest {
     }
 
     @Test
+    @DisplayName("Should display the first page of help")
     void run_firstPage() {
-        Map<String, CommandNode> commands = new LinkedHashMap<>();
+        Map<String, CommandNode<TestCommandSource>> commands = new LinkedHashMap<>();
         for (int i = 0; i < 7; i++) {
-            commands.put("cmd" + i, new LiteralCommandNode("cmd" + i));
+            commands.put("cmd" + i, new LiteralCommandNode<>("cmd" + i));
         }
-        HelpCommand helpCommand = new HelpCommand(commands);
+        HelpCommand<TestCommandSource> helpCommand = new HelpCommand<>(commands);
         Map<String, Object> args = new HashMap<>();
-        CommandContext context = new CommandContext(null, args); // page is null
+        CommandContext<TestCommandSource> context = new CommandContext<>(null, args); // page is null
 
         helpCommand.run(context);
 
@@ -50,15 +53,16 @@ class HelpCommandTest {
     }
 
     @Test
+    @DisplayName("Should display the second page of help")
     void run_secondPage() {
-        Map<String, CommandNode> commands = new LinkedHashMap<>();
+        Map<String, CommandNode<TestCommandSource>> commands = new LinkedHashMap<>();
         for (int i = 0; i < 7; i++) {
-            commands.put("cmd" + i, new LiteralCommandNode("cmd" + i));
+            commands.put("cmd" + i, new LiteralCommandNode<>("cmd" + i));
         }
-        HelpCommand helpCommand = new HelpCommand(commands);
+        HelpCommand<TestCommandSource> helpCommand = new HelpCommand<>(commands);
         Map<String, Object> args = new HashMap<>();
         args.put("page", 2);
-        CommandContext context = new CommandContext(null, args);
+        CommandContext<TestCommandSource> context = new CommandContext<>(null, args);
 
         helpCommand.run(context);
 
@@ -70,13 +74,14 @@ class HelpCommandTest {
     }
 
     @Test
+    @DisplayName("Should handle a page number that is out of bounds")
     void run_pageOutOfBounds() {
-        Map<String, CommandNode> commands = new LinkedHashMap<>();
-        commands.put("cmd1", new LiteralCommandNode("cmd1"));
-        HelpCommand helpCommand = new HelpCommand(commands);
+        Map<String, CommandNode<TestCommandSource>> commands = new LinkedHashMap<>();
+        commands.put("cmd1", new LiteralCommandNode<>("cmd1"));
+        HelpCommand<TestCommandSource> helpCommand = new HelpCommand<>(commands);
         Map<String, Object> args = new HashMap<>();
         args.put("page", 100);
-        CommandContext context = new CommandContext(null, args);
+        CommandContext<TestCommandSource> context = new CommandContext<>(null, args);
 
         helpCommand.run(context);
 
@@ -86,13 +91,14 @@ class HelpCommandTest {
     }
 
     @Test
+    @DisplayName("Should handle a page number of zero")
     void run_pageZero() {
-        Map<String, CommandNode> commands = new LinkedHashMap<>();
-        commands.put("cmd1", new LiteralCommandNode("cmd1"));
-        HelpCommand helpCommand = new HelpCommand(commands);
+        Map<String, CommandNode<TestCommandSource>> commands = new LinkedHashMap<>();
+        commands.put("cmd1", new LiteralCommandNode<>("cmd1"));
+        HelpCommand<TestCommandSource> helpCommand = new HelpCommand<>(commands);
         Map<String, Object> args = new HashMap<>();
         args.put("page", 0);
-        CommandContext context = new CommandContext(null, args);
+        CommandContext<TestCommandSource> context = new CommandContext<>(null, args);
 
         helpCommand.run(context);
 

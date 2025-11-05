@@ -1,48 +1,45 @@
 /* (C) 2025 Maximilian Bollschweiler */
-package bollschweiler.de.lmu.ifi.cip.gitlab2.commands;
+package github.businessdirt.jasper.commands;
 
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertSame;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class CommandRegistryTest {
 
     @Test
-    void getInstance() {
-        assertNotNull(CommandRegistry.getInstance());
-        assertSame(CommandRegistry.getInstance(), CommandRegistry.getInstance());
+    @DisplayName("Should get the same registry instance for the same class")
+    void get() {
+        assertNotNull(CommandRegistry.get(TestCommandSource.class));
+        assertEquals(CommandRegistry.get(TestCommandSource.class), CommandRegistry.get(TestCommandSource.class));
     }
 
     @Test
+    @DisplayName("Should correctly identify a message command")
     void isMessageCommand() {
         assertTrue(CommandRegistry.isMessageCommand("/hello"));
-        assertTrue(CommandRegistry.isMessageCommand("bye"));
-        assertTrue(CommandRegistry.isMessageCommand("BYE"));
         assertFalse(CommandRegistry.isMessageCommand("just a message"));
     }
 
     @Test
+    @DisplayName("Should handle the help command")
     void handle_helpCommand() {
-        CommandRegistry registry = CommandRegistry.getInstance();
-        // The handle method returns true if the client should continue, false otherwise.
-        // For "help", it should return true. And not throw an exception.
-        assertTrue(registry.handle(null, "/help"));
+        CommandRegistry<TestCommandSource> registry = CommandRegistry.get(TestCommandSource.class);
+        assertEquals(CommandResult.SUCCESS, registry.handle(null, "/help"));
     }
     
     @Test
+    @DisplayName("Should handle a command with a leading slash stripped")
     void handle_stripsSlash() {
-        CommandRegistry registry = CommandRegistry.getInstance();
-        assertTrue(registry.handle(null, "help"));
+        CommandRegistry<TestCommandSource> registry = CommandRegistry.get(TestCommandSource.class);
+        assertEquals(CommandResult.SUCCESS, registry.handle(null, "help"));
     }
 
     @Test
+    @DisplayName("Should handle an unknown command")
     void handle_unknownCommand() {
-        CommandRegistry registry = CommandRegistry.getInstance();
-        // An unknown command will cause an exception inside handle, which is caught, logged,
-        // and then handle returns true.
-        assertTrue(registry.handle(null, "/unknowncommand"));
+        CommandRegistry<TestCommandSource> registry = CommandRegistry.get(TestCommandSource.class);
+        assertEquals(CommandResult.UNKNOWN_COMMAND, registry.handle(null, "/unknowncommand"));
     }
 }

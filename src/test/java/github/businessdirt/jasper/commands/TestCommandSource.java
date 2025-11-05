@@ -1,4 +1,4 @@
 package github.businessdirt.jasper.commands;
 
-public class TestCommandContext {
+public class TestCommandSource implements CommandSource {
 }

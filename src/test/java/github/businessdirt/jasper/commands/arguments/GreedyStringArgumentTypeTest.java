@@ -1,14 +1,16 @@
 /* (C) 2025 Maximilian Bollschweiler */
-package bollschweiler.de.lmu.ifi.cip.gitlab2.commands.arguments;
+package github.businessdirt.jasper.commands.arguments;
+
+import github.businessdirt.jasper.commands.StringReader;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import bollschweiler.de.lmu.ifi.cip.gitlab2.commands.StringReader;
-import org.junit.jupiter.api.Test;
 
 class GreedyStringArgumentTypeTest {
 
     @Test
+    @DisplayName("Should parse the remaining string")
     void parse() {
         GreedyStringArgumentType type = new GreedyStringArgumentType();
         StringReader reader = new StringReader("hello world");
@@ -17,6 +19,7 @@ class GreedyStringArgumentTypeTest {
     }
 
     @Test
+    @DisplayName("Should parse the entire remaining string")
     void parse_readsRemaining() {
         GreedyStringArgumentType type = new GreedyStringArgumentType();
         StringReader reader = new StringReader("this is a long string");

@@ -1,81 +1,93 @@
 /* (C) 2025 Maximilian Bollschweiler */
-package bollschweiler.de.lmu.ifi.cip.gitlab2.commands.builder;
+package github.businessdirt.jasper.commands.builder;
 
-import static bollschweiler.de.lmu.ifi.cip.gitlab2.commands.builder.LiteralArgumentBuilder.literal;
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertInstanceOf;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
-import bollschweiler.de.lmu.ifi.cip.gitlab2.commands.arguments.IntegerArgumentType;
-import bollschweiler.de.lmu.ifi.cip.gitlab2.commands.arguments.StringArgumentType;
-import bollschweiler.de.lmu.ifi.cip.gitlab2.commands.tree.ArgumentCommandNode;
-import bollschweiler.de.lmu.ifi.cip.gitlab2.commands.tree.CommandNode;
-import bollschweiler.de.lmu.ifi.cip.gitlab2.commands.tree.LiteralCommandNode;
+import github.businessdirt.jasper.commands.CommandResult;
+import github.businessdirt.jasper.commands.TestCommandSource;
+import github.businessdirt.jasper.commands.arguments.IntegerArgumentType;
+import github.businessdirt.jasper.commands.arguments.StringArgumentType;
+import github.businessdirt.jasper.commands.tree.ArgumentCommandNode;
+import github.businessdirt.jasper.commands.tree.CommandNode;
+import github.businessdirt.jasper.commands.tree.LiteralCommandNode;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class ArgumentBuilderTest {
 
     @Test
+    @DisplayName("Should build a basic literal command node")
     void testBasicLiteral() {
-        LiteralCommandNode node = literal("test").build();
+        LiteralCommandNode<TestCommandSource> node = LiteralArgumentBuilder.<TestCommandSource>literal("test").build();
         assertEquals("test", node.getName());
     }
 
     @Test
+    @DisplayName("Should build a literal command node with an executor")
     void testLiteralWithExecutor() {
-        LiteralCommandNode node = literal("test").executes(c -> 0).build();
+        LiteralCommandNode<TestCommandSource> node = LiteralArgumentBuilder.<TestCommandSource>literal("test")
+                .executes(c -> CommandResult.SUCCESS)
+                .build();
+
         assertNotNull(node.getCommand());
     }
 
     @Test
+    @DisplayName("Should build chained literal command nodes")
     void testChainedLiterals() {
-        LiteralCommandNode node = literal("a")
-                .literal("b", b -> b.executes(c -> 0))
+        LiteralCommandNode<TestCommandSource> node = LiteralArgumentBuilder.<TestCommandSource>literal("a")
+                .literal("b", b -> b.executes(c -> CommandResult.SUCCESS))
                 .build();
         assertEquals(1, node.getChildren().size());
-        CommandNode child = node.getChildren().get("b");
+        CommandNode<TestCommandSource> child = node.getChildren().get("b");
         assertNotNull(child);
         assertEquals("b", child.getName());
         assertNotNull(child.getCommand());
     }
 
     @Test
+    @DisplayName("Should build a literal command node with an argument")
     void testLiteralWithArgument() {
-        LiteralCommandNode node = literal("set")
-                .argument("value", new IntegerArgumentType(), value -> value.executes(c -> 0))
+        LiteralCommandNode<TestCommandSource> node = LiteralArgumentBuilder.<TestCommandSource>literal("set")
+                .argument("value", new IntegerArgumentType(), value -> {
+                    value.executes(c -> CommandResult.SUCCESS);
+                })
                 .build();
+
         assertEquals(1, node.getChildren().size());
-        CommandNode child = node.getChildren().get("value");
+        CommandNode<TestCommandSource> child = node.getChildren().get("value");
         assertNotNull(child);
         assertInstanceOf(ArgumentCommandNode.class, child);
         assertEquals("value", child.getName());
         assertNotNull(child.getCommand());
-        assertInstanceOf(IntegerArgumentType.class, ((ArgumentCommandNode<?>) child).getType());
+        assertInstanceOf(IntegerArgumentType.class, ((ArgumentCommandNode<TestCommandSource, ?>) child).getType());
     }
 
     @Test
+    @DisplayName("Should build a complex command structure")
     void testComplexStructure() {
-        LiteralCommandNode node = literal("a")
-                .literal("b", b -> b
-                        .argument("c", new StringArgumentType(), c -> c.executes(cmd -> 0))
-                )
-                .argument("d", new IntegerArgumentType(), d -> d.executes(cmd -> 1))
+        LiteralCommandNode<TestCommandSource> node = LiteralArgumentBuilder.<TestCommandSource>literal("a")
+                .literal("b", b -> {
+                    b.argument("c", new StringArgumentType(), c -> {
+                        c.executes(cmd -> CommandResult.SUCCESS);
+                    });
+                })
+                .argument("d", new IntegerArgumentType(), d ->
+                    d.executes(cmd -> CommandResult.SUCCESS))
                 .build();
 
         assertEquals(2, node.getChildren().size());
         assertTrue(node.getChildren().containsKey("b"));
         assertTrue(node.getChildren().containsKey("d"));
 
-        CommandNode b = node.getChildren().get("b");
+        CommandNode<TestCommandSource> b = node.getChildren().get("b");
         assertNull(b.getCommand());
         assertEquals(1, b.getChildren().size());
         assertTrue(b.getChildren().containsKey("c"));
-        CommandNode c = b.getChildren().get("c");
+        CommandNode<TestCommandSource> c = b.getChildren().get("c");
         assertNotNull(c.getCommand());
 
-        CommandNode d = node.getChildren().get("d");
+        CommandNode<TestCommandSource> d = node.getChildren().get("d");
         assertNotNull(d.getCommand());
     }
 }

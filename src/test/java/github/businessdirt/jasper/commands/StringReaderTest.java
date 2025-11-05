@@ -1,15 +1,15 @@
 /* (C) 2025 Maximilian Bollschweiler */
-package bollschweiler.de.lmu.ifi.cip.gitlab2.commands;
+package github.businessdirt.jasper.commands;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertTrue;
-
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class StringReaderTest {
 
     @Test
+    @DisplayName("Should read a string until a space")
     void testReadString() {
         StringReader reader = new StringReader("hello world");
         assertEquals("hello", reader.readString());
@@ -17,6 +17,7 @@ class StringReaderTest {
     }
 
     @Test
+    @DisplayName("Should read the remaining part of the string")
     void testReadRemaining() {
         StringReader reader = new StringReader("hello world");
         reader.setCursor(6);
@@ -25,6 +26,7 @@ class StringReaderTest {
     }
 
     @Test
+    @DisplayName("Should correctly report if it can read more")
     void testCanRead() {
         StringReader reader = new StringReader("hello");
         assertTrue(reader.canRead());
@@ -33,6 +35,7 @@ class StringReaderTest {
     }
 
     @Test
+    @DisplayName("Should correctly report if it can read a certain length")
     void testCanReadWithLength() {
         StringReader reader = new StringReader("hello");
         assertTrue(reader.canRead(5));
@@ -40,6 +43,7 @@ class StringReaderTest {
     }
 
     @Test
+    @DisplayName("Should peek at the next character without consuming it")
     void testPeek() {
         StringReader reader = new StringReader("hello");
         assertEquals('h', reader.peek());
@@ -48,6 +52,7 @@ class StringReaderTest {
     }
 
     @Test
+    @DisplayName("Should skip a character")
     void testSkip() {
         StringReader reader = new StringReader("hello");
         reader.skip();
@@ -55,6 +60,7 @@ class StringReaderTest {
     }
 
     @Test
+    @DisplayName("Should copy a StringReader correctly")
     void testConstructorCopy() {
         StringReader original = new StringReader("hello world");
         original.setCursor(5);

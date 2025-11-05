@@ -1,18 +1,18 @@
 /* (C) 2025 Maximilian Bollschweiler */
-package bollschweiler.de.lmu.ifi.cip.gitlab2.commands;
+package github.businessdirt.jasper.commands;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNull;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 
 import java.util.HashMap;
 import java.util.Map;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class CommandContextTest {
 
-    private CommandContext commandContext;
+    private CommandContext<TestCommandSource> commandContext;
 
     @BeforeEach
     void setUp() {
@@ -20,26 +20,30 @@ class CommandContextTest {
         arguments.put("arg1", "value1");
         arguments.put("arg2", 123);
 
-        commandContext = new CommandContext(null, arguments);
+        commandContext = new CommandContext<>(null, arguments);
     }
 
     @Test
+    @DisplayName("Should return the source")
     void getSource() {
         assertNull(commandContext.source());
     }
 
     @Test
+    @DisplayName("Should return the correct argument")
     void getArgument() {
         assertEquals("value1", commandContext.getArgument("arg1", String.class));
         assertEquals(123, commandContext.getArgument("arg2", Integer.class));
     }
 
     @Test
+    @DisplayName("Should return null for a non-existent argument")
     void getArgument_NotFound() {
         assertNull(commandContext.getArgument("nonexistent", String.class));
     }
 
     @Test
+    @DisplayName("Should throw ClassCastException for an argument of the wrong type")
     void getArgument_WrongType() {
         // This will throw a ClassCastException at runtime, which is expected behavior.
         // The @SuppressWarnings("unchecked") in the original code indicates this.

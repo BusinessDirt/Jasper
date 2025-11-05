@@ -12,7 +12,6 @@ import java.util.Random;
 public class AsciiRenderer {
 
     private final Random random = new Random();
-    private static final String OBFUSCATED_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+-=[]{}|;':,./<>?";
 
     public String render(Text text) {
         StringBuilder sb = new StringBuilder();
@@ -23,18 +22,6 @@ public class AsciiRenderer {
     private void renderComponent(StringBuilder sb, Text text) {
         Style style = text.getStyle();
         String content = text.asString();
-
-        if (style.obfuscated()) {
-            StringBuilder obfuscated = new StringBuilder();
-            for (int i = 0; i < content.length(); i++) {
-                if (Character.isWhitespace(content.charAt(i))) {
-                    obfuscated.append(content.charAt(i));
-                } else {
-                    obfuscated.append(OBFUSCATED_CHARS.charAt(random.nextInt(OBFUSCATED_CHARS.length())));
-                }
-            }
-            content = obfuscated.toString();
-        }
 
         sb.append(toAnsi(style));
         sb.append(content);

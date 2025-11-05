@@ -9,10 +9,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class AsciiRenderer {
+public class AsciiTextRenderer implements TextRenderer<String> {
 
-    private final Random random = new Random();
-
+    @Override
     public String render(Text text) {
         StringBuilder sb = new StringBuilder();
         renderComponent(sb, text);
@@ -20,22 +19,16 @@ public class AsciiRenderer {
     }
 
     private void renderComponent(StringBuilder sb, Text text) {
-        Style style = text.getStyle();
-        String content = text.asString();
-
-        sb.append(toAnsi(style));
-        sb.append(content);
+        sb.append(toAnsi(text.getStyle()));
+        sb.append(text.asString());
         sb.append("[0m");
 
-        for (Text sibling : text.getSiblings()) {
+        for (Text sibling : text.getSiblings())
             renderComponent(sb, sibling);
-        }
     }
 
     private String toAnsi(Style style) {
-        if (style == Style.EMPTY) {
-            return "";
-        }
+        if (style == Style.EMPTY) return "";
 
         List<String> codes = new ArrayList<>();
         if (style.bold()) codes.add("1");
@@ -53,9 +46,7 @@ public class AsciiRenderer {
             codes.add(String.valueOf(color.getBlue()));
         }
 
-        if (codes.isEmpty()) {
-            return "";
-        }
+        if (codes.isEmpty()) return "";
 
         return "[" + String.join(";", codes) + "m";
     }

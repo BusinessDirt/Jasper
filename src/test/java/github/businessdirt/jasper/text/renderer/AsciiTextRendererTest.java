@@ -9,13 +9,13 @@ import org.junit.jupiter.api.DisplayName;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-public class AsciiRendererTest {
+public class AsciiTextRendererTest {
 
-    private AsciiRenderer renderer;
+    private AsciiTextRenderer renderer;
 
     @BeforeEach
     public void setUp() {
-        renderer = new AsciiRenderer();
+        renderer = new AsciiTextRenderer();
     }
 
     @Test

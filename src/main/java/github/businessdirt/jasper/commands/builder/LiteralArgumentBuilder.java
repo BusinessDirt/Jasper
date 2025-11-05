@@ -17,6 +17,7 @@ public class LiteralArgumentBuilder<S extends CommandSource> extends AbstractArg
      * Creates a new literal argument builder.
      *
      * @param literal the literal
+     * @param <S> the command source type
      * @return the new literal argument builder
      */
     public static <S extends CommandSource> LiteralArgumentBuilder<S> literal(String literal) {

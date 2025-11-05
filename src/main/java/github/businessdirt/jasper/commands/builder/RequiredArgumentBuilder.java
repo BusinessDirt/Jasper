@@ -21,6 +21,7 @@ public class RequiredArgumentBuilder<S extends CommandSource, T> extends Abstrac
      *
      * @param name the name of the argument
      * @param type the type of the argument
+     * @param <S> the command source type
      * @param <T> the type of the argument
      * @return the new required argument builder
      */

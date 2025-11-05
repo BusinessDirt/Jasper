@@ -44,9 +44,10 @@ public class CommandRegistry<S extends CommandSource> {
     }
 
     /**
-     * Returns the singleton instance of the command handler.
+     * Returns the command registry instance for the given command source type.
      *
-     * @return the singleton instance
+     * @param clazz the command source class
+     * @return the command registry instance
      */
     public static synchronized CommandRegistry<? extends CommandSource> get(Class<? extends CommandSource> clazz) {
         return INSTANCES.putIfAbsent(clazz, new CommandRegistry<>());

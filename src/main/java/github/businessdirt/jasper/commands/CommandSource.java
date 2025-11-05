@@ -1,4 +1,5 @@
+/* (C) 2025 Maximilian Bollschweiler */
 package github.businessdirt.jasper.commands;
 
-public interface CommandSource {
-}
+/** A marker interface for command sources. */
+public interface CommandSource {}

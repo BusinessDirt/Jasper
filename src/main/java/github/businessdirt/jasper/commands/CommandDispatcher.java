@@ -25,6 +25,11 @@ public class CommandDispatcher<S extends CommandSource> {
         root.addChild(command);
     }
 
+    /**
+     * Returns the registered commands.
+     *
+     * @return a map of command names to command nodes
+     */
     public Map<String, CommandNode<S>> getCommands() {
         return root.getChildren();
     }

@@ -2,7 +2,6 @@
 package github.businessdirt.jasper.commands;
 
 import github.businessdirt.jasper.commands.tree.CommandNode;
-import github.businessdirt.jasper.text.TextBoxBuilder;
 
 import java.util.Map;
 
@@ -31,6 +30,7 @@ public record HelpCommand<S extends CommandSource>(Map<String, CommandNode<S>> c
 
         if (page > totalPages) page = totalPages;
 
+        /*
         TextBoxBuilder boxBuilder = new TextBoxBuilder("Showing help page %d of %d (/help <page>)", page, totalPages);
 
         int index = 0;
@@ -41,9 +41,9 @@ public record HelpCommand<S extends CommandSource>(Map<String, CommandNode<S>> c
                 boxBuilder.literal(command.getUsage());
             index++;
         }
-
-
         System.out.println(boxBuilder.build());
+
+        */
         return 0;
     }
 }

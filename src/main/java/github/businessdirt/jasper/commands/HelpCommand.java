@@ -30,21 +30,20 @@ public record HelpCommand<S extends CommandSource>(Map<String, CommandNode<S>> c
 
         if (page > totalPages) page = totalPages;
 
-        /*
-        TextBoxBuilder boxBuilder = new TextBoxBuilder("Showing help page %d of %d (/help <page>)", page, totalPages);
+
+        StringBuilder builder = new StringBuilder("Showing help page ")
+                .append(page).append(" of ").append(totalPages).append(" (/help <page>)\n");
 
         int index = 0;
         int startIndex = (page - 1) * COMMANDS_PER_PAGE;
         int endIndex = Math.min(startIndex + COMMANDS_PER_PAGE, totalCommands);
         for (CommandNode<S> command : commands.values()) {
             if (index >= startIndex && index < endIndex)
-                boxBuilder.literal(command.getUsage());
+                builder.append(command.getUsage()).append("\n");
             index++;
         }
-        System.out.println(boxBuilder.build());
 
-        */
-
+        context.out().println(builder);
         return CommandResult.SUCCESS;
     }
 }

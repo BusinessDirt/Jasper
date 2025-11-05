@@ -3,7 +3,6 @@ package github.businessdirt.jasper.commands;
 
 import github.businessdirt.jasper.commands.tree.CommandNode;
 import github.businessdirt.jasper.commands.tree.LiteralCommandNode;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,17 +18,13 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class HelpCommandTest {
 
-    private final ByteArrayOutputStream outContent = new ByteArrayOutputStream();
-    private final PrintStream originalOut = System.out;
+    private ByteArrayOutputStream outContent;
+    private TestCommandSource source;
 
     @BeforeEach
-    public void setUpStreams() {
-        System.setOut(new PrintStream(outContent));
-    }
-
-    @AfterEach
-    public void restoreStreams() {
-        System.setOut(originalOut);
+    public void setUp() {
+        this.outContent = new ByteArrayOutputStream();
+        this.source = new TestCommandSource(new PrintStream(this.outContent));
     }
 
     @Test
@@ -39,13 +34,15 @@ class HelpCommandTest {
         for (int i = 0; i < 7; i++) {
             commands.put("cmd" + i, new LiteralCommandNode<>("cmd" + i));
         }
+
         HelpCommand<TestCommandSource> helpCommand = new HelpCommand<>(commands);
+
         Map<String, Object> args = new HashMap<>();
-        CommandContext<TestCommandSource> context = new CommandContext<>(null, args); // page is null
+        CommandContext<TestCommandSource> context = new CommandContext<>(this.source, args); // page is null
 
         helpCommand.run(context);
 
-        String output = outContent.toString();
+        String output = this.outContent.toString();
         assertTrue(output.contains("Showing help page 1 of 2"));
         assertTrue(output.contains("/cmd0"));
         assertTrue(output.contains("/cmd4"));
@@ -59,14 +56,16 @@ class HelpCommandTest {
         for (int i = 0; i < 7; i++) {
             commands.put("cmd" + i, new LiteralCommandNode<>("cmd" + i));
         }
+
         HelpCommand<TestCommandSource> helpCommand = new HelpCommand<>(commands);
+
         Map<String, Object> args = new HashMap<>();
         args.put("page", 2);
-        CommandContext<TestCommandSource> context = new CommandContext<>(null, args);
+        CommandContext<TestCommandSource> context = new CommandContext<>(this.source, args);
 
         helpCommand.run(context);
 
-        String output = outContent.toString();
+        String output = this.outContent.toString();
         assertTrue(output.contains("Showing help page 2 of 2"));
         assertFalse(output.contains("/cmd4"));
         assertTrue(output.contains("/cmd5"));
@@ -78,14 +77,16 @@ class HelpCommandTest {
     void run_pageOutOfBounds() {
         Map<String, CommandNode<TestCommandSource>> commands = new LinkedHashMap<>();
         commands.put("cmd1", new LiteralCommandNode<>("cmd1"));
+
         HelpCommand<TestCommandSource> helpCommand = new HelpCommand<>(commands);
+
         Map<String, Object> args = new HashMap<>();
         args.put("page", 100);
-        CommandContext<TestCommandSource> context = new CommandContext<>(null, args);
+        CommandContext<TestCommandSource> context = new CommandContext<>(this.source, args);
 
         helpCommand.run(context);
 
-        String output = outContent.toString();
+        String output = this.outContent.toString();
         assertTrue(output.contains("Showing help page 1 of 1"));
         assertTrue(output.contains("/cmd1"));
     }
@@ -95,14 +96,16 @@ class HelpCommandTest {
     void run_pageZero() {
         Map<String, CommandNode<TestCommandSource>> commands = new LinkedHashMap<>();
         commands.put("cmd1", new LiteralCommandNode<>("cmd1"));
+
         HelpCommand<TestCommandSource> helpCommand = new HelpCommand<>(commands);
+
         Map<String, Object> args = new HashMap<>();
         args.put("page", 0);
-        CommandContext<TestCommandSource> context = new CommandContext<>(null, args);
+        CommandContext<TestCommandSource> context = new CommandContext<>(this.source, args);
 
         helpCommand.run(context);
 
-        String output = outContent.toString();
+        String output = this.outContent.toString();
         assertTrue(output.contains("Showing help page 1 of 1"));
     }
 }

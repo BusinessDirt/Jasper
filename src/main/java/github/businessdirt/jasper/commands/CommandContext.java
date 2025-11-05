@@ -1,6 +1,7 @@
 /* (C) 2025 Maximilian Bollschweiler */
 package github.businessdirt.jasper.commands;
 
+import java.io.PrintStream;
 import java.util.Map;
 
 /**
@@ -22,5 +23,12 @@ public record CommandContext<S extends CommandSource>(S source, Map<String, Obje
     @SuppressWarnings({"unchecked", "unused"})
     public <T> T getArgument(String name, Class<T> clazz) {
         return (T) arguments.get(name);
+    }
+
+    /**
+     * @return the output stream the commands should use
+     */
+    public PrintStream out() {
+        return this.source.out();
     }
 }

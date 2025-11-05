@@ -23,6 +23,11 @@ public abstract class Text {
         return this;
     }
 
+    public Text setStyle(Style style) {
+        this.style = style;
+        return this;
+    }
+
     public Style getStyle() {
         return style;
     }

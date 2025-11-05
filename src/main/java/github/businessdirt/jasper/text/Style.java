@@ -1,32 +1,33 @@
 package github.businessdirt.jasper.text;
 
-public record Style(TextColor color, boolean bold, boolean italic, boolean underlined, boolean strikethrough,
-                    boolean obfuscated) {
+public record Style(
+        TextColor color,
+        boolean bold,
+        boolean italic,
+        boolean underlined,
+        boolean strikethrough
+) {
 
-    public static final Style EMPTY = new Style(null, false, false, false, false, false);
+    public static final Style EMPTY = new Style(null, false, false, false, false);
 
     public Style withColor(TextColor color) {
-        return new Style(color, bold, italic, underlined, strikethrough, obfuscated);
+        return new Style(color, bold, italic, underlined, strikethrough);
     }
 
     public Style withBold(boolean bold) {
-        return new Style(color, bold, italic, underlined, strikethrough, obfuscated);
+        return new Style(color, bold, italic, underlined, strikethrough);
     }
 
     public Style withItalic(boolean italic) {
-        return new Style(color, bold, italic, underlined, strikethrough, obfuscated);
+        return new Style(color, bold, italic, underlined, strikethrough);
     }
 
     public Style withUnderlined(boolean underlined) {
-        return new Style(color, bold, italic, underlined, strikethrough, obfuscated);
+        return new Style(color, bold, italic, underlined, strikethrough);
     }
 
     public Style withStrikethrough(boolean strikethrough) {
-        return new Style(color, bold, italic, underlined, strikethrough, obfuscated);
-    }
-
-    public Style withObfuscated(boolean obfuscated) {
-        return new Style(color, bold, italic, underlined, strikethrough, obfuscated);
+        return new Style(color, bold, italic, underlined, strikethrough);
     }
 
     public Style merge(Style other) {
@@ -38,9 +39,7 @@ public record Style(TextColor color, boolean bold, boolean italic, boolean under
                 other.bold || bold,
                 other.italic || italic,
                 other.underlined || underlined,
-                other.strikethrough || strikethrough,
-                other.obfuscated || obfuscated
+                other.strikethrough || strikethrough
         );
     }
-
 }

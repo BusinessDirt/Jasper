@@ -9,7 +9,7 @@ public interface Command<S extends CommandSource> {
      * Executes the command.
      *
      * @param context The context in which the command is executed.
-     * @return an integer representing the command's execution status
+     * @return the {@link CommandResult} of the command.
      */
-    int run(CommandContext<S> context);
+    CommandResult run(CommandContext<S> context);
 }

@@ -42,7 +42,7 @@ public class CommandDispatcher<S extends CommandSource> {
      * @return the result of the command execution
      * @throws Exception if an error occurs during command execution
      */
-    public int execute(String input, S source) throws Exception {
+    public CommandResult execute(String input, S source) throws Exception {
         StringReader reader = new StringReader(input);
         CommandNode<S> currentNode = root;
         Map<String, Object> arguments = new HashMap<>();
@@ -86,16 +86,12 @@ public class CommandDispatcher<S extends CommandSource> {
                 }
             }
 
-            if (!found) {
-                System.out.println("Usage: " + currentNode.getUsage(commandPath.toString()));
-                return 0;
-            }
+            if (!found) return new CommandResult(CommandResult.ERROR_STATUS,
+                    "Usage: " + currentNode.getUsage(commandPath.toString()));
         }
 
-        if (currentNode.getCommand() == null) {
-            System.out.println("Usage: " + currentNode.getUsage(commandPath.toString()));
-            return 0;
-        }
+        if (currentNode.getCommand() == null) return new  CommandResult(CommandResult.ERROR_STATUS,
+                "Usage: " + currentNode.getUsage(commandPath.toString()));
 
         return currentNode.getCommand().run(new CommandContext<>(source, arguments));
     }

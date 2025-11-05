@@ -18,10 +18,10 @@ public record HelpCommand<S extends CommandSource>(Map<String, CommandNode<S>> c
      * Executes the command.
      *
      * @param context the command context
-     * @return 0
+     * @return the {@link CommandResult}
      */
     @Override
-    public int run(CommandContext<S> context) {
+    public CommandResult run(CommandContext<S> context) {
         Integer page = context.getArgument("page", Integer.class);
         if (page == null || page < 1) page = 1;
 
@@ -44,6 +44,7 @@ public record HelpCommand<S extends CommandSource>(Map<String, CommandNode<S>> c
         System.out.println(boxBuilder.build());
 
         */
-        return 0;
+
+        return CommandResult.SUCCESS;
     }
 }

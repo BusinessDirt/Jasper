@@ -1,6 +1,6 @@
 package github.businessdirt.jasper.text;
 
-public class LiteralText extends BaseText {
+public class LiteralText extends Text {
 
     private final String text;
 

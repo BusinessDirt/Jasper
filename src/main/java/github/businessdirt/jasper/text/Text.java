@@ -1,19 +1,39 @@
 package github.businessdirt.jasper.text;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @SuppressWarnings("unused")
-public interface Text {
+public abstract class Text {
 
-    Style getStyle();
+    protected Style style;
+    protected final List<Text> siblings;
 
-    String asString();
+    protected Text() {
+        this(Style.EMPTY, new ArrayList<>());
+    }
 
-    List<Text> getSiblings();
+    protected Text(Style style, List<Text> siblings) {
+        this.style = style;
+        this.siblings = siblings;
+    }
 
-    Text append(Text text);
+    public Text append(Text text) {
+        siblings.add(text);
+        return this;
+    }
 
-    default Text copy() {
-        return new LiteralText(asString());
+    public Style getStyle() {
+        return style;
+    }
+
+    public List<Text> getSiblings() {
+        return siblings;
+    }
+
+    public abstract String asString();
+
+    public static Text literal(String text) {
+        return new LiteralText(text);
     }
 }

@@ -1,7 +1,7 @@
 /* (C) 2025 Maximilian Bollschweiler */
-package bollschweiler.de.lmu.ifi.cip.gitlab2.commands.arguments;
+package github.businessdirt.jasper.commands.arguments;
 
-import bollschweiler.de.lmu.ifi.cip.gitlab2.commands.StringReader;
+import github.businessdirt.jasper.commands.StringReader;
 
 /**
  * Represents a type of command argument.

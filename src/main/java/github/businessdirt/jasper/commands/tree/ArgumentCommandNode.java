@@ -1,7 +1,7 @@
 /* (C) 2025 Maximilian Bollschweiler */
-package bollschweiler.de.lmu.ifi.cip.gitlab2.commands.tree;
+package github.businessdirt.jasper.commands.tree;
 
-import bollschweiler.de.lmu.ifi.cip.gitlab2.commands.arguments.ArgumentType;
+import github.businessdirt.jasper.commands.arguments.ArgumentType;
 
 /**
  * Represents a command node that is an argument.

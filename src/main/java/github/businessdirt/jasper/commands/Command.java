@@ -1,5 +1,5 @@
 /* (C) 2025 Maximilian Bollschweiler */
-package bollschweiler.de.lmu.ifi.cip.gitlab2.commands;
+package github.businessdirt.jasper.commands;
 
 /** Represents a command that can be executed. */
 @FunctionalInterface

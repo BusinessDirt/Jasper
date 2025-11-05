@@ -1,8 +1,8 @@
 /* (C) 2025 Maximilian Bollschweiler */
-package bollschweiler.de.lmu.ifi.cip.gitlab2.commands.builder;
+package github.businessdirt.jasper.commands.builder;
 
-import bollschweiler.de.lmu.ifi.cip.gitlab2.commands.arguments.ArgumentType;
-import bollschweiler.de.lmu.ifi.cip.gitlab2.commands.tree.ArgumentCommandNode;
+import github.businessdirt.jasper.commands.arguments.ArgumentType;
+import github.businessdirt.jasper.commands.tree.ArgumentCommandNode;
 
 /**
  * A builder for required command arguments.

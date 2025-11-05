@@ -1,11 +1,6 @@
 /* (C) 2025 Maximilian Bollschweiler */
-package bollschweiler.de.lmu.ifi.cip.gitlab2.commands;
+package github.businessdirt.jasper.commands;
 
-import static bollschweiler.de.lmu.ifi.cip.gitlab2.commands.builder.LiteralArgumentBuilder.literal;
-
-import bollschweiler.de.lmu.ifi.cip.gitlab2.commands.arguments.IntegerArgumentType;
-import bollschweiler.de.lmu.ifi.cip.gitlab2.commands.builder.LiteralArgumentBuilder;
-import bollschweiler.de.lmu.ifi.cip.gitlab2.network.client.ClientContext;
 import java.util.function.Consumer;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;

@@ -1,9 +1,10 @@
 /* (C) 2025 Maximilian Bollschweiler */
-package bollschweiler.de.lmu.ifi.cip.gitlab2.commands.builder;
+package github.businessdirt.jasper.commands.builder;
 
-import bollschweiler.de.lmu.ifi.cip.gitlab2.commands.Command;
-import bollschweiler.de.lmu.ifi.cip.gitlab2.commands.arguments.ArgumentType;
-import bollschweiler.de.lmu.ifi.cip.gitlab2.commands.tree.CommandNode;
+import github.businessdirt.jasper.commands.Command;
+import github.businessdirt.jasper.commands.arguments.ArgumentType;
+import github.businessdirt.jasper.commands.tree.CommandNode;
+
 import java.util.function.Consumer;
 
 /**

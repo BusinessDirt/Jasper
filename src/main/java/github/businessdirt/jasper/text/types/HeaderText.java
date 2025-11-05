@@ -1,7 +1,7 @@
 /* (C) 2025 Maximilian Bollschweiler */
-package bollschweiler.de.lmu.ifi.cip.gitlab2.utils.text.types;
+package github.businessdirt.jasper.text.types;
 
-import bollschweiler.de.lmu.ifi.cip.gitlab2.utils.text.Text;
+import github.businessdirt.jasper.text.Text;
 
 /**
  * Represents a header text element used within a text box.

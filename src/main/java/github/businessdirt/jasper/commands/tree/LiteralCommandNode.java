@@ -1,5 +1,5 @@
 /* (C) 2025 Maximilian Bollschweiler */
-package bollschweiler.de.lmu.ifi.cip.gitlab2.commands.tree;
+package github.businessdirt.jasper.commands.tree;
 
 /**
  * Represents a command node that is a literal.

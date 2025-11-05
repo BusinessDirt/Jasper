@@ -1,7 +1,8 @@
 /* (C) 2025 Maximilian Bollschweiler */
-package bollschweiler.de.lmu.ifi.cip.gitlab2.commands.tree;
+package github.businessdirt.jasper.commands.tree;
 
-import bollschweiler.de.lmu.ifi.cip.gitlab2.commands.Command;
+import github.businessdirt.jasper.commands.Command;
+
 import java.util.LinkedHashMap;
 import java.util.Map;
 

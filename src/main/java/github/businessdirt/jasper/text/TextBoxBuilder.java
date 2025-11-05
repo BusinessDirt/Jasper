@@ -1,10 +1,11 @@
 /* (C) 2025 Maximilian Bollschweiler */
-package bollschweiler.de.lmu.ifi.cip.gitlab2.utils.text;
+package github.businessdirt.jasper.text;
 
-import bollschweiler.de.lmu.ifi.cip.gitlab2.utils.text.types.CenteredLiteralText;
-import bollschweiler.de.lmu.ifi.cip.gitlab2.utils.text.types.Divider;
-import bollschweiler.de.lmu.ifi.cip.gitlab2.utils.text.types.HeaderText;
-import bollschweiler.de.lmu.ifi.cip.gitlab2.utils.text.types.LiteralText;
+import github.businessdirt.jasper.text.types.CenteredLiteralText;
+import github.businessdirt.jasper.text.types.Divider;
+import github.businessdirt.jasper.text.types.HeaderText;
+import github.businessdirt.jasper.text.types.LiteralText;
+
 import java.util.ArrayList;
 import java.util.List;
 

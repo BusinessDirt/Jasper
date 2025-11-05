@@ -1,7 +1,7 @@
 /* (C) 2025 Maximilian Bollschweiler */
-package bollschweiler.de.lmu.ifi.cip.gitlab2.commands.builder;
+package github.businessdirt.jasper.commands.builder;
 
-import bollschweiler.de.lmu.ifi.cip.gitlab2.commands.tree.LiteralCommandNode;
+import github.businessdirt.jasper.commands.tree.LiteralCommandNode;
 
 /**
  * A builder for literal command arguments. A literal argument is a fixed string that must be present in the command.

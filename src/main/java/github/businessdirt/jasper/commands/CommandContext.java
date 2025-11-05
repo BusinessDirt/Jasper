@@ -1,5 +1,5 @@
 /* (C) 2025 Maximilian Bollschweiler */
-package bollschweiler.de.lmu.ifi.cip.gitlab2.commands;
+package github.businessdirt.jasper.commands;
 
 import bollschweiler.de.lmu.ifi.cip.gitlab2.network.client.ClientContext;
 import java.util.Map;

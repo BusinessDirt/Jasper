@@ -1,11 +1,10 @@
 /* (C) 2025 Maximilian Bollschweiler */
-package bollschweiler.de.lmu.ifi.cip.gitlab2.commands;
+package github.businessdirt.jasper.commands;
 
-import bollschweiler.de.lmu.ifi.cip.gitlab2.commands.tree.ArgumentCommandNode;
-import bollschweiler.de.lmu.ifi.cip.gitlab2.commands.tree.CommandNode;
-import bollschweiler.de.lmu.ifi.cip.gitlab2.commands.tree.LiteralCommandNode;
-import bollschweiler.de.lmu.ifi.cip.gitlab2.commands.tree.RootCommandNode;
-import bollschweiler.de.lmu.ifi.cip.gitlab2.network.client.ClientContext;
+import github.businessdirt.jasper.commands.tree.CommandNode;
+import github.businessdirt.jasper.commands.tree.LiteralCommandNode;
+import github.businessdirt.jasper.commands.tree.RootCommandNode;
+
 import java.util.HashMap;
 import java.util.Map;
 

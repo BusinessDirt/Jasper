@@ -1,5 +1,5 @@
 /* (C) 2025 Maximilian Bollschweiler */
-package bollschweiler.de.lmu.ifi.cip.gitlab2.utils.text;
+package github.businessdirt.jasper.text;
 
 import java.util.Objects;
 

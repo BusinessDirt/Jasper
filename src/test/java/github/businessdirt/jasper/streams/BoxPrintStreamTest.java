@@ -1,5 +1,6 @@
 package github.businessdirt.jasper.streams;
 
+import github.businessdirt.jasper.streams.charsets.BoxCharset;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -34,7 +35,7 @@ public class BoxPrintStreamTest {
     @Test
     @DisplayName("Test auto-flush creates a box on println")
     void testAutoFlushCreatesBoxOnPrintln() {
-        boxedOut = new BoxPrintStream(testOutput, true, charset);
+        boxedOut = new BoxPrintStream(testOutput, true, charset, BoxCharset.SINGLE);
         boxedOut.println("Hello World");
 
         String expected =
@@ -48,7 +49,7 @@ public class BoxPrintStreamTest {
     @Test
     @DisplayName("Test manual-flush combines lines into one box")
     void testManualFlushCombinesLinesIntoOneBox() {
-        boxedOut = new BoxPrintStream(testOutput, false, charset);
+        boxedOut = new BoxPrintStream(testOutput, false, charset, BoxCharset.SINGLE);
         boxedOut.println("Line 1");
         boxedOut.print("Line 2 (shorter)"); // .print without line break
 
@@ -68,7 +69,7 @@ public class BoxPrintStreamTest {
     @Test
     @DisplayName("Test empty println with auto-flush skips creating a box")
     void testEmptyPrintlnWithAutoFlushSkipsBox() {
-        boxedOut = new BoxPrintStream(testOutput, true, charset);
+        boxedOut = new BoxPrintStream(testOutput, true, charset, BoxCharset.SINGLE);
 
         boxedOut.println("First line");
         boxedOut.println(); // This line should not create a box
@@ -89,7 +90,7 @@ public class BoxPrintStreamTest {
     @Test
     @DisplayName("Test box correctly pads shorter lines")
     void testBoxCorrectlyPadsShorterLines() {
-        boxedOut = new BoxPrintStream(testOutput, true, charset);
+        boxedOut = new BoxPrintStream(testOutput, true, charset, BoxCharset.SINGLE);
         boxedOut.println("This is the longest line\nShort\nAnd another one");
 
         String horizontalBar = "─".repeat(24);
@@ -106,7 +107,7 @@ public class BoxPrintStreamTest {
     @Test
     @DisplayName("Test close() flushes remaining buffer")
     void testCloseFlushesRemainingBuffer() {
-        boxedOut = new BoxPrintStream(testOutput, false, charset);
+        boxedOut = new BoxPrintStream(testOutput, false, charset, BoxCharset.SINGLE);
         boxedOut.print("Last content");
 
         assertEquals(0, testOutput.size(), "Output should be buffered before close.");

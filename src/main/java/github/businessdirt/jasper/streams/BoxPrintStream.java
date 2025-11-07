@@ -1,11 +1,12 @@
 package github.businessdirt.jasper.streams;
 
+import github.businessdirt.jasper.streams.charsets.BoxCharset;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.io.PrintStream;
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 
 /**
  * A PrintStream that buffers output and, on each call to flush(),
@@ -18,6 +19,7 @@ public class BoxPrintStream extends PrintStream {
     private final AutoFlushByteArrayOutputStream internalBuffer;
     private final OutputStream finalDestination;
     private final Charset charset;
+    private final BoxCharset boxCharset;
 
     private boolean isCurrentlyFlushing = false;
 
@@ -28,33 +30,14 @@ public class BoxPrintStream extends PrintStream {
      * @param autoFlush        If true, println will automatically flush.
      * @param charset          The charset to be used.
      */
-    public BoxPrintStream(OutputStream finalDestination, boolean autoFlush, Charset charset) {
+    public BoxPrintStream(OutputStream finalDestination, boolean autoFlush, Charset charset, BoxCharset boxCharset) {
         super(new AutoFlushByteArrayOutputStream(), autoFlush, charset);
         this.internalBuffer = (AutoFlushByteArrayOutputStream) super.out;
         this.finalDestination = finalDestination;
         this.charset = charset;
+        this.boxCharset = boxCharset;
 
         this.internalBuffer.owner = this;
-    }
-
-    /**
-     * Convenience constructor with default charset (UTF-8).
-     *
-     * @param finalDestination The actual target OutputStream.
-     * @param autoFlush        If true, println will automatically flush.
-     */
-    public BoxPrintStream(OutputStream finalDestination, boolean autoFlush) {
-        this(finalDestination, autoFlush, StandardCharsets.UTF_8);
-    }
-
-    /**
-     * Convenience constructor with default charset (UTF-8) and
-     * default autoFlush (true).
-     *
-     * @param finalDestination The actual target OutputStream.
-     */
-    public BoxPrintStream(OutputStream finalDestination) {
-        this(finalDestination, true, StandardCharsets.UTF_8);
     }
 
     /**
@@ -136,24 +119,36 @@ public class BoxPrintStream extends PrintStream {
             }
         }
 
+        char spacing = this.boxCharset.getChar(false, false, false, false);
+
+        char horizontal = this.boxCharset.getChar(true, true, false, false);
+        char vertical = this.boxCharset.getChar(false, false, true, true);
+
+        char topLeftCorner = this.boxCharset.getChar(false, true, false, true);
+        char topRightCorner = this.boxCharset.getChar(false, true, true, false);
+        char bottomLeftCorner = this.boxCharset.getChar(true, false, false, true);
+        char bottomRightCorner = this.boxCharset.getChar(true, false, true, false);
+
         StringBuilder sb = new StringBuilder();
-        String horizontalBar = "─".repeat(maxWidth);
+        String horizontalBar = String.valueOf(horizontal).repeat(maxWidth);
 
         // Top border
-        sb.append("┌─").append(horizontalBar).append("─┐\n");
+        sb.append(topLeftCorner).append(horizontal).append(horizontalBar)
+                .append(horizontal).append(topRightCorner).append("\n");
 
         // Content lines
         for (String line : lines) {
-            sb.append("│ ").append(line);
+            sb.append(vertical).append(spacing).append(line);
             // Add padding spaces to make the right edge flush
             if (line.length() < maxWidth) {
-                sb.append(" ".repeat(maxWidth - line.length()));
+                sb.append(String.valueOf(spacing).repeat(maxWidth - line.length()));
             }
-            sb.append(" │\n");
+            sb.append(spacing).append(vertical).append("\n");
         }
 
         // Bottom border
-        sb.append("└─").append(horizontalBar).append("─┘");
+        sb.append(bottomLeftCorner).append(horizontal).append(horizontalBar)
+                .append(horizontal).append(bottomRightCorner);
 
         return sb.toString();
     }

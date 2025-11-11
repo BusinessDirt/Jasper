@@ -1,122 +1,114 @@
-package github.businessdirt.jasper.logging.builder;
+package github.businessdirt.jasper.logging.pattern;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
-public class PatternPartBuilder {
+public class PatternLayoutBuilder {
     private final String prefix, suffix;
     private final List<String> content;
 
-    private PatternPartBuilder(String prefix, String suffix) {
+    private PatternLayoutBuilder(String prefix, String suffix) {
         this.prefix = prefix;
         this.suffix = suffix;
         this.content = new ArrayList<>();
     }
 
-    public static PatternPartBuilder builder(String prefix, String suffix) {
-        return new PatternPartBuilder(prefix, suffix);
+    public static PatternLayoutBuilder builder(String prefix, String suffix) {
+        return new PatternLayoutBuilder(prefix, suffix);
     }
 
-    public static PatternPartBuilder builder() {
-        return PatternPartBuilder.builder("", "");
-    }
-
-    public static PatternPartBuilder squareBrackets() {
-        return PatternPartBuilder.builder("[", "]");
-    }
-
-    public static PatternPartBuilder brackets() {
-        return PatternPartBuilder.builder("(", ")");
-    }
-
-    public PatternPartBuilder literal(String content) {
+    public PatternLayoutBuilder literal(String content) {
         this.content.add(content);
         return this;
     }
 
-    public PatternPartBuilder date(String format) {
+    public PatternLayoutBuilder date(String format) {
         return this.literal("%d{" + format + "}");
     }
 
-    public PatternPartBuilder level(String formatSpecifier) {
+    public PatternLayoutBuilder date() {
+        return this.date("HH:mm:ss");
+    }
+
+    public PatternLayoutBuilder level(String formatSpecifier) {
         return this.literal("%" + formatSpecifier + "level");
     }
 
-    public PatternPartBuilder level() {
+    public PatternLayoutBuilder level() {
         return this.literal("%level");
     }
 
-    public PatternPartBuilder logger() {
-        return this.literal("%c");
-    }
-
-    public PatternPartBuilder logger(String precisionSpecifier) {
+    public PatternLayoutBuilder logger(String precisionSpecifier) {
         return this.literal("%c{" + precisionSpecifier + "}");
     }
 
-    public PatternPartBuilder message() {
+    public PatternLayoutBuilder logger() {
+        return this.logger("1");
+    }
+
+    public PatternLayoutBuilder message() {
         return this.literal("%msg");
     }
 
-    public PatternPartBuilder threadName() {
+    public PatternLayoutBuilder threadName() {
         return this.literal("%t");
     }
 
-    public PatternPartBuilder threadName(String formatSpecifier) {
+    public PatternLayoutBuilder threadName(String formatSpecifier) {
         return this.literal("%" + formatSpecifier + "t");
     }
 
-    public PatternPartBuilder exception() {
+    public PatternLayoutBuilder exception() {
         return this.literal("%ex");
     }
 
-    public PatternPartBuilder exception(String options) {
+    public PatternLayoutBuilder exception(String options) {
         return this.literal("%ex{" + options + "}");
     }
 
-    public PatternPartBuilder rootException() {
+    public PatternLayoutBuilder rootException() {
         return this.literal("%rEx");
     }
 
-    public PatternPartBuilder rootException(String options) {
+    public PatternLayoutBuilder rootException(String options) {
         return this.literal("%rEx{" + options + "}");
     }
 
-    public PatternPartBuilder style(String innerPattern, String styles) {
+    public PatternLayoutBuilder style(String innerPattern, String styles) {
         return this.literal("%style{" + innerPattern + "}{" + styles + "}");
     }
 
-    public PatternPartBuilder highlight(Consumer<PatternPartBuilder> innerPattern, String styles) {
-        PatternPartBuilder innerPatternBuilder = PatternPartBuilder.builder();
+    public PatternLayoutBuilder highlight(Consumer<PatternLayoutBuilder> innerPattern, String styles) {
+        PatternLayoutBuilder innerPatternBuilder = PatternLayoutBuilder.builder("", "");
         innerPattern.accept(innerPatternBuilder);
         return this.literal("%highlight{" + innerPatternBuilder.build() + "}{" + styles + "}");
     }
 
-    public PatternPartBuilder highlight(Consumer<PatternPartBuilder> innerPattern) {
-        PatternPartBuilder innerPatternBuilder = PatternPartBuilder.builder();
+    public PatternLayoutBuilder highlight(Consumer<PatternLayoutBuilder> innerPattern) {
+        PatternLayoutBuilder innerPatternBuilder = PatternLayoutBuilder.builder("", "");
         innerPattern.accept(innerPatternBuilder);
         return this.literal("%highlight{" + innerPatternBuilder.build() + "}");
     }
 
-    public PatternPartBuilder processId() {
+    public PatternLayoutBuilder processId() {
         return this.literal("%pid");
     }
 
-    public PatternPartBuilder hostName() {
+    public PatternLayoutBuilder hostName() {
         return this.literal("%host");
     }
 
-    public PatternPartBuilder mdc() {
+    public PatternLayoutBuilder mdc() {
         return this.literal("%X");
     }
 
-    public PatternPartBuilder mdc(String key) {
+    public PatternLayoutBuilder mdc(String key) {
         return this.literal("%X{" + key + "}");
     }
 
-    public PatternPartBuilder ndc() {
+    public PatternLayoutBuilder ndc() {
         return this.literal("%x");
     }
 
@@ -127,7 +119,7 @@ public class PatternPartBuilder {
      * <p>
      * <b>PERFORMANCE WARNING:</b> Extremely slow. Avoid in production.
      */
-    public PatternPartBuilder fileName() {
+    public PatternLayoutBuilder fileName() {
         return this.literal("%F");
     }
 
@@ -136,7 +128,7 @@ public class PatternPartBuilder {
      * <p>
      * <b>PERFORMANCE WARNING:</b> Extremely slow. Avoid in production.
      */
-    public PatternPartBuilder lineNumber() {
+    public PatternLayoutBuilder lineNumber() {
         return this.literal("%L");
     }
 
@@ -145,7 +137,7 @@ public class PatternPartBuilder {
      * <p>
      * <b>PERFORMANCE WARNING:</b> Extremely slow. Avoid in production.
      */
-    public PatternPartBuilder methodName() {
+    public PatternLayoutBuilder methodName() {
         return this.literal("%M");
     }
 
@@ -154,7 +146,7 @@ public class PatternPartBuilder {
      * <p>
      * <b>PERFORMANCE WARNING:</b> Extremely slow. Avoid in production.
      */
-    public PatternPartBuilder location() {
+    public PatternLayoutBuilder location() {
         return this.literal("%C.%M(%F:%L)");
     }
 

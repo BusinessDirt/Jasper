@@ -1,6 +1,6 @@
 package github.businessdirt.jasper.logging;
 
-import github.businessdirt.jasper.logging.builder.PatternPartBuilder;
+import github.businessdirt.jasper.logging.pattern.PatternLayoutBuilder;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,14 +11,11 @@ class LogConfiguratorTest {
     @Test
     void test() {
         LogConfigurator.builder(Level.INFO)
-                .pattern(patternBuilder -> patternBuilder
-                        .append(PatternPartBuilder.squareBrackets().date("HH:mm:ss"))
-                        .appendSpace()
-                        .append(PatternPartBuilder.squareBrackets().threadName().literal("/").level())
-                        .appendSpace()
-                        .append(PatternPartBuilder.brackets().logger("1"))
-                        .append(":").appendSpace()
-                        .append(PatternPartBuilder.builder().highlight(PatternPartBuilder::message,
+                .pattern(pattern -> pattern
+                        .layoutSquareBrackets(PatternLayoutBuilder::date).literal(" ")
+                        .layoutSquareBrackets(layout -> layout.threadName().literal("/").level()).literal(" ")
+                        .layoutBrackets(PatternLayoutBuilder::logger).literal(": ")
+                        .layout(layout -> layout.highlight(PatternLayoutBuilder::message,
                                 "{FATAL=red bright, ERROR=red, WARN=yellow, INFO=green, DEBUG=blue, TRACE=white}"))
                 ).build();
 

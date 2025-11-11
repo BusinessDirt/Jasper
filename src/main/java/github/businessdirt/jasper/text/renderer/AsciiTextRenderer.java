@@ -19,7 +19,7 @@ public class AsciiTextRenderer implements TextRenderer<String> {
     @Override
     public String render(Text text) {
         StringBuilder sb = new StringBuilder();
-        renderComponent(sb, text);
+        this.renderComponent(sb, text);
         return sb.toString();
     }
 
@@ -34,7 +34,7 @@ public class AsciiTextRenderer implements TextRenderer<String> {
         sb.append("\033[0m");
 
         for (Text sibling : text.getSiblings())
-            renderComponent(sb, sibling);
+            this.renderComponent(sb, sibling);
     }
 
     /**

@@ -26,7 +26,7 @@ class ArgumentBuilderTest {
     @DisplayName("Should build a literal command node with an executor")
     void testLiteralWithExecutor() {
         LiteralCommandNode<TestCommandSource> node = LiteralArgumentBuilder.<TestCommandSource>literal("test")
-                .executes(c -> CommandResult.SUCCESS)
+                .executes(_ -> CommandResult.SUCCESS)
                 .build();
 
         assertNotNull(node.getCommand());
@@ -36,7 +36,8 @@ class ArgumentBuilderTest {
     @DisplayName("Should build chained literal command nodes")
     void testChainedLiterals() {
         LiteralCommandNode<TestCommandSource> node = LiteralArgumentBuilder.<TestCommandSource>literal("a")
-                .literal("b", b -> b.executes(c -> CommandResult.SUCCESS))
+                .literal("b", b ->
+                        b.executes(_ -> CommandResult.SUCCESS))
                 .build();
         assertEquals(1, node.getChildren().size());
         CommandNode<TestCommandSource> child = node.getChildren().get("b");
@@ -49,9 +50,8 @@ class ArgumentBuilderTest {
     @DisplayName("Should build a literal command node with an argument")
     void testLiteralWithArgument() {
         LiteralCommandNode<TestCommandSource> node = LiteralArgumentBuilder.<TestCommandSource>literal("set")
-                .argument("value", new IntegerArgumentType(), value -> {
-                    value.executes(c -> CommandResult.SUCCESS);
-                })
+                .argument("value", new IntegerArgumentType(), value ->
+                        value.executes(_ -> CommandResult.SUCCESS))
                 .build();
 
         assertEquals(1, node.getChildren().size());
@@ -67,13 +67,11 @@ class ArgumentBuilderTest {
     @DisplayName("Should build a complex command structure")
     void testComplexStructure() {
         LiteralCommandNode<TestCommandSource> node = LiteralArgumentBuilder.<TestCommandSource>literal("a")
-                .literal("b", b -> {
-                    b.argument("c", new StringArgumentType(), c -> {
-                        c.executes(cmd -> CommandResult.SUCCESS);
-                    });
-                })
+                .literal("b", b ->
+                        b.argument("c", new StringArgumentType(), c ->
+                                c.executes(_ -> CommandResult.SUCCESS)))
                 .argument("d", new IntegerArgumentType(), d ->
-                    d.executes(cmd -> CommandResult.SUCCESS))
+                    d.executes(_ -> CommandResult.SUCCESS))
                 .build();
 
         assertEquals(2, node.getChildren().size());

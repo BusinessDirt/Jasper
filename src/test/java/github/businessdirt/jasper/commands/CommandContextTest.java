@@ -48,6 +48,7 @@ class CommandContextTest {
         // This will throw a ClassCastException at runtime, which is expected behavior.
         // The @SuppressWarnings("unchecked") in the original code indicates this.
         assertThrows(ClassCastException.class, () -> {
+            @SuppressWarnings("unused")
             Integer value = commandContext.getArgument("arg1", Integer.class);
         });
     }

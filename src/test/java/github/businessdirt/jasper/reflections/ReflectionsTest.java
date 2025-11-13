@@ -1,9 +1,9 @@
 package github.businessdirt.jasper.reflections;
 
-import github.businessdirt.jasper.dummies.DummyClassA;
-import github.businessdirt.jasper.dummies.DummyClassB;
-import github.businessdirt.jasper.dummies.DummyInterface;
-import github.businessdirt.jasper.dummies.nested.DummyClassC;
+import github.businessdirt.jasper.reflections.dummies.DummyClassA;
+import github.businessdirt.jasper.reflections.dummies.DummyClassB;
+import github.businessdirt.jasper.reflections.dummies.DummyInterface;
+import github.businessdirt.jasper.reflections.dummies.nested.DummyClassC;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

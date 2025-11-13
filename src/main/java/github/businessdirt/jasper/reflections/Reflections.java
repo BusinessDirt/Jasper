@@ -70,6 +70,14 @@ public class Reflections {
                 .collect(Collectors.toSet());
     }
 
+    public <T> Set<Class<? extends T>> getSubTypesOf(Class<T> type) {
+        //noinspection unchecked
+        return this.stream()
+                .filter(type::isAssignableFrom)
+                .map(cls -> (Class<? extends T>) cls)
+                .collect(Collectors.toSet());
+    }
+
     private Set<Class<?>> scan(String basePackage) throws IOException {
         String packagePath = basePackage.replace('.', '/');
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();

@@ -1,6 +1,9 @@
 /* (C) 2025 Maximilian Bollschweiler */
 package github.businessdirt.jasper.commands;
 
+import github.businessdirt.jasper.events.system.EventBus;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -17,6 +20,10 @@ class CommandRegistryTest {
     @BeforeEach
     void setUp() {
         this.source = new TestCommandSource(new PrintStream(new ByteArrayOutputStream()));
+
+        Logger logger = LogManager.getLogger();
+        EventBus.initialize("github.businessdirt.jasper", logger);
+        CommandRegistry.initialize("github.businessdirt.jasper", logger);
     }
 
     @Test
@@ -36,21 +43,21 @@ class CommandRegistryTest {
     @Test
     @DisplayName("Should handle the help command")
     void handle_helpCommand() {
-        CommandRegistry<TestCommandSource> registry = CommandRegistry.get(TestCommandSource.class);
-        assertEquals(CommandResult.SUCCESS, registry.handle(this.source, "/help"));
+        CommandResult result = CommandRegistry.handle(TestCommandSource.class, this.source, "/help");
+        assertEquals(CommandResult.SUCCESS, result);
     }
     
     @Test
     @DisplayName("Should handle a command with a leading slash stripped")
     void handle_stripsSlash() {
-        CommandRegistry<TestCommandSource> registry = CommandRegistry.get(TestCommandSource.class);
-        assertEquals(CommandResult.SUCCESS, registry.handle(this.source, "help"));
+        CommandResult result = CommandRegistry.handle(TestCommandSource.class, this.source, "help");
+        assertEquals(CommandResult.SUCCESS, result);
     }
 
     @Test
     @DisplayName("Should handle an unknown command")
     void handle_unknownCommand() {
-        CommandRegistry<TestCommandSource> registry = CommandRegistry.get(TestCommandSource.class);
-        assertEquals(CommandResult.UNKNOWN_COMMAND, registry.handle(this.source, "/unknowncommand"));
+        CommandResult result = CommandRegistry.handle(TestCommandSource.class, this.source, "/unknowncommand");
+        assertEquals(CommandResult.UNKNOWN_COMMAND, result);
     }
 }

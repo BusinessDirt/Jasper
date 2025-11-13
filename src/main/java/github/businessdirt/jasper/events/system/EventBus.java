@@ -12,10 +12,12 @@ import java.util.stream.Collectors;
 
 public class EventBus {
 
+    private static EventBus INSTANCE;
+
     private final Map<Class<? extends Event>, List<EventListener>> listeners;
     private final Map<Class<? extends Event>, EventHandler> handlers;
 
-    public EventBus(String basePackage) {
+    private EventBus(String basePackage) {
         this.listeners = new HashMap<>();
         this.handlers = new HashMap<>();
 
@@ -64,15 +66,12 @@ public class EventBus {
                             .add(new EventListener(name, eventConsumer, eventData.getKey(), List.of()));
                 });
             });
-
-
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
     }
 
-    public EventHandler getEventHandler(Class<Event> event) {
+    public EventHandler getEventHandler(Class<? extends Event> event) {
         return handlers.computeIfAbsent(event, e ->
                 new EventHandler(e,
                         getEventClasses(e).stream()
@@ -143,5 +142,16 @@ public class EventBus {
         }
 
         return classes;
+    }
+
+    public static void initialize(String basePackage) {
+        if (INSTANCE == null) {
+            INSTANCE = new EventBus(basePackage);
+        }
+    }
+
+    public static EventBus get() {
+        if (INSTANCE == null) throw new RuntimeException("Use EventBus#initialize(String basePackage) to initialize the EventBus first!");
+        return INSTANCE;
     }
 }

@@ -19,7 +19,7 @@ public abstract class Event {
     }
 
     public boolean post(Consumer<Throwable> onError) {
-        return EventBus.getEventHandler(this.getClass()).post(this, onError);
+        return EventBus.get().getEventHandler(this.getClass()).post(this, onError);
     }
 
     public interface Cancellable {

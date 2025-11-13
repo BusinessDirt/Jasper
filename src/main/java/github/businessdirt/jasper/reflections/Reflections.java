@@ -23,7 +23,6 @@ import java.util.stream.Stream;
  * A simple classpath scanner that finds all classes in a given package.
  * It works for both file systems (IDE) and JAR files (production).
  */
-@SuppressWarnings("unused")
 public class Reflections {
 
     private final Set<Class<?>> classes;

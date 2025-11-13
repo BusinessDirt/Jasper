@@ -8,7 +8,6 @@ import java.util.List;
  * A text component has a {@link Style} and a list of siblings.
  * The siblings are other text components that are appended to this one.
  */
-@SuppressWarnings("unused")
 public abstract class Text {
 
     /**

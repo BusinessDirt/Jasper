@@ -5,7 +5,6 @@ import github.businessdirt.jasper.commands.arguments.IntegerArgumentType;
 import github.businessdirt.jasper.commands.builder.LiteralArgumentBuilder;
 
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.Consumer;
 
@@ -14,7 +13,6 @@ import static github.businessdirt.jasper.commands.builder.LiteralArgumentBuilder
 /**
  * Handles client commands. This is a singleton class that holds the command dispatcher and provides methods for registering and handling commands.
  */
-@SuppressWarnings("unused")
 public class CommandRegistry<S extends CommandSource> {
 
     private static final Map<Class<? extends CommandSource>, CommandRegistry<? extends CommandSource>> INSTANCES = new HashMap<>();

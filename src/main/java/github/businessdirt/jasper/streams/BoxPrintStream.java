@@ -13,7 +13,6 @@ import java.nio.charset.Charset;
  * sends the buffered content as a text-based box in "Gemini style" to the
  * actual target OutputStream.
  */
-@SuppressWarnings("unused")
 public class BoxPrintStream extends PrintStream {
 
     private final AutoFlushByteArrayOutputStream internalBuffer;

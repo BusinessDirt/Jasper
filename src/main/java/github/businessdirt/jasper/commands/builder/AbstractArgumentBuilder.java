@@ -14,7 +14,6 @@ import java.util.function.Consumer;
  * @param <S> the type of the command source
  * @param <B> the type of the builder
  */
-@SuppressWarnings("unused")
 public abstract class AbstractArgumentBuilder<S extends CommandSource, B extends AbstractArgumentBuilder<S, B>> {
     protected final CommandNode<S> node;
 

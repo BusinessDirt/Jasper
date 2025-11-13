@@ -2,12 +2,15 @@ package github.businessdirt.jasper.reflections;
 
 import java.io.File;
 import java.io.IOException;
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
 import java.net.JarURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
@@ -35,6 +38,13 @@ public class Reflections {
 
     public Stream<Class<?>> stream() {
         return this.classes.stream();
+    }
+
+    public Set<Method> getMethodsAnnotatedWith(Class<? extends Annotation> annotation) {
+        return this.stream()
+                .flatMap(c -> Arrays.stream(c.getMethods())
+                        .filter(m -> m.isAnnotationPresent(annotation)))
+                .collect(Collectors.toSet());
     }
 
     private Set<Class<?>> scan(String basePackage) throws IOException {

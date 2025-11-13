@@ -6,10 +6,10 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class EventListener {
-    public final String name;
-    public final Consumer<Object> invoker;
-    public final HandleEvent.Priority priority;
-    public final boolean canReceiveCancelled;
+    private final String name;
+    private final Consumer<Object> invoker;
+    private final HandleEvent.Priority priority;
+    private final boolean canReceiveCancelled;
 
     private final List<Predicate<Event>> predicates;
 
@@ -32,5 +32,21 @@ public class EventListener {
 
     public boolean shouldInvoke(Event event) {
         return predicates.stream().allMatch(predicate -> predicate.test(event));
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public Consumer<Object> getInvoker() {
+        return invoker;
+    }
+
+    public HandleEvent.Priority getPriority() {
+        return priority;
+    }
+
+    public boolean canReceiveCancelled() {
+        return canReceiveCancelled;
     }
 }

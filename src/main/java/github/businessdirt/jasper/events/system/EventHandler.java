@@ -1,0 +1,4 @@
+package github.businessdirt.jasper.events.system;
+
+public class EventHandler {
+}

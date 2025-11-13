@@ -11,18 +11,11 @@ public class EventHandler {
     private final List<EventListener> listeners;
     private final boolean canReceiveCancelled;
 
-    private EventHandler(String name, List<EventListener> listeners, boolean canReceiveCancelled) {
-        this.name = name;
-        this.listeners = listeners;
-        this.canReceiveCancelled = canReceiveCancelled;
-    }
-
     public EventHandler(Class<? extends Event> event, List<EventListener> listeners) {
         String eventName = event.getName();
         String[] parts = eventName.split("\\.");
         String lastPart = parts.length > 0 ? parts[parts.length - 1] : eventName;
-        lastPart = lastPart.replace("$", ".");
-        this.name = lastPart;
+        this.name = lastPart.replace("$", ".");
 
         List<EventListener> sortedListeners = new ArrayList<>(listeners);
         sortedListeners.sort(Comparator.comparingInt(listener -> listener.getPriority().asInt()));

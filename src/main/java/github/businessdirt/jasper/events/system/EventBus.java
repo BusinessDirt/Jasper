@@ -63,7 +63,7 @@ public class EventBus {
                     };
 
                     listeners.computeIfAbsent(eventType, key -> new ArrayList<>())
-                            .add(new EventListener(name, eventConsumer, eventData.getKey(), List.of()));
+                            .add(new EventListener(name, eventConsumer, eventData.getKey()));
                 });
             });
         } catch (IOException e) {
@@ -131,6 +131,7 @@ public class EventBus {
 
     private List<Class<?>> getEventClasses(Class<?> clazz) {
         List<Class<?>> classes = new ArrayList<>();
+        classes.add(clazz);
 
         var currentClass = clazz;
         while (currentClass.getSuperclass() != null) {

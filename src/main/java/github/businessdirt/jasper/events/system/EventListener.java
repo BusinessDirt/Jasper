@@ -16,8 +16,7 @@ public class EventListener {
     public EventListener(
             String name,
             Consumer<Object> invoker,
-            HandleEvent options,
-            List<Predicate<Event>> extraPredicates
+            HandleEvent options
     ) {
         this.name = name;
         this.invoker = invoker;
@@ -26,8 +25,6 @@ public class EventListener {
 
         this.predicates = new ArrayList<>();
         if (!canReceiveCancelled) this.predicates.add(event -> !event.isCancelled());
-
-        this.predicates.addAll(extraPredicates);
     }
 
     public boolean shouldInvoke(Event event) {

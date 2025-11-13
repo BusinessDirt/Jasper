@@ -1,5 +1,6 @@
 package github.businessdirt.jasper.events.system;
 
+import github.businessdirt.jasper.events.dummies.DummyCancellableEvent;
 import github.businessdirt.jasper.events.dummies.DummyEvent;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
@@ -8,8 +9,7 @@ import org.junit.jupiter.api.Test;
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class EventBusTest {
 
@@ -18,12 +18,13 @@ class EventBusTest {
         EventBus.initialize("github.businessdirt.jasper");
     }
 
-    String postEvent() {
+    String postEvent(Event event) {
         PrintStream originalOut = System.out;
         ByteArrayOutputStream output = new ByteArrayOutputStream();
         System.setOut(new PrintStream(output, true));
 
-        new DummyEvent().post();
+        @SuppressWarnings("unused")
+        boolean cancelled = event.post();
 
         System.setOut(originalOut);
         return output.toString();
@@ -32,7 +33,7 @@ class EventBusTest {
     @Test
     @DisplayName("Should successfully post events to all listeners")
     void testEventPost() {
-        String output = postEvent();
+        String output = postEvent(new DummyEvent());
 
         assertTrue(output.contains("eventType=null, event=DummyEvent\n"));
         assertTrue(output.contains("eventType=DummyEvent, event=null\n"));
@@ -43,6 +44,15 @@ class EventBusTest {
     @DisplayName("Should prioritize events correctly")
     void testEventPostPriority() {
         assertEquals("eventType=null, event=DummyEvent\neventType=DummyEvent, event=null\neventType=DummyEvent, event=DummyEvent\n",
-                postEvent());
+                postEvent(new DummyEvent()));
+    }
+
+    @Test
+    @DisplayName("Should cancel events successfully")
+    void testEventPostCancel() {
+        String output = postEvent(new DummyCancellableEvent());
+        assertTrue(output.contains("handleCancellableEvent->cancel"));
+        assertTrue(output.contains("handleCancellableEvent->receiveCancelled"));
+        assertFalse(output.contains("UNEXPECTED"));
     }
 }

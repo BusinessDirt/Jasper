@@ -4,6 +4,7 @@ import github.businessdirt.jasper.events.system.HandleEvent;
 
 public class TestListenerObject {
 
+    @SuppressWarnings("unused")
     public static final TestListenerObject INSTANCE = new TestListenerObject();
 
     @HandleEvent(priority = HandleEvent.Priority.HIGHEST)

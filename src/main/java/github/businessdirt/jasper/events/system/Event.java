@@ -11,7 +11,7 @@ public abstract class Event {
         return isCancelled;
     }
 
-    private void cancel() {
+    private void setCancelled() {
         this.isCancelled = true;
     }
 
@@ -25,7 +25,7 @@ public abstract class Event {
 
     public interface Cancellable {
         default void cancel() {
-            ((Event) this).cancel();
+            ((Event) this).setCancelled();
         }
     }
 }

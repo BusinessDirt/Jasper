@@ -18,7 +18,7 @@ class ReflectionsTest {
     @DisplayName("Should find all classes in a directory (IDE mode)")
     void testScanDirectory() throws IOException {
         // When we run this in the IDE, these classes are loose .class files
-        Reflections reflections = new Reflections("github.businessdirt.jasper.dummies");
+        Reflections reflections = new Reflections("github.businessdirt.jasper.reflections.dummies");
         Set<Class<?>> foundClasses = reflections.found();
 
         assertNotNull(foundClasses);

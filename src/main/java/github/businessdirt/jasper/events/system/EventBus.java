@@ -42,29 +42,27 @@ public class EventBus {
                     }
                 });
 
-                var eventData = getEventData(method);
+                Map.Entry<HandleEvent, Class<? extends Event>> eventData = getEventData(method);
                 if (eventData == null) return;
 
-                eventData.getValue().forEach(eventType -> {
-                    if (!Modifier.isPublic(method.getModifiers())) {
-                        throw new RuntimeException(
-                                "Method " + method.getName() + "() in " + instance.getClass().getName() + " is not public. Make sure to set it to public."
-                        ); // TODO
-                    }
+                if (!Modifier.isPublic(method.getModifiers())) {
+                    throw new RuntimeException(
+                            "Method " + method.getName() + "() in " + instance.getClass().getName() + " is not public. Make sure to set it to public."
+                    ); // TODO
+                }
 
-                    String name = this.buildListenerName(method);
-                    Consumer<Object> eventConsumer = switch (method.getParameterCount()) {
-                        case 1 -> LambdaFactory.createConsumerFromMethod(instance, method);
-                        case 0 -> _ -> LambdaFactory.createRunnableFromMethod(instance, method).run();
+                String name = this.buildListenerName(method);
+                Consumer<Object> eventConsumer = switch (method.getParameterCount()) {
+                    case 1 -> LambdaFactory.createConsumerFromMethod(instance, method);
+                    case 0 -> _ -> LambdaFactory.createRunnableFromMethod(instance, method).run();
 
-                        default -> throw new IllegalArgumentException(
-                                "Method " + method.getName() + "() must have either 0 or 1 parameter"
-                        ); // TODO
-                    };
+                    default -> throw new IllegalArgumentException(
+                            "Method " + method.getName() + "() must have either 0 or 1 parameter"
+                    ); // TODO
+                };
 
-                    listeners.computeIfAbsent(eventType, _ -> new ArrayList<>())
-                            .add(EventListener.of(name, eventConsumer, eventData.getKey()));
-                });
+                listeners.computeIfAbsent(eventData.getValue(), _ -> new ArrayList<>())
+                        .add(EventListener.of(name, eventConsumer, eventData.getKey()));
             });
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -83,7 +81,7 @@ public class EventBus {
 
 
     @SuppressWarnings("unchecked")
-    private Map.Entry<HandleEvent, List<Class<? extends Event>>> getEventData(Method method) {
+    private Map.Entry<HandleEvent, Class<? extends Event>> getEventData(Method method) {
         HandleEvent options = method.getAnnotation(HandleEvent.class);
         if (options == null) return null;
 
@@ -96,7 +94,7 @@ public class EventBus {
                     ); // TODO
                 }
 
-                yield Map.entry(options, List.of((Class<? extends Event>) eventType));
+                yield Map.entry(options, (Class<? extends Event>) eventType);
             }
 
             case 0 -> {
@@ -106,7 +104,7 @@ public class EventBus {
                     ); //TODO
                 }
 
-                yield Map.entry(options, List.of(options.eventType()));
+                yield Map.entry(options, options.eventType());
             }
 
             default -> null;

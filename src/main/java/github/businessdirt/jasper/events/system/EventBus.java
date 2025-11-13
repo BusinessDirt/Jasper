@@ -30,7 +30,7 @@ public class EventBus {
             annotatedMethods.forEach(method -> {
                 method.setAccessible(true);
 
-                Object instance = instances.computeIfAbsent(method.getDeclaringClass(), c -> {
+                Object instance = instances.computeIfAbsent(method.getDeclaringClass(), _ -> {
                     try {
                         return method.getDeclaringClass().getField("INSTANCE").get(null);
                     } catch (NoSuchFieldException | IllegalAccessException e) {
@@ -62,8 +62,8 @@ public class EventBus {
                         ); // TODO
                     };
 
-                    listeners.computeIfAbsent(eventType, key -> new ArrayList<>())
-                            .add(new EventListener(name, eventConsumer, eventData.getKey()));
+                    listeners.computeIfAbsent(eventType, _ -> new ArrayList<>())
+                            .add(EventListener.of(name, eventConsumer, eventData.getKey()));
                 });
             });
         } catch (IOException e) {
@@ -73,12 +73,10 @@ public class EventBus {
 
     public EventHandler getEventHandler(Class<? extends Event> event) {
         return handlers.computeIfAbsent(event, e ->
-                new EventHandler(e,
-                        getEventClasses(e).stream()
-                                .map(listeners::get)
-                                .filter(Objects::nonNull)
-                                .flatMap(List::stream)
-                                .collect(Collectors.toList())
+                new EventHandler(e, getEventClasses(e).stream()
+                        .map(cls -> listeners.getOrDefault(cls, Collections.emptyList()))
+                        .flatMap(List::stream)
+                        .collect(Collectors.toList())
                 )
         );
     }

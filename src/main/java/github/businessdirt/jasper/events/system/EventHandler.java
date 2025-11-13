@@ -18,7 +18,7 @@ public class EventHandler {
         this.name = lastPart.replace("$", ".");
 
         List<EventListener> sortedListeners = new ArrayList<>(listeners);
-        sortedListeners.sort(Comparator.comparingInt(listener -> listener.getPriority().asInt()));
+        sortedListeners.sort(Comparator.comparingInt(listener -> listener.priority().asInt()));
         this.listeners = sortedListeners;
 
         boolean anyCanReceiveCancelled = false;
@@ -38,7 +38,7 @@ public class EventHandler {
             if (!listener.shouldInvoke(event)) continue;
 
             try {
-                listener.getInvoker().accept(event);
+                listener.invoker().accept(event);
             } catch (Throwable throwable) {
                 if (onError != null) onError.accept(throwable);
             }
@@ -51,13 +51,5 @@ public class EventHandler {
 
     public String getName() {
         return name;
-    }
-
-    public List<EventListener> getListeners() {
-        return listeners;
-    }
-
-    public boolean canReceiveCancelled() {
-        return canReceiveCancelled;
     }
 }

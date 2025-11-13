@@ -2,6 +2,7 @@ package github.businessdirt.jasper.events.system;
 
 import java.util.function.Consumer;
 
+@SuppressWarnings("unused")
 public abstract class Event {
 
     private boolean isCancelled = false;
@@ -10,8 +11,8 @@ public abstract class Event {
         return isCancelled;
     }
 
-    private void setCancelled(boolean cancelled) {
-        this.isCancelled = cancelled;
+    private void cancel() {
+        this.isCancelled = true;
     }
 
     public boolean post() {
@@ -24,7 +25,7 @@ public abstract class Event {
 
     public interface Cancellable {
         default void cancel() {
-            ((Event) this).setCancelled(true);
+            ((Event) this).cancel();
         }
     }
 }

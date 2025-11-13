@@ -42,13 +42,4 @@ public class LambdaFactory {
             throw new IllegalArgumentException("Method " + instance.getClass().getName() + "#" + method.getName() + " is not a valid runnable", e);
         }
     }
-
-    private Consumer<Object> createZeroParameterConsumer(Method method, Object instance) {
-        Runnable runnable = createRunnableFromMethod(instance, method);
-        return _ -> runnable.run();
-    }
-
-    private Consumer<Object> createSingleParameterConsumer(Method method, Object instance) {
-        return createConsumerFromMethod(instance, method);
-    }
 }

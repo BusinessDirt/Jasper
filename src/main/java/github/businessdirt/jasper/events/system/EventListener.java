@@ -5,45 +5,25 @@ import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class EventListener {
-    private final String name;
-    private final Consumer<Object> invoker;
-    private final HandleEvent.Priority priority;
-    private final boolean canReceiveCancelled;
+public record EventListener(
+    String name,
+    Consumer<Object> invoker,
+    HandleEvent.Priority priority,
+    boolean canReceiveCancelled,
+    List<Predicate<Event>> predicates
+) {
 
-    private final List<Predicate<Event>> predicates;
-
-    public EventListener(
+    public static EventListener of(
             String name,
             Consumer<Object> invoker,
             HandleEvent options
     ) {
-        this.name = name;
-        this.invoker = invoker;
-        this.priority = options.priority();
-        this.canReceiveCancelled = options.receiveCancelled();
-
-        this.predicates = new ArrayList<>();
-        if (!canReceiveCancelled) this.predicates.add(event -> !event.isCancelled());
+        List<Predicate<Event>> predicates = new ArrayList<>();
+        if (!options.receiveCancelled()) predicates.add(event -> !event.isCancelled());
+        return new EventListener(name, invoker, options.priority(), options.receiveCancelled(), predicates);
     }
 
     public boolean shouldInvoke(Event event) {
         return predicates.stream().allMatch(predicate -> predicate.test(event));
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public Consumer<Object> getInvoker() {
-        return invoker;
-    }
-
-    public HandleEvent.Priority getPriority() {
-        return priority;
-    }
-
-    public boolean canReceiveCancelled() {
-        return canReceiveCancelled;
     }
 }

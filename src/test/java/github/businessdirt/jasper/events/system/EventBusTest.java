@@ -2,6 +2,7 @@ package github.businessdirt.jasper.events.system;
 
 import github.businessdirt.jasper.events.dummies.DummyCancellableEvent;
 import github.businessdirt.jasper.events.dummies.DummyEvent;
+import org.apache.logging.log4j.LogManager;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -15,7 +16,7 @@ class EventBusTest {
 
     @BeforeAll
     static void init() {
-        EventBus.initialize("github.businessdirt.jasper");
+        EventBus.initialize("github.businessdirt.jasper", LogManager.getLogger(EventBusTest.class));
     }
 
     String postEvent(Event event) {

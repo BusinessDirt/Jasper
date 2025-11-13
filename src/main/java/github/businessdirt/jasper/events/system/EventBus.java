@@ -11,6 +11,15 @@ import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 
+/**
+ * The main class for the event system.
+ * <p>
+ * The EventBus discovers event listeners in a given package and registers them.
+ * It is responsible for posting events to the appropriate listeners.
+ * <p>
+ * The EventBus must be initialized with {@link #initialize(String, Logger)} before use.
+ * After initialization, the singleton instance can be retrieved with {@link #get()}.
+ */
 public class EventBus {
 
     private static EventBus INSTANCE;
@@ -19,6 +28,13 @@ public class EventBus {
     private final Map<Class<? extends Event>, EventHandler> handlers;
     private final Logger logger;
 
+    /**
+     * Constructs a new {@link EventBus}.
+     * This constructor is private. Use {@link #initialize(String, Logger)} to create an instance.
+     *
+     * @param basePackage the package to scan for event listeners.
+     * @param logger      the logger to use for logging errors.
+     */
     private EventBus(String basePackage, Logger logger) {
         this.listeners = new HashMap<>();
         this.handlers = new HashMap<>();
@@ -86,6 +102,13 @@ public class EventBus {
         });
     }
 
+    /**
+     * Gets the {@link EventHandler} for the given event class.
+     * If an event handler does not exist for the given event, a new one is created.
+     *
+     * @param event the event class.
+     * @return the {@link EventHandler} for the given event class.
+     */
     public EventHandler getEventHandler(Class<? extends Event> event) {
         return handlers.computeIfAbsent(event, e ->
                 new EventHandler(e, getEventClasses(e).stream()
@@ -171,12 +194,26 @@ public class EventBus {
                 .log(message, args);
     }
 
+    /**
+     * Initializes the singleton instance of the {@link EventBus}.
+     * This method must be called before {@link #get()} is called.
+     *
+     * @param basePackage the package to scan for event listeners.
+     * @param logger      the logger to use for logging errors.
+     */
     public static void initialize(String basePackage, Logger logger) {
         if (INSTANCE == null) {
             INSTANCE = new EventBus(basePackage, logger);
         }
     }
 
+    /**
+     * Gets the singleton instance of the {@link EventBus}.
+     * {@link #initialize(String, Logger)} must be called before this method.
+     *
+     * @return the singleton instance of the {@link EventBus}.
+     * @throws RuntimeException if the EventBus has not been initialized.
+     */
     public static EventBus get() {
         if (INSTANCE == null) throw new RuntimeException("Use EventBus::initialize(String, Logger) to initialize the EventBus first!");
         return INSTANCE;

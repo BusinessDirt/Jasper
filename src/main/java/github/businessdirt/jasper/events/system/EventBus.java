@@ -7,9 +7,7 @@ import github.businessdirt.jasper.events.system.exceptions.ParameterException;
 import github.businessdirt.jasper.reflections.LambdaFactory;
 import github.businessdirt.jasper.reflections.ReflectionUtils;
 import github.businessdirt.jasper.reflections.Reflections;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Unmodifiable;
 
 import javax.annotation.Nonnull;
@@ -26,7 +24,7 @@ import java.util.stream.Collectors;
  * The EventBus discovers event listeners in a given package and registers them.
  * It is responsible for posting events to the appropriate listeners.
  * <p>
- * The EventBus must be initialized with {@link #initialize(String, Logger)} before use.
+ * The EventBus must be initialized with {@link #initialize(String)} before use.
  * After initialization, the singleton instance can be retrieved with {@link #get()}.
  */
 public class EventBus {
@@ -35,15 +33,12 @@ public class EventBus {
 
     private final Map<Class<? extends Event>, List<EventListener>> listeners;
     private final Map<Class<? extends Event>, EventHandler> handlers;
-    private final Logger logger;
 
     private EventBus(
-            String basePackage,
-            Logger logger
+            @NotNull String basePackage
     ) throws IOException, MethodNotPublicException, ClassNotInstantiableException, ParameterException {
         this.listeners = new HashMap<>();
         this.handlers = new HashMap<>();
-        this.logger = logger;
 
         Reflections reflections = new Reflections(basePackage);
         Set<Method> annotatedMethods = reflections.getMethodsAnnotatedWith(HandleEvent.class);
@@ -54,7 +49,7 @@ public class EventBus {
             method.setAccessible(true);
 
             if (!Modifier.isPublic(method.getModifiers()))
-                throw new MethodNotPublicException(method, this.logger);
+                throw new MethodNotPublicException(method);
 
             var name = ReflectionUtils.getMethodString(method);
             var instance = this.getInstance(method, instances); // throws ClassNotInstantiableException
@@ -77,7 +72,7 @@ public class EventBus {
                 try {
                     return method.getDeclaringClass().getConstructor().newInstance();
                 } catch (Exception ex) {
-                    throw new ClassNotInstantiableException(method.getDeclaringClass(), this.logger);
+                    throw new ClassNotInstantiableException(method.getDeclaringClass());
                 }
             }
         });
@@ -91,30 +86,25 @@ public class EventBus {
 
         // options shouldn't be null because only methods annotated
         // with HandleEvent are being parsed into this function
-        if (options == null && this.logger != null) {
-            this.logger.atWarn().log("Method {} is annotated with @HandleEvent but the annotation object is null",
-                    ReflectionUtils.getMethodString(method));
-        }
-
         assert options != null;
 
         return switch (method.getParameterCount()) {
             case 1 -> {
                 Class<?> eventType = method.getParameterTypes()[0];
                 if(!Event.class.isAssignableFrom(eventType))
-                    throw new ParameterException(method, "must be a subtype of " + Event.class.getName(), this.logger);
+                    throw new ParameterException(method, "must be a subtype of " + Event.class.getName());
 
                 yield Map.entry(options, (Class<? extends Event>) eventType);
             }
 
             case 0 -> {
                 if (options.eventType() == Event.class) throw new ParameterException(method,
-                        "Specify eventType in @HandleEvent if using 0 parameters", this.logger);
+                        "Specify eventType in @HandleEvent if using 0 parameters");
 
                 yield Map.entry(options, options.eventType());
             }
 
-            default -> throw new ParameterException(method, "must have either 0 or 1 parameters", this.logger);
+            default -> throw new ParameterException(method, "must have either 0 or 1 parameters");
         };
     }
 
@@ -126,7 +116,7 @@ public class EventBus {
             case 1 -> LambdaFactory.createConsumerFromMethod(instance, method);
             case 0 -> _ -> LambdaFactory.createRunnableFromMethod(instance, method).run();
 
-            default -> throw new ParameterException(method, "must have either 0 or 1 parameters", this.logger);
+            default -> throw new ParameterException(method, "must have either 0 or 1 parameters");
         };
     }
 
@@ -173,7 +163,6 @@ public class EventBus {
      * These methods will then be called when a corresponding event is posted.</p>
      *
      * @param basePackage the package to scan for event listeners.
-     * @param logger      the logger to use for logging errors. Can be null.
      *
      * @throws IOException if an I/O error occurs during initialization. This is thrown by {@link Reflections}.
      *
@@ -183,17 +172,16 @@ public class EventBus {
      */
 
     public static void initialize(
-            @NotNull String basePackage,
-            @Nullable Logger logger
+            @NotNull String basePackage
     ) throws IOException, MethodNotPublicException, ClassNotInstantiableException, ParameterException {
         if (INSTANCE == null) {
-            INSTANCE = new EventBus(basePackage, logger);
+            INSTANCE = new EventBus(basePackage);
         }
     }
 
     /**
      * Gets the singleton instance of the {@link EventBus}.
-     * {@link #initialize(String, Logger)} must be called before this method.
+     * {@link #initialize(String)} must be called before this method.
      *
      * @return the singleton instance of the {@link EventBus}.
      * @throws EventBusNotInitializedException if the EventBus has not been initialized.

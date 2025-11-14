@@ -14,6 +14,9 @@ repositories {
 java.toolchain.languageVersion.set(JavaLanguageVersion.of(23))
 
 dependencies {
+    compileOnly("org.jetbrains:annotations:26.0.2-1")
+    testCompileOnly("org.jetbrains:annotations:26.0.2-1")
+
     // https://junit.org/
     testImplementation(platform("org.junit:junit-bom:5.10.0"))
     testImplementation("org.junit.jupiter:junit-jupiter")

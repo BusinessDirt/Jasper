@@ -3,9 +3,7 @@ package github.businessdirt.jasper.commands;
 
 import github.businessdirt.jasper.events.events.CommandRegistrationEvent;
 import github.businessdirt.jasper.reflections.Reflections;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -29,16 +27,11 @@ public class CommandRegistry {
     }
 
     public static void initialize(
-            @NotNull String basePackage,
-            @Nullable Logger logger
-    ) {
-        try {
-            Reflections reflections = new Reflections(basePackage);
-            reflections.getSubTypesOf(CommandSource.class).forEach(sourceClass ->
+            @NotNull String basePackage
+    ) throws IOException {
+        Reflections reflections = new Reflections(basePackage);
+        reflections.getSubTypesOf(CommandSource.class).forEach(sourceClass ->
                 new CommandRegistrationEvent<>(CommandRegistry.get(sourceClass)).post());
-        } catch (IOException e) {
-            if (logger != null) logger.atError().withThrowable(e).log("Cannot initialize command registry"); // TODO
-        }
     }
 
     /**

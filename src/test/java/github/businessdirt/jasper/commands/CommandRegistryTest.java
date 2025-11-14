@@ -2,8 +2,6 @@
 package github.businessdirt.jasper.commands;
 
 import github.businessdirt.jasper.events.system.EventBus;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -22,9 +20,8 @@ class CommandRegistryTest {
     void setUp() throws IOException {
         this.source = new TestCommandSource(new PrintStream(new ByteArrayOutputStream()));
 
-        Logger logger = LogManager.getLogger();
-        EventBus.initialize("github.businessdirt.jasper", logger);
-        CommandRegistry.initialize("github.businessdirt.jasper", logger);
+        EventBus.initialize("github.businessdirt.jasper");
+        CommandRegistry.initialize("github.businessdirt.jasper");
     }
 
     @Test

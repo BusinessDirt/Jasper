@@ -23,7 +23,10 @@ public class LambdaFactory {
      * @throws InvalidConsumerException if the method is not a valid consumer (e.g., wrong number of arguments, static).
      */
     @SuppressWarnings("unchecked")
-    public static Consumer<Object> createConsumerFromMethod(Object instance, Method method) throws InvalidConsumerException {
+    public static Consumer<Object> createConsumerFromMethod(
+            Object instance,
+            Method method
+    ) throws InvalidConsumerException {
         try {
             MethodHandles.Lookup lookup = MethodHandles.lookup();
             MethodHandle handle = lookup.unreflect(method);
@@ -50,7 +53,10 @@ public class LambdaFactory {
      * @return a {@link Runnable} that, when called, invokes the specified method.
      * @throws InvalidRunnableException if the method is not a valid runnable (e.g., wrong number of arguments, static).
      */
-    public static Runnable createRunnableFromMethod(Object instance, Method method) throws InvalidRunnableException {
+    public static Runnable createRunnableFromMethod(
+            Object instance,
+            Method method
+    ) throws InvalidRunnableException {
         try {
             MethodHandles.Lookup lookup = MethodHandles.lookup();
             MethodHandle handle = lookup.unreflect(method);

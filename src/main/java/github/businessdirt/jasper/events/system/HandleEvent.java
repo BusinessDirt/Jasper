@@ -16,6 +16,7 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface HandleEvent {
+
     /**
      * For cases where the event properties are themselves not needed, and solely a listener for an event fire suffices.
      * This is required when the listener method has 0 parameters.
@@ -38,18 +39,24 @@ public @interface HandleEvent {
      */
     boolean receiveCancelled() default false;
 
+
     /**
      * The priority of an event listener.
      */
     enum Priority {
+
         /** The highest priority, called first. */
         HIGHEST(-2),
+
         /** High priority, called after HIGHEST. */
         HIGH(-1),
+
         /** The default priority. */
         MEDIUM(0),
+
         /** Low priority, called before LOWEST. */
         LOW(1),
+
         /** The lowest priority, called last. */
         LOWEST(2);
 

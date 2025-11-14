@@ -38,6 +38,7 @@ public class EventHandler {
                 break;
             }
         }
+
         this.canReceiveCancelled = anyCanReceiveCancelled;
     }
 

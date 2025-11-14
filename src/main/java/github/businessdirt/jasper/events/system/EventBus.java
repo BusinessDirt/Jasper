@@ -139,9 +139,7 @@ public class EventBus {
                 new EventHandler(e, getEventClasses(e).stream()
                         .map(cls -> listeners.getOrDefault(cls, Collections.emptyList()))
                         .flatMap(List::stream)
-                        .collect(Collectors.toList())
-                )
-        );
+                        .collect(Collectors.toList())));
     }
 
     private List<Class<?>> getEventClasses(Class<?> clazz) {

@@ -18,11 +18,11 @@ public class CommandRegistrationEvent<S extends CommandSource> extends Event {
     public CommandRegistrationEvent(CommandDispatcher<S> dispatcher) {
         this.dispatcher = dispatcher;
 
-        this.register("help", root -> root.executes(new HelpCommand<>(this.dispatcher.getCommands()))
-                .argument("page", new IntegerArgumentType(), page ->
-                        page.executes(new HelpCommand<>(this.dispatcher.getCommands()))
-                ).build()
-        );
+        this.register("help", root ->
+                root.executes(new HelpCommand<>(this.dispatcher.getCommands()))
+                        .argument("page", new IntegerArgumentType(), page ->
+                                page.executes(new HelpCommand<>(this.dispatcher.getCommands())))
+                        .build());
     }
 
     /**
@@ -31,7 +31,10 @@ public class CommandRegistrationEvent<S extends CommandSource> extends Event {
      * @param rootCommand the root command
      * @param builder the command builder
      */
-    public void register(String rootCommand, Consumer<LiteralArgumentBuilder<S>> builder) {
+    public void register(
+            String rootCommand,
+            Consumer<LiteralArgumentBuilder<S>> builder
+    ) {
         LiteralArgumentBuilder<S> root = literal(rootCommand);
         builder.accept(root);
         this.dispatcher.register(root);

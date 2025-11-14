@@ -7,5 +7,4 @@ package github.businessdirt.jasper.events.system;
  * @see Event
  * @see Event.Cancellable
  */
-public abstract class CancellableEvent extends Event implements Event.Cancellable {
-}
+public abstract class CancellableEvent extends Event implements Event.Cancellable { }

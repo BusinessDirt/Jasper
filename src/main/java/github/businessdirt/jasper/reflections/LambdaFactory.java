@@ -1,5 +1,8 @@
 package github.businessdirt.jasper.reflections;
 
+import github.businessdirt.jasper.reflections.exceptions.InvalidConsumerException;
+import github.businessdirt.jasper.reflections.exceptions.InvalidRunnableException;
+
 import java.lang.invoke.*;
 import java.lang.reflect.Method;
 import java.util.function.Consumer;
@@ -34,7 +37,7 @@ public class LambdaFactory {
             );
             return (Consumer<Object>) site.getTarget().bindTo(instance).invokeExact();
         } catch (Throwable e) {
-            throw new IllegalArgumentException("Method " + instance.getClass().getName() + "#" + method.getName() + " is not a valid consumer", e);
+            throw new InvalidConsumerException(method, e);
         }
     }
 
@@ -61,7 +64,7 @@ public class LambdaFactory {
             );
             return (Runnable) site.getTarget().bindTo(instance).invokeExact();
         } catch (Throwable e) {
-            throw new IllegalArgumentException("Method " + instance.getClass().getName() + "#" + method.getName() + " is not a valid runnable", e);
+            throw new InvalidRunnableException(method, e);
         }
     }
 }

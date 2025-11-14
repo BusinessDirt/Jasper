@@ -1,5 +1,8 @@
 package github.businessdirt.jasper.reflections;
 
+import github.businessdirt.jasper.reflections.scanners.ClasspathScanner;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
@@ -12,9 +15,10 @@ import java.util.stream.Stream;
  * A simple classpath scanner that finds all classes in a given package.
  * It works for both file systems (IDE) and JAR files (production).
  */
+@SuppressWarnings("unused")
 public class Reflections {
 
-    private final Set<Class<?>> classes;
+    private final Set<Class<?>> foundClasses;
 
     /**
      * Constructs a new {@link Reflections} instance and scans the given base package
@@ -24,8 +28,21 @@ public class Reflections {
      * @throws IOException if an I/O error occurs during scanning.
      */
     public Reflections(String basePackage) throws IOException {
-        ClasspathScanner scanner = new ClasspathScanner(basePackage);
-        this.classes = scanner.scan();
+        ClasspathScanner scanner = new ClasspathScanner(basePackage, null);
+        this.foundClasses = scanner.scan();
+    }
+
+    /**
+     * Constructs a new {@link Reflections} instance and scans the given base package
+     * for all classes.
+     *
+     * @param basePackage the base package to scan (e.g., "com.example.myproject").
+     * @param logger a logger to log errors to
+     * @throws IOException if an I/O error occurs during scanning.
+     */
+    public Reflections(String basePackage, Logger logger) throws IOException {
+        ClasspathScanner scanner = new ClasspathScanner(basePackage, logger);
+        this.foundClasses = scanner.scan();
     }
 
     /**
@@ -33,8 +50,8 @@ public class Reflections {
      *
      * @return a {@link Set} of {@link Class} objects.
      */
-    public Set<Class<?>> found() {
-        return this.classes;
+    public Set<Class<?>> getClasses() {
+        return this.foundClasses;
     }
 
     /**
@@ -43,7 +60,7 @@ public class Reflections {
      * @return a {@link Stream} of {@link Class} objects.
      */
     public Stream<Class<?>> stream() {
-        return this.classes.stream();
+        return this.foundClasses.stream();
     }
 
     /**
@@ -60,11 +77,28 @@ public class Reflections {
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * Retrieves all classes that inherit from the specified class.
+     * @param type the superclass.
+     * @return the classes that extends or implement the superclass.
+     * @param <T> the generic type of the superclass.
+     */
     public <T> Set<Class<? extends T>> getSubTypesOf(Class<T> type) {
         //noinspection unchecked
         return this.stream()
                 .filter(type::isAssignableFrom)
                 .map(cls -> (Class<? extends T>) cls)
+                .collect(Collectors.toSet());
+    }
+
+    /**
+     * Retrieves all classes annotated with the specified annotation.
+     * @param annotation the annotation the classes need to be annotated with.
+     * @return all classes with the given annotation.
+     */
+    public Set<Class<?>> getClassesAnnotatedWith(Class<? extends Annotation> annotation) {
+        return this.stream()
+                .filter(c -> c.isAnnotationPresent(annotation))
                 .collect(Collectors.toSet());
     }
 }

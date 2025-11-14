@@ -19,7 +19,7 @@ class ReflectionsTest {
     void testScanDirectory() throws IOException {
         // When we run this in the IDE, these classes are loose .class files
         Reflections reflections = new Reflections("github.businessdirt.jasper.reflections.dummies");
-        Set<Class<?>> foundClasses = reflections.found();
+        Set<Class<?>> foundClasses = reflections.getClasses();
 
         assertNotNull(foundClasses);
         assertEquals(4, foundClasses.size());
@@ -36,7 +36,7 @@ class ReflectionsTest {
     @DisplayName("Should find classes in a JAR file (Production mode)")
     void testScanJar() throws IOException {
         Reflections reflections = new Reflections("org.junit.jupiter.api");
-        Set<Class<?>> foundClasses = reflections.found();
+        Set<Class<?>> foundClasses = reflections.getClasses();
 
         assertNotNull(foundClasses);
         assertTrue(foundClasses.size() > 20); // Safe bet
@@ -53,7 +53,7 @@ class ReflectionsTest {
     @DisplayName("Should return empty set for a non-existent package")
     void testScanNonExistentPackage() throws IOException {
         Reflections reflections = new Reflections("com.this.is.not.a.real.package.foo.bar");
-        Set<Class<?>> foundClasses = reflections.found();
+        Set<Class<?>> foundClasses = reflections.getClasses();
 
         assertNotNull(foundClasses);
         assertTrue(foundClasses.isEmpty());

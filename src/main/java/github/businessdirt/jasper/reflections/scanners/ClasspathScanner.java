@@ -1,4 +1,7 @@
-package github.businessdirt.jasper.reflections;
+package github.businessdirt.jasper.reflections.scanners;
+
+import github.businessdirt.jasper.reflections.exceptions.ScanningException;
+import org.apache.logging.log4j.Logger;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,7 +22,7 @@ import java.util.stream.Collectors;
  * A simple classpath scanner that works both for JAR files and when running from a directory
  * @param basePackage the package to scan
  */
-public record ClasspathScanner(String basePackage) {
+public record ClasspathScanner(String basePackage, Logger logger) {
 
     /**
      * Scans the specified package recursively for classes. This works for running from a directory and from a JAR
@@ -59,7 +62,7 @@ public record ClasspathScanner(String basePackage) {
                     .map(path -> toClassName(packageDir, path, basePackage))
                     .collect(Collectors.toSet());
         } catch (Exception e) {
-            throw new RuntimeException("Error scanning directory", e);
+            throw new ScanningException("Error scanning directory", e, this.logger);
         }
     }
 
@@ -93,7 +96,7 @@ public record ClasspathScanner(String basePackage) {
                 }
             }
         } catch (IOException e) {
-            throw new RuntimeException("Error scanning JAR", e);
+            throw new ScanningException("Error scanning JAR", e, this.logger);
         }
         return classNames;
     }
@@ -109,7 +112,7 @@ public record ClasspathScanner(String basePackage) {
             } catch (ClassNotFoundException | NoClassDefFoundError e) {
                 // This is common. The class might have dependencies that
                 // aren't available. We can just skip it.
-                System.err.println("Could not load class " + className + ": " + e.getMessage());
+                if (logger != null) logger.atWarn().withThrowable(e).log("Could not load class {}", className);
             }
         }
         return loadedClasses;

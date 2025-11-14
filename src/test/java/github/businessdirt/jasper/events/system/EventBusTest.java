@@ -8,6 +8,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -15,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class EventBusTest {
 
     @BeforeAll
-    static void init() {
+    static void init() throws IOException {
         EventBus.initialize("github.businessdirt.jasper", LogManager.getLogger(EventBusTest.class));
     }
 

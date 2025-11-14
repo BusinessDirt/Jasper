@@ -1,9 +1,12 @@
 package github.businessdirt.jasper.events.system;
 
+import github.businessdirt.jasper.events.system.exceptions.*;
 import github.businessdirt.jasper.reflections.LambdaFactory;
+import github.businessdirt.jasper.reflections.ReflectionUtils;
 import github.businessdirt.jasper.reflections.Reflections;
 import org.apache.logging.log4j.Logger;
 
+import javax.annotation.Nonnull;
 import java.io.IOException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -34,60 +37,48 @@ public class EventBus {
      *
      * @param basePackage the package to scan for event listeners.
      * @param logger      the logger to use for logging errors.
+     * @throws IOException if an I/O error occurs during initialization. This is thrown by {@link Reflections}
+     * @throws ClassNotInstantiableException if a class that has a method annotated with {@link HandleEvent}
+     * has no default constructor and no INSTANCE field.
+     * @throws InvalidParameterCountException if there is an error with the parameter count of an annotated method
+     * @throws MethodNotPublicException if a method annotated with {@link HandleEvent} is not public
      */
-    private EventBus(String basePackage, Logger logger) {
+    private EventBus(String basePackage, Logger logger) throws IOException {
         this.listeners = new HashMap<>();
         this.handlers = new HashMap<>();
         this.logger = logger;
 
-        try {
-            Reflections reflections = new Reflections(basePackage);
-            Set<Method> annotatedMethods = reflections.getMethodsAnnotatedWith(HandleEvent.class);
+        Reflections reflections = new Reflections(basePackage);
+        Set<Method> annotatedMethods = reflections.getMethodsAnnotatedWith(HandleEvent.class);
 
-            Map<Class<?>, Object> instances = new HashMap<>();
+        Map<Class<?>, Object> instances = new HashMap<>();
 
-            annotatedMethods.forEach(method -> {
-                method.setAccessible(true);
+        annotatedMethods.forEach(method -> {
+            method.setAccessible(true);
 
-                Object instance = getInstance(method, instances);
-                if (instance == null) return;
+            if (!Modifier.isPublic(method.getModifiers()))
+                throw new MethodNotPublicException(method, this.logger);
 
-                Map.Entry<HandleEvent, Class<? extends Event>> eventData = getEventData(method);
-                if (eventData == null) return;
+            var instance = this.getInstance(method, instances);
+            var name = this.buildListenerName(method);
+            var eventData = this.getEventData(method);
+            var eventConsumer = this.getEventConsumer(method, instance);
 
-                if (!Modifier.isPublic(method.getModifiers())) {
-                    this.error(null, "Method {}::{}() is not public.",
-                            instance.getClass().getName(), method.getName());
-                    return;
-                }
-
-                String name = this.buildListenerName(method);
-
-                Consumer<Object> eventConsumer = getEventConsumer(method, instance);
-                if (eventConsumer == null) return;
-
-                listeners.computeIfAbsent(eventData.getValue(), _ -> new ArrayList<>())
-                        .add(EventListener.of(name, eventConsumer, eventData.getKey()));
-            });
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+            listeners.computeIfAbsent(eventData.getValue(), _ -> new ArrayList<>())
+                    .add(EventListener.of(name, eventConsumer, eventData.getKey()));
+        });
     }
 
-    private Consumer<Object> getEventConsumer(Method method, Object instance) {
+    private @Nonnull Consumer<Object> getEventConsumer(Method method, Object instance) {
         return switch (method.getParameterCount()) {
             case 1 -> LambdaFactory.createConsumerFromMethod(instance, method);
             case 0 -> _ -> LambdaFactory.createRunnableFromMethod(instance, method).run();
 
-            default -> {
-                this.error(null, "Method {}::{} must have either 0 or 1 parameter.",
-                        instance.getClass().getName(), method.getName());
-                yield null;
-            }
+            default -> throw new InvalidParameterCountException(method, "Must have either 0 or 1 parameter", this.logger);
         };
     }
 
-    private Object getInstance(Method method, Map<Class<?>, Object> instances) {
+    private @Nonnull Object getInstance(Method method, Map<Class<?>, Object> instances) {
         return instances.computeIfAbsent(method.getDeclaringClass(), _ -> {
             try {
                 return method.getDeclaringClass().getField("INSTANCE").get(null);
@@ -95,8 +86,7 @@ public class EventBus {
                 try {
                     return method.getDeclaringClass().getConstructor().newInstance();
                 } catch (Exception ex) {
-                    this.error(ex, "No default constructor or INSTANCE field found for {}", method.getDeclaringClass());
-                    return null;
+                    throw new ClassNotInstantiableException(method.getDeclaringClass(), this.logger);
                 }
             }
         });
@@ -119,35 +109,36 @@ public class EventBus {
         );
     }
 
-
     @SuppressWarnings("unchecked")
-    private Map.Entry<HandleEvent, Class<? extends Event>> getEventData(Method method) {
+    private @Nonnull Map.Entry<HandleEvent, Class<? extends Event>> getEventData(Method method) {
         HandleEvent options = method.getAnnotation(HandleEvent.class);
-        if (options == null) return null;
+
+        // options shouldn't be null because only methods annotated
+        // with HandleEvent are being parsed into this function
+        if (options == null && this.logger != null) {
+            this.logger.atWarn().log("Method {} is annotated with @HandleEvent but the annotation object is null",
+                    ReflectionUtils.getMethodString(method));
+        }
+
+        assert options != null;
 
         return switch (method.getParameterCount()) {
             case 1 -> {
                 Class<?> eventType = method.getParameterTypes()[0];
-                if(!Event.class.isAssignableFrom(eventType)) {
-                    throw new RuntimeException(
-                            "Method " + method.getName() + " parameter must be a subclass of Event."
-                    ); // TODO
-                }
+                if(!Event.class.isAssignableFrom(eventType))
+                    throw new ParameterNotEventException(method, this.logger);
 
                 yield Map.entry(options, (Class<? extends Event>) eventType);
             }
 
             case 0 -> {
-                if (options.eventType() == Event.class) {
-                    throw new RuntimeException(
-                            "Method " + method.getName() + "must have an event type specified in @HandleEvent."
-                    ); //TODO
-                }
+                if (options.eventType() == Event.class) throw new InvalidParameterCountException(method,
+                        "Specify eventType in @HandleEvent if using 0 parameters", this.logger);
 
                 yield Map.entry(options, options.eventType());
             }
 
-            default -> null;
+            default -> throw new InvalidParameterCountException(method, "Must have either 0 or 1 parameter", this.logger);
         };
     }
 
@@ -200,8 +191,9 @@ public class EventBus {
      *
      * @param basePackage the package to scan for event listeners.
      * @param logger      the logger to use for logging errors.
+     * @throws IOException if an I/O error occurs during initialization
      */
-    public static void initialize(String basePackage, Logger logger) {
+    public static void initialize(String basePackage, Logger logger) throws IOException {
         if (INSTANCE == null) {
             INSTANCE = new EventBus(basePackage, logger);
         }
@@ -212,10 +204,10 @@ public class EventBus {
      * {@link #initialize(String, Logger)} must be called before this method.
      *
      * @return the singleton instance of the {@link EventBus}.
-     * @throws RuntimeException if the EventBus has not been initialized.
+     * @throws EventBusNotInitializedException if the EventBus has not been initialized. This is thrown by {@link Reflections}
      */
-    public static EventBus get() {
-        if (INSTANCE == null) throw new RuntimeException("Use EventBus::initialize(String, Logger) to initialize the EventBus first!");
+    public static EventBus get() throws EventBusNotInitializedException{
+        if (INSTANCE == null) throw new EventBusNotInitializedException();
         return INSTANCE;
     }
 }

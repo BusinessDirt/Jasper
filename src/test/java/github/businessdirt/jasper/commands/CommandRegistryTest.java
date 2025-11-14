@@ -9,6 +9,7 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.io.ByteArrayOutputStream;
+import java.io.IOException;
 import java.io.PrintStream;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -18,7 +19,7 @@ class CommandRegistryTest {
     private TestCommandSource source;
 
     @BeforeEach
-    void setUp() {
+    void setUp() throws IOException {
         this.source = new TestCommandSource(new PrintStream(new ByteArrayOutputStream()));
 
         Logger logger = LogManager.getLogger();

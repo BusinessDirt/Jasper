@@ -2,7 +2,6 @@ package github.businessdirt.jasper.reflections.scanners;
 
 import github.businessdirt.jasper.reflections.exceptions.ScanningException;
 import org.apache.logging.log4j.Logger;
-import org.apache.logging.log4j.MarkerManager;
 
 import java.io.IOException;
 import java.net.JarURLConnection;

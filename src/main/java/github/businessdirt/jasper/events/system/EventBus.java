@@ -8,6 +8,9 @@ import github.businessdirt.jasper.reflections.LambdaFactory;
 import github.businessdirt.jasper.reflections.ReflectionUtils;
 import github.businessdirt.jasper.reflections.Reflections;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.Unmodifiable;
 
 import javax.annotation.Nonnull;
 import java.io.IOException;
@@ -63,9 +66,9 @@ public class EventBus {
         });
     }
 
-    private @Nonnull Object getInstance(
-            Method method,
-            Map<Class<?>, Object> instances
+    private @NotNull Object getInstance(
+            @NotNull Method method,
+            @NotNull Map<Class<?>, Object> instances
     ) throws ClassNotInstantiableException {
         return instances.computeIfAbsent(method.getDeclaringClass(), _ -> {
             try {
@@ -81,8 +84,8 @@ public class EventBus {
     }
 
     @SuppressWarnings("unchecked")
-    private @Nonnull Map.Entry<HandleEvent, Class<? extends Event>> getEventData(
-            Method method
+    private @NotNull Map.@Unmodifiable Entry<HandleEvent, Class<? extends Event>> getEventData(
+            @NotNull Method method
     ) throws ParameterException {
         HandleEvent options = method.getAnnotation(HandleEvent.class);
 
@@ -116,8 +119,8 @@ public class EventBus {
     }
 
     private @Nonnull Consumer<Object> getEventConsumer(
-            Method method,
-            Object instance
+            @NotNull Method method,
+            @NotNull Object instance
     ) throws ParameterException {
         return switch (method.getParameterCount()) {
             case 1 -> LambdaFactory.createConsumerFromMethod(instance, method);
@@ -134,7 +137,9 @@ public class EventBus {
      * @param event the event class.
      * @return the {@link EventHandler} for the given event class.
      */
-    public EventHandler getEventHandler(Class<? extends Event> event) {
+    public @NotNull EventHandler getEventHandler(
+            @NotNull Class<? extends Event> event
+    ) {
         return handlers.computeIfAbsent(event, e ->
                 new EventHandler(e, getEventClasses(e).stream()
                         .map(cls -> listeners.getOrDefault(cls, Collections.emptyList()))
@@ -142,7 +147,9 @@ public class EventBus {
                         .collect(Collectors.toList())));
     }
 
-    private List<Class<?>> getEventClasses(Class<?> clazz) {
+    private @NotNull List<Class<?>> getEventClasses(
+            @NotNull Class<?> clazz
+    ) {
         List<Class<?>> classes = new ArrayList<>();
         classes.add(clazz);
 
@@ -176,8 +183,8 @@ public class EventBus {
      */
 
     public static void initialize(
-            String basePackage,
-            Logger logger
+            @NotNull String basePackage,
+            @Nullable Logger logger
     ) throws IOException, MethodNotPublicException, ClassNotInstantiableException, ParameterException {
         if (INSTANCE == null) {
             INSTANCE = new EventBus(basePackage, logger);

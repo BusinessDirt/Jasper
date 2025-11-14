@@ -1,6 +1,8 @@
 /* (C) 2025 Maximilian Bollschweiler */
 package github.businessdirt.jasper.commands;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.PrintStream;
 import java.util.Map;
 
@@ -21,7 +23,10 @@ public record CommandContext<S extends CommandSource>(S source, Map<String, Obje
      * @return the argument
      */
     @SuppressWarnings({"unchecked", "unused"})
-    public <T> T getArgument(String name, Class<T> clazz) {
+    public <T> T getArgument(
+            @NotNull String name,
+            @NotNull Class<T> clazz
+    ) {
         return (T) arguments.get(name);
     }
 

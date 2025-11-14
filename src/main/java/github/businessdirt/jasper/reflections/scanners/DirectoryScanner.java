@@ -2,6 +2,8 @@ package github.businessdirt.jasper.reflections.scanners;
 
 import github.businessdirt.jasper.reflections.exceptions.ScanningException;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.net.URL;
@@ -16,7 +18,10 @@ import java.util.stream.Collectors;
  * @param basePackage the base package parsed from the ClasspathScanner
  * @param logger an optional logger to log debug events to
  */
-public record DirectoryScanner(String basePackage, Logger logger) {
+public record DirectoryScanner(
+        @NotNull String basePackage,
+        @Nullable Logger logger
+) {
 
     /**
      * Finds all classes for a given resource.
@@ -24,7 +29,7 @@ public record DirectoryScanner(String basePackage, Logger logger) {
      * @return a set of all class names
      */
     @SuppressWarnings("resource")
-    public Set<String> findAll(URL resource) {
+    public @NotNull Set<String> findAll(@NotNull URL resource) {
         try {
             Path packageDir = Paths.get(resource.toURI());
 
@@ -39,7 +44,7 @@ public record DirectoryScanner(String basePackage, Logger logger) {
         }
     }
 
-    private String toClassName(Path baseDir, Path classFile) {
+    private @NotNull String toClassName(@NotNull Path baseDir, @NotNull Path classFile) {
         Path relativePath = baseDir.relativize(classFile);
         String relativeName = relativePath.toString();
 

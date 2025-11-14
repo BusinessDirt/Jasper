@@ -1,5 +1,8 @@
 package github.businessdirt.jasper.args;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * An abstract base class for a type-safe command-line argument.
  * @param <T> the type of the argument's value
@@ -15,7 +18,10 @@ public abstract class Arg<T> {
      * @param key the key of the argument (e.g., "port")
      * @param defaultValue the default value if the argument is not provided or invalid
      */
-    public Arg(String key, T defaultValue) {
+    public Arg(
+            @NotNull String key,
+            @NotNull T defaultValue
+    ) {
         this.key = key;
         this.defaultValue = defaultValue;
         this.value = defaultValue;
@@ -24,21 +30,21 @@ public abstract class Arg<T> {
     /**
      * @return the key of the argument
      */
-    public String getKey() {
+    public @NotNull String getKey() {
         return key;
     }
 
     /**
      * @return the parsed value of the argument, or the default value if not parsed yet
      */
-    public T getValue() {
+    public @NotNull T getValue() {
         return value;
     }
 
     /**
      * @return the default value of the argument
      */
-    public T getDefaultValue() {
+    public @NotNull T getDefaultValue() {
         return defaultValue;
     }
 
@@ -48,5 +54,5 @@ public abstract class Arg<T> {
      * @param present {@code true} if the argument was present on the command line
      * @param value the raw string value from the command line, or {@code null}
      */
-    public abstract void parse(boolean present, String value);
+    public abstract void parse(boolean present, @Nullable String value);
 }

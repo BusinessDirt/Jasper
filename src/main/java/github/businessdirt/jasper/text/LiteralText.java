@@ -1,5 +1,7 @@
 package github.businessdirt.jasper.text;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * A simple text component that contains a string.
  */
@@ -19,7 +21,7 @@ public class LiteralText extends Text {
      * {@inheritDoc}
      */
     @Override
-    public String asString() {
+    public @NotNull String asString() {
         return text;
     }
 }

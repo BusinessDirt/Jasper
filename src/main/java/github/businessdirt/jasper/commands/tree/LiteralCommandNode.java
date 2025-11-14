@@ -2,6 +2,7 @@
 package github.businessdirt.jasper.commands.tree;
 
 import github.businessdirt.jasper.commands.CommandSource;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a command node that is a literal.
@@ -14,7 +15,7 @@ public class LiteralCommandNode<S extends CommandSource> extends CommandNode<S> 
      *
      * @param literal the literal
      */
-    public LiteralCommandNode(String literal) {
+    public LiteralCommandNode(@NotNull String literal) {
         this.literal = literal;
     }
 
@@ -24,7 +25,7 @@ public class LiteralCommandNode<S extends CommandSource> extends CommandNode<S> 
      * @return the literal of this node
      */
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return literal;
     }
 }

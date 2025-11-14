@@ -1,6 +1,7 @@
 package github.businessdirt.jasper.args.args;
 
 import github.businessdirt.jasper.args.Arg;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * An argument that represents a boolean flag.
@@ -27,7 +28,7 @@ public class FlagArg extends Arg<Boolean> {
      * @param value the raw string value, or {@code null}
      */
     @Override
-    public void parse(boolean present, String value) {
+    public void parse(boolean present, @Nullable String value) {
         if (!present) {
             this.value = false;
             return;

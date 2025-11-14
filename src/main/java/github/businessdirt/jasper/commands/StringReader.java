@@ -1,6 +1,8 @@
 /* (C) 2025 Maximilian Bollschweiler */
 package github.businessdirt.jasper.commands;
 
+import org.jetbrains.annotations.NotNull;
+
 /** A simple string reader that allows reading a string character by character. */
 public class StringReader {
     private final String string;
@@ -11,7 +13,7 @@ public class StringReader {
      *
      * @param string the string to read
      */
-    public StringReader(String string) {
+    public StringReader(@NotNull String string) {
         this.string = string;
     }
 
@@ -20,7 +22,7 @@ public class StringReader {
      *
      * @param other the other string reader
      */
-    public StringReader(StringReader other) {
+    public StringReader(@NotNull StringReader other) {
         this.string = other.string;
         this.cursor = other.cursor;
     }
@@ -30,7 +32,7 @@ public class StringReader {
      *
      * @return the read string
      */
-    public String readString() {
+    public @NotNull String readString() {
         int start = cursor;
         while (canRead() && !Character.isWhitespace(peek())) skip();
         return string.substring(start, cursor);
@@ -41,7 +43,7 @@ public class StringReader {
      *
      * @return the remaining string
      */
-    public String readRemaining() {
+    public @NotNull String readRemaining() {
         String remaining = string.substring(cursor);
         cursor = string.length();
         return remaining;

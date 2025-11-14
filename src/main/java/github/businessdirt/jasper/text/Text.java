@@ -1,5 +1,7 @@
 package github.businessdirt.jasper.text;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +34,10 @@ public abstract class Text {
      * @param style the style of the text component
      * @param siblings the list of siblings
      */
-    protected Text(Style style, List<Text> siblings) {
+    protected Text(
+            @NotNull Style style,
+            @NotNull List<Text> siblings
+    ) {
         this.style = style;
         this.siblings = siblings;
     }
@@ -42,7 +47,7 @@ public abstract class Text {
      * @param text the text component to append
      * @return this text component
      */
-    public Text append(Text text) {
+    public @NotNull Text append(@NotNull Text text) {
         siblings.add(text);
         return this;
     }
@@ -52,7 +57,7 @@ public abstract class Text {
      * @param style the new style
      * @return this text component
      */
-    public Text setStyle(Style style) {
+    public @NotNull Text setStyle(@NotNull Style style) {
         this.style = style;
         return this;
     }
@@ -60,15 +65,15 @@ public abstract class Text {
     /**
      * @return the style of this text component
      */
-    public Style getStyle() {
-        return style;
+    public @NotNull Style getStyle() {
+        return this.style;
     }
 
     /**
      * @return the list of siblings of this text component
      */
-    public List<Text> getSiblings() {
-        return siblings;
+    public @NotNull List<Text> getSiblings() {
+        return this.siblings;
     }
 
     /**
@@ -76,14 +81,14 @@ public abstract class Text {
      * This does not include the siblings.
      * @return the plain string representation
      */
-    public abstract String asString();
+    public abstract @NotNull String asString();
 
     /**
      * Creates a new {@link LiteralText} component with the given text.
      * @param text the text content
      * @return a new literal text component
      */
-    public static Text literal(String text) {
+    public static @NotNull Text literal(@NotNull String text) {
         return new LiteralText(text);
     }
 }

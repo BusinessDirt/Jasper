@@ -1,6 +1,7 @@
 package github.businessdirt.jasper.text.renderer;
 
 import github.businessdirt.jasper.text.Text;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A functional interface for rendering a {@link Text} component to a specific format.
@@ -13,5 +14,5 @@ public interface TextRenderer<S> {
      * @param text the text component to render
      * @return the rendered output
      */
-    S render(Text text);
+    @NotNull S render(@NotNull Text text);
 }

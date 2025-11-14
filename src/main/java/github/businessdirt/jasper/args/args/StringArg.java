@@ -1,6 +1,7 @@
 package github.businessdirt.jasper.args.args;
 
 import github.businessdirt.jasper.args.Arg;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * An argument that holds a string value.
@@ -23,7 +24,7 @@ public class StringArg extends Arg<String> {
      * @param value the raw string value, or {@code null}
      */
     @Override
-    public void parse(boolean present, String value) {
+    public void parse(boolean present, @Nullable String value) {
         if (!present || value == null) {
             this.value = getDefaultValue();
             return;

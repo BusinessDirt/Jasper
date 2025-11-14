@@ -1,5 +1,7 @@
 package github.businessdirt.jasper.events.system;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -23,14 +25,14 @@ public @interface HandleEvent {
      *
      * @return the type of event to listen for.
      */
-    Class<? extends Event> eventType() default Event.class;
+    @NotNull Class<? extends Event> eventType() default Event.class;
 
     /**
      * The priority of the event listener. Listeners with higher priority (lower integer value) are called first.
      *
      * @return the priority of the listener.
      */
-    Priority priority() default Priority.MEDIUM;
+    @NotNull Priority priority() default Priority.MEDIUM;
 
     /**
      * If {@code true}, the listener will be called even if the event has been cancelled.

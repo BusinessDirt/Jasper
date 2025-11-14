@@ -3,6 +3,7 @@ package github.businessdirt.jasper.commands.builder;
 
 import github.businessdirt.jasper.commands.CommandSource;
 import github.businessdirt.jasper.commands.tree.LiteralCommandNode;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A builder for literal command arguments. A literal argument is a fixed string that must be present in the command.
@@ -30,7 +31,7 @@ public class LiteralArgumentBuilder<S extends CommandSource> extends AbstractArg
      * @return the literal command node
      */
     @Override
-    public LiteralCommandNode<S> build() {
+    public @NotNull LiteralCommandNode<S> build() {
         return (LiteralCommandNode<S>) this.node;
     }
 }

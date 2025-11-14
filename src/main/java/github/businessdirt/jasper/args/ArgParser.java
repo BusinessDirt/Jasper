@@ -1,6 +1,8 @@
 /* (C) 2025 Maximilian Bollschweiler */
 package github.businessdirt.jasper.args;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +42,7 @@ public class ArgParser {
      * Constructs a new parser and registers the given arguments.
      * @param args the {@link Arg} instances to register
      */
-    public ArgParser(Arg<?>... args) {
+    public ArgParser(@NotNull Arg<?>... args) {
         for (Arg<?> arg : args) {
             this.argumentMap.put(arg.getKey(), arg);
         }
@@ -51,7 +53,7 @@ public class ArgParser {
      * For each registered argument, its {@link Arg#parse(boolean, String)} method is called.
      * @param args the string array from the main method
      */
-    public void parse(String[] args) {
+    public void parse(@NotNull String[] args) {
         for (int i = 0; i < args.length; i++) {
             String arg = args[i];
             if (arg.startsWith("--")) {
@@ -75,7 +77,7 @@ public class ArgParser {
      * @throws IllegalArgumentException if no argument with the given key is registered
      */
     @SuppressWarnings("unchecked")
-    public <T> T get(String key) {
+    public <T> @NotNull T get(@NotNull String key) {
         Arg<T> arg = (Arg<T>) this.argumentMap.get(key);
         if (arg == null) {
             throw new IllegalArgumentException("Argument with key '" + key + "' not registered.");
@@ -88,7 +90,7 @@ public class ArgParser {
      * @param key the key of the argument
      * @return {@code true} if the argument was present, {@code false} otherwise
      */
-    public boolean has(String key) {
+    public boolean has(@NotNull String key) {
         return this.parsedArgs.containsKey(key);
     }
 }

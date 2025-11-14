@@ -2,6 +2,7 @@
 package github.businessdirt.jasper.commands;
 
 import github.businessdirt.jasper.commands.tree.CommandNode;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
 
@@ -21,7 +22,7 @@ public record HelpCommand<S extends CommandSource>(Map<String, CommandNode<S>> c
      * @return the {@link CommandResult}
      */
     @Override
-    public CommandResult run(CommandContext<S> context) {
+    public @NotNull CommandResult run(@NotNull CommandContext<S> context) {
         Integer page = context.getArgument("page", Integer.class);
         if (page == null || page < 1) page = 1;
 

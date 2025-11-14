@@ -1,5 +1,8 @@
 package github.businessdirt.jasper.events.system;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
@@ -21,7 +24,10 @@ public class EventHandler {
      * @param event     the event class this handler is for.
      * @param listeners the list of listeners for this event.
      */
-    public EventHandler(Class<? extends Event> event, List<EventListener> listeners) {
+    public EventHandler(
+            @NotNull Class<? extends Event> event,
+            @NotNull List<EventListener> listeners
+    ) {
         String eventName = event.getName();
         String[] parts = eventName.split("\\.");
         String lastPart = parts.length > 0 ? parts[parts.length - 1] : eventName;
@@ -49,7 +55,10 @@ public class EventHandler {
      * @param onError a {@link Consumer} that will be called if an exception is thrown by a listener.
      * @return {@code true} if the event was cancelled by any of the listeners, {@code false} otherwise.
      */
-    public boolean post(Event event, Consumer<Throwable> onError) {
+    public boolean post(
+            @NotNull Event event,
+            @Nullable Consumer<Throwable> onError
+    ) {
         if (this.listeners.isEmpty()) return false;
 
         for (EventListener listener : this.listeners) {
@@ -70,7 +79,7 @@ public class EventHandler {
     /**
      * @return the simple name of the event this handler is for.
      */
-    public String getName() {
+    public @NotNull String getName() {
         return name;
     }
 }

@@ -6,6 +6,7 @@ import github.businessdirt.jasper.commands.tree.ArgumentCommandNode;
 import github.businessdirt.jasper.commands.tree.CommandNode;
 import github.businessdirt.jasper.commands.tree.LiteralCommandNode;
 import github.businessdirt.jasper.commands.tree.RootCommandNode;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -22,7 +23,7 @@ public class CommandDispatcher<S extends CommandSource> {
      *
      * @param command the command to register
      */
-    public void register(LiteralArgumentBuilder<S> command) {
+    public void register(@NotNull LiteralArgumentBuilder<S> command) {
         root.addChild(command.build());
     }
 
@@ -42,7 +43,10 @@ public class CommandDispatcher<S extends CommandSource> {
      * @param source the source of the command
      * @return the result of the command execution
      */
-    public CommandResult execute(String input, S source) {
+    public CommandResult execute(
+            @NotNull String input,
+            @NotNull S source
+    ) {
         StringReader reader = new StringReader(input);
         CommandNode<S> currentNode = root;
         Map<String, Object> arguments = new HashMap<>();

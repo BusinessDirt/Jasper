@@ -2,6 +2,7 @@
 package github.businessdirt.jasper.commands.arguments;
 
 import github.businessdirt.jasper.commands.StringReader;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents an integer argument type. This argument type will consume a single word and parse it as an integer.
@@ -16,7 +17,7 @@ public class IntegerArgumentType implements ArgumentType<Integer> {
      * @throws NumberFormatException if the string is not a valid integer
      */
     @Override
-    public Integer parse(StringReader reader) throws NumberFormatException {
+    public @NotNull Integer parse(@NotNull StringReader reader) throws NumberFormatException {
         return Integer.parseInt(reader.readString());
     }
 }

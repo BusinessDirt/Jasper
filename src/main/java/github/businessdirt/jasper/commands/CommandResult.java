@@ -1,12 +1,17 @@
 package github.businessdirt.jasper.commands;
 
+import org.jetbrains.annotations.NotNull;
+
 /**
  * Represents the result of a command execution.
  * @param status the status code of the result
  * @param message an optional message that can be used for further debugging or as info
  */
 @SuppressWarnings("unused")
-public record CommandResult(int status, String message) {
+public record CommandResult(
+        int status,
+        @NotNull String message
+) {
 
     public static int QUIT_STATUS = -1;
     public static int SUCCESS_STATUS = 0;
@@ -18,7 +23,7 @@ public record CommandResult(int status, String message) {
     /**
      * A default {@code CommandResult} that is used when the execution was successful
      */
-    public static final CommandResult SUCCESS = new CommandResult(SUCCESS_STATUS, null);
+    public static final CommandResult SUCCESS = new CommandResult(SUCCESS_STATUS, "");
 
     /**
      * A {@code CommandResult} for an unknown command.

@@ -1,5 +1,8 @@
 package github.businessdirt.jasper.text;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * Represents the styling of a {@link Text} component.
  * The styling is immutable, and every modification method returns a new instance.
@@ -11,7 +14,7 @@ package github.businessdirt.jasper.text;
  * @param strikethrough whether the text is strikethrough
  */
 public record Style(
-        TextColor color,
+        @Nullable TextColor color,
         boolean bold,
         boolean italic,
         boolean underlined,
@@ -28,7 +31,7 @@ public record Style(
      * @param color the new color
      * @return a new style instance
      */
-    public Style withColor(TextColor color) {
+    public @NotNull Style withColor(@NotNull TextColor color) {
         return new Style(color, bold, italic, underlined, strikethrough);
     }
 
@@ -37,7 +40,7 @@ public record Style(
      * @param bold whether the text should be bold
      * @return a new style instance
      */
-    public Style withBold(boolean bold) {
+    public @NotNull Style withBold(boolean bold) {
         return new Style(color, bold, italic, underlined, strikethrough);
     }
 
@@ -46,7 +49,7 @@ public record Style(
      * @param italic whether the text should be italic
      * @return a new style instance
      */
-    public Style withItalic(boolean italic) {
+    public @NotNull Style withItalic(boolean italic) {
         return new Style(color, bold, italic, underlined, strikethrough);
     }
 
@@ -55,7 +58,7 @@ public record Style(
      * @param underlined whether the text should be underlined
      * @return a new style instance
      */
-    public Style withUnderlined(boolean underlined) {
+    public @NotNull Style withUnderlined(boolean underlined) {
         return new Style(color, bold, italic, underlined, strikethrough);
     }
 
@@ -64,7 +67,7 @@ public record Style(
      * @param strikethrough whether the text should have a strikethrough
      * @return a new style instance
      */
-    public Style withStrikethrough(boolean strikethrough) {
+    public @NotNull Style withStrikethrough(boolean strikethrough) {
         return new Style(color, bold, italic, underlined, strikethrough);
     }
 
@@ -74,7 +77,7 @@ public record Style(
      * @param other the style to merge with
      * @return a new style instance with the merged properties
      */
-    public Style merge(Style other) {
+    public @NotNull Style merge(@NotNull Style other) {
         if (this == EMPTY) return other;
         if (other == EMPTY) return this;
 

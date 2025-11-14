@@ -1,5 +1,7 @@
 package github.businessdirt.jasper.events.system;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.function.Consumer;
 
 /**
@@ -47,7 +49,7 @@ public abstract class Event {
      * @param onError a {@link Consumer} that will be called if an exception is thrown by a listener.
      * @return {@code true} if the event was cancelled by any of the listeners, {@code false} otherwise.
      */
-    public boolean post(Consumer<Throwable> onError) {
+    public boolean post(@Nullable Consumer<Throwable> onError) {
         return EventBus.get().getEventHandler(this.getClass()).post(this, onError);
     }
 

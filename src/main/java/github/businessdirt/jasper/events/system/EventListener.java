@@ -1,5 +1,7 @@
 package github.businessdirt.jasper.events.system;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
@@ -16,11 +18,11 @@ import java.util.function.Predicate;
  * @param predicates          a list of predicates to test before invoking the listener.
  */
 public record EventListener(
-    String name,
-    Consumer<Object> invoker,
-    HandleEvent.Priority priority,
+    @NotNull String name,
+    @NotNull Consumer<Object> invoker,
+    @NotNull HandleEvent.Priority priority,
     boolean canReceiveCancelled,
-    List<Predicate<Event>> predicates
+    @NotNull List<Predicate<Event>> predicates
 ) {
 
     /**
@@ -31,10 +33,10 @@ public record EventListener(
      * @param options the {@link HandleEvent} annotation of the listener method.
      * @return a new {@link EventListener} instance.
      */
-    public static EventListener of(
-            String name,
-            Consumer<Object> invoker,
-            HandleEvent options
+    public static @NotNull EventListener of(
+            @NotNull String name,
+            @NotNull Consumer<Object> invoker,
+            @NotNull HandleEvent options
     ) {
         List<Predicate<Event>> predicates = new ArrayList<>();
         if (!options.receiveCancelled()) predicates.add(event -> !event.isCancelled());
@@ -47,7 +49,7 @@ public record EventListener(
      * @param event the event to check.
      * @return {@code true} if the listener should be invoked, {@code false} otherwise.
      */
-    public boolean shouldInvoke(Event event) {
+    public boolean shouldInvoke(@NotNull Event event) {
         return predicates.stream().allMatch(predicate -> predicate.test(event));
     }
 }

@@ -1,5 +1,7 @@
 package github.businessdirt.jasper.commands;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.PrintStream;
 
 public class TestCommandSource implements CommandSource {
@@ -13,7 +15,7 @@ public class TestCommandSource implements CommandSource {
     }
 
     @Override
-    public PrintStream out() {
+    public @NotNull PrintStream out() {
         return this.out;
     }
 }

@@ -1,6 +1,8 @@
 /* (C) 2025 Maximilian Bollschweiler */
 package github.businessdirt.jasper.commands;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.PrintStream;
 
 /** A marker interface for command sources. */
@@ -9,5 +11,5 @@ public interface CommandSource {
     /**
      * @return the output stream the commands should use
      */
-    PrintStream out();
+    @NotNull PrintStream out();
 }

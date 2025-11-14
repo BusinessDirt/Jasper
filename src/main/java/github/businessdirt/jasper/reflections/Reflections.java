@@ -2,6 +2,8 @@ package github.businessdirt.jasper.reflections;
 
 import github.businessdirt.jasper.reflections.scanners.ClasspathScanner;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -27,9 +29,10 @@ public class Reflections {
      * @param basePackage the base package to scan (e.g., "com.example.myproject").
      * @throws IOException if an I/O error occurs during scanning.
      */
-    public Reflections(String basePackage) throws IOException {
-        ClasspathScanner scanner = new ClasspathScanner(basePackage, null);
-        this.foundClasses = scanner.scan();
+    public Reflections(
+            @NotNull String basePackage
+    ) throws IOException {
+        this(basePackage, null);
     }
 
     /**
@@ -40,7 +43,10 @@ public class Reflections {
      * @param logger a logger to log errors to
      * @throws IOException if an I/O error occurs during scanning.
      */
-    public Reflections(String basePackage, Logger logger) throws IOException {
+    public Reflections(
+            @NotNull String basePackage,
+            @Nullable Logger logger
+    ) throws IOException {
         ClasspathScanner scanner = new ClasspathScanner(basePackage, logger);
         this.foundClasses = scanner.scan();
     }
@@ -50,7 +56,7 @@ public class Reflections {
      *
      * @return a {@link Set} of {@link Class} objects.
      */
-    public Set<Class<?>> getClasses() {
+    public @NotNull Set<Class<?>> getClasses() {
         return this.foundClasses;
     }
 
@@ -59,7 +65,7 @@ public class Reflections {
      *
      * @return a {@link Stream} of {@link Class} objects.
      */
-    public Stream<Class<?>> stream() {
+    public @NotNull Stream<Class<?>> stream() {
         return this.foundClasses.stream();
     }
 
@@ -70,7 +76,9 @@ public class Reflections {
      * @param annotation the annotation class to search for.
      * @return a {@link Set} of {@link Method} objects annotated with the given annotation.
      */
-    public Set<Method> getMethodsAnnotatedWith(Class<? extends Annotation> annotation) {
+    public @NotNull Set<Method> getMethodsAnnotatedWith(
+            @NotNull Class<? extends Annotation> annotation
+    ) {
         return this.stream()
                 .flatMap(c -> Arrays.stream(c.getMethods())
                         .filter(m -> m.isAnnotationPresent(annotation)))
@@ -83,7 +91,9 @@ public class Reflections {
      * @return the classes that extends or implement the superclass.
      * @param <T> the generic type of the superclass.
      */
-    public <T> Set<Class<? extends T>> getSubTypesOf(Class<T> type) {
+    public <T> @NotNull Set<Class<? extends T>> getSubTypesOf(
+            @NotNull Class<T> type
+    ) {
         //noinspection unchecked
         return this.stream()
                 .filter(type::isAssignableFrom)
@@ -96,7 +106,9 @@ public class Reflections {
      * @param annotation the annotation the classes need to be annotated with.
      * @return all classes with the given annotation.
      */
-    public Set<Class<?>> getClassesAnnotatedWith(Class<? extends Annotation> annotation) {
+    public @NotNull Set<Class<?>> getClassesAnnotatedWith(
+            @NotNull Class<? extends Annotation> annotation
+    ) {
         return this.stream()
                 .filter(c -> c.isAnnotationPresent(annotation))
                 .collect(Collectors.toSet());

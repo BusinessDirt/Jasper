@@ -4,6 +4,7 @@ package github.businessdirt.jasper.commands.builder;
 import github.businessdirt.jasper.commands.CommandSource;
 import github.businessdirt.jasper.commands.arguments.ArgumentType;
 import github.businessdirt.jasper.commands.tree.ArgumentCommandNode;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * A builder for required command arguments.
@@ -35,7 +36,7 @@ public class RequiredArgumentBuilder<S extends CommandSource, T> extends Abstrac
      * @return the argument command node
      */
     @Override
-    public ArgumentCommandNode<S, T> build() {
+    public @NotNull ArgumentCommandNode<S, T> build() {
         return (ArgumentCommandNode<S, T>) node;
     }
 }

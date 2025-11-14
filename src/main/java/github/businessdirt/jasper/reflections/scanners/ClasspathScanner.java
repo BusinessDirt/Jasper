@@ -1,6 +1,8 @@
 package github.businessdirt.jasper.reflections.scanners;
 
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.net.URL;
@@ -12,14 +14,17 @@ import java.util.Set;
  * A simple classpath scanner that works both for JAR files and when running from a directory
  * @param basePackage the package to scan
  */
-public record ClasspathScanner(String basePackage, Logger logger) {
+public record ClasspathScanner(
+        @NotNull String basePackage,
+        @Nullable Logger logger
+) {
 
     /**
      * Scans the specified package recursively for classes. This works for running from a directory and from a JAR
      * @return the set of classes this scanner found
      * @throws IOException if an io exception has been found
      */
-    public Set<Class<?>> scan() throws IOException {
+    public @NotNull Set<Class<?>> scan() throws IOException {
         String packagePath = basePackage.replace('.', '/');
         ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
         Enumeration<URL> resources = classLoader.getResources(packagePath);
@@ -42,7 +47,10 @@ public record ClasspathScanner(String basePackage, Logger logger) {
         return loadClasses(classNames, classLoader);
     }
 
-    private Set<Class<?>> loadClasses(Set<String> classNames, ClassLoader classLoader) {
+    private @NotNull Set<Class<?>> loadClasses(
+            @NotNull Set<String> classNames,
+            @NotNull ClassLoader classLoader
+    ) {
         Set<Class<?>> loadedClasses = new HashSet<>();
         for (String className : classNames) {
             try {

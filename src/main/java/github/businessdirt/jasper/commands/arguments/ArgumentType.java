@@ -2,6 +2,7 @@
 package github.businessdirt.jasper.commands.arguments;
 
 import github.businessdirt.jasper.commands.StringReader;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a type of command argument.
@@ -16,5 +17,5 @@ public interface ArgumentType<T> {
      * @param reader the string to parse
      * @return the parsed argument
      */
-    T parse(StringReader reader);
+    @NotNull T parse(@NotNull StringReader reader);
 }

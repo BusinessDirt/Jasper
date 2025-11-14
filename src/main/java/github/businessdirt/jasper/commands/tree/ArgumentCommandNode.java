@@ -3,6 +3,7 @@ package github.businessdirt.jasper.commands.tree;
 
 import github.businessdirt.jasper.commands.CommandSource;
 import github.businessdirt.jasper.commands.arguments.ArgumentType;
+import org.jetbrains.annotations.NotNull;
 
 /**
  * Represents a command node that is an argument.
@@ -19,7 +20,10 @@ public class ArgumentCommandNode<S extends CommandSource, T> extends CommandNode
      * @param name the name of the argument
      * @param type the type of the argument
      */
-    public ArgumentCommandNode(String name, ArgumentType<T> type) {
+    public ArgumentCommandNode(
+            @NotNull String name,
+            @NotNull ArgumentType<T> type
+    ) {
         this.name = name;
         this.type = type;
     }
@@ -30,8 +34,8 @@ public class ArgumentCommandNode<S extends CommandSource, T> extends CommandNode
      * @return the name of the argument
      */
     @Override
-    public String getName() {
-        return name;
+    public @NotNull String getName() {
+        return this.name;
     }
 
     /**
@@ -39,7 +43,7 @@ public class ArgumentCommandNode<S extends CommandSource, T> extends CommandNode
      *
      * @return the type of the argument
      */
-    public ArgumentType<T> getType() {
-        return type;
+    public @NotNull ArgumentType<T> getType() {
+        return this.type;
     }
 }

@@ -6,6 +6,7 @@ import github.businessdirt.jasper.commands.HelpCommand;
 import github.businessdirt.jasper.commands.arguments.IntegerArgumentType;
 import github.businessdirt.jasper.commands.builder.LiteralArgumentBuilder;
 import github.businessdirt.jasper.events.system.Event;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -15,7 +16,7 @@ public class CommandRegistrationEvent<S extends CommandSource> extends Event {
 
     private final CommandDispatcher<S> dispatcher;
 
-    public CommandRegistrationEvent(CommandDispatcher<S> dispatcher) {
+    public CommandRegistrationEvent(@NotNull CommandDispatcher<S> dispatcher) {
         this.dispatcher = dispatcher;
 
         this.register("help", root ->
@@ -32,8 +33,8 @@ public class CommandRegistrationEvent<S extends CommandSource> extends Event {
      * @param builder the command builder
      */
     public void register(
-            String rootCommand,
-            Consumer<LiteralArgumentBuilder<S>> builder
+            @NotNull String rootCommand,
+            @NotNull Consumer<LiteralArgumentBuilder<S>> builder
     ) {
         LiteralArgumentBuilder<S> root = literal(rootCommand);
         builder.accept(root);

@@ -5,8 +5,6 @@ import github.businessdirt.jasper.events.system.Event;
 public class ApplicationStartEvent extends Event {
 
     public ApplicationStartEvent() {
-        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
-            new ApplicationShutdownEvent().post();
-        }));
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> new ApplicationShutdownEvent().post()));
     }
 }

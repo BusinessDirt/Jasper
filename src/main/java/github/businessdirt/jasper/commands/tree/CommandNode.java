@@ -3,6 +3,8 @@ package github.businessdirt.jasper.commands.tree;
 
 import github.businessdirt.jasper.commands.Command;
 import github.businessdirt.jasper.commands.CommandSource;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.LinkedHashMap;
 import java.util.Map;
@@ -19,8 +21,8 @@ public abstract class CommandNode<S extends CommandSource> {
      *
      * @param node the child to add
      */
-    public void addChild(CommandNode<S> node) {
-        children.put(node.getName(), node);
+    public void addChild(@NotNull CommandNode<S> node) {
+        this.children.put(node.getName(), node);
     }
 
     /**
@@ -28,7 +30,7 @@ public abstract class CommandNode<S extends CommandSource> {
      *
      * @param command the command to execute
      */
-    public void executes(Command<S> command) {
+    public void executes(@NotNull Command<S> command) {
         this.command = command;
     }
 
@@ -37,7 +39,7 @@ public abstract class CommandNode<S extends CommandSource> {
      *
      * @return the children of this node
      */
-    public Map<String, CommandNode<S>> getChildren() {
+    public @NotNull Map<String, CommandNode<S>> getChildren() {
         return children;
     }
 
@@ -46,7 +48,7 @@ public abstract class CommandNode<S extends CommandSource> {
      *
      * @return the command to be executed
      */
-    public Command<S> getCommand() {
+    public @Nullable Command<S> getCommand() {
         return command;
     }
 
@@ -55,18 +57,18 @@ public abstract class CommandNode<S extends CommandSource> {
      *
      * @return the name of this node
      */
-    public abstract String getName();
+    public abstract @NotNull String getName();
 
     /**
      * Returns the usage of this command.
      *
      * @return the usage of this command
      */
-    public String getUsage() {
+    public @NotNull String getUsage() {
         return getUsage(getName());
     }
 
-    private String getUsageFragment() {
+    private @NotNull String getUsageFragment() {
         if (this instanceof ArgumentCommandNode) {
             return "<" + getName() + ">";
         } else {
@@ -80,7 +82,7 @@ public abstract class CommandNode<S extends CommandSource> {
      * @param base the base of the command
      * @return the usage of this command
      */
-    public String getUsage(String base) {
+    public @NotNull String getUsage(@NotNull String base) {
         StringBuilder usage = new StringBuilder(base.equals("bye") ? "" : "/");
         usage.append(base);
 

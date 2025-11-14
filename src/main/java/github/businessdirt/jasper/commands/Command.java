@@ -1,6 +1,8 @@
 /* (C) 2025 Maximilian Bollschweiler */
 package github.businessdirt.jasper.commands;
 
+import org.jetbrains.annotations.NotNull;
+
 /** Represents a command that can be executed. */
 @FunctionalInterface
 public interface Command<S extends CommandSource> {
@@ -11,5 +13,5 @@ public interface Command<S extends CommandSource> {
      * @param context The context in which the command is executed.
      * @return the {@link CommandResult} of the command.
      */
-    CommandResult run(CommandContext<S> context);
+    @NotNull CommandResult run(@NotNull CommandContext<S> context);
 }

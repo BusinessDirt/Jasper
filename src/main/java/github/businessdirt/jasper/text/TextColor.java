@@ -1,5 +1,6 @@
 package github.businessdirt.jasper.text;
 
+import org.jetbrains.annotations.NotNull;
 import org.jspecify.annotations.NonNull;
 import java.awt.Color;
 
@@ -18,7 +19,7 @@ public record TextColor(int rgb) {
      * @param b the blue value (0-255)
      * @return a new text color instance
      */
-    public static TextColor fromRgb(int r, int g, int b) {
+    public static @NotNull TextColor fromRgb(int r, int g, int b) {
         return new TextColor(new Color(r, g, b).getRGB());
     }
 
@@ -27,7 +28,7 @@ public record TextColor(int rgb) {
      * @param color the color instance
      * @return a new text color instance
      */
-    public static TextColor fromColor(Color color) {
+    public static @NotNull TextColor fromColor(Color color) {
         return new TextColor(color.getRGB());
     }
 

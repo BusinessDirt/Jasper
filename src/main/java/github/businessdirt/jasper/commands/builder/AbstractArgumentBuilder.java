@@ -5,6 +5,7 @@ import github.businessdirt.jasper.commands.Command;
 import github.businessdirt.jasper.commands.CommandSource;
 import github.businessdirt.jasper.commands.arguments.ArgumentType;
 import github.businessdirt.jasper.commands.tree.CommandNode;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Consumer;
 
@@ -22,12 +23,12 @@ public abstract class AbstractArgumentBuilder<S extends CommandSource, B extends
      *
      * @param node the command node
      */
-    protected AbstractArgumentBuilder(CommandNode<S> node) {
+    protected AbstractArgumentBuilder(@NotNull CommandNode<S> node) {
         this.node = node;
     }
 
     @SuppressWarnings("unchecked")
-    private B then(CommandNode<S> child) {
+    private @NotNull B then(@NotNull CommandNode<S> child) {
         this.node.addChild(child);
         return (B) this;
     }
@@ -39,7 +40,10 @@ public abstract class AbstractArgumentBuilder<S extends CommandSource, B extends
      * @param consumer the consumer for the literal argument builder
      * @return the builder
      */
-    public B literal(String literal, Consumer<LiteralArgumentBuilder<S>> consumer) {
+    public @NotNull B literal(
+            @NotNull String literal,
+            @NotNull Consumer<LiteralArgumentBuilder<S>> consumer
+    ) {
         LiteralArgumentBuilder<S> literalBuilder = LiteralArgumentBuilder.literal(literal);
         consumer.accept(literalBuilder);
         return this.then(literalBuilder.build());
@@ -54,7 +58,11 @@ public abstract class AbstractArgumentBuilder<S extends CommandSource, B extends
      * @param <T> the type of the argument
      * @return the builder
      */
-    public <T> B argument(String argName, ArgumentType<T> type, Consumer<RequiredArgumentBuilder<S, T>> consumer) {
+    public <T> @NotNull B argument(
+            @NotNull String argName,
+            @NotNull ArgumentType<T> type,
+            @NotNull Consumer<RequiredArgumentBuilder<S, T>> consumer
+    ) {
         RequiredArgumentBuilder<S, T> argumentBuilder = RequiredArgumentBuilder.argument(argName, type);
         consumer.accept(argumentBuilder);
         return this.then(argumentBuilder.build());
@@ -67,7 +75,7 @@ public abstract class AbstractArgumentBuilder<S extends CommandSource, B extends
      * @return the builder
      */
     @SuppressWarnings("unchecked")
-    public B executes(Command<S> command) {
+    public @NotNull B executes(Command<S> command) {
         this.node.executes(command);
         return (B) this;
     }
@@ -77,5 +85,5 @@ public abstract class AbstractArgumentBuilder<S extends CommandSource, B extends
      *
      * @return the command node
      */
-    public abstract CommandNode<S> build();
+    public abstract @NotNull CommandNode<S> build();
 }

@@ -3,6 +3,7 @@ package github.businessdirt.jasper.text.renderer;
 import github.businessdirt.jasper.text.Style;
 import github.businessdirt.jasper.text.Text;
 import github.businessdirt.jasper.text.TextColor;
+import org.jetbrains.annotations.NotNull;
 
 import java.awt.Color;
 import java.util.ArrayList;
@@ -17,7 +18,7 @@ public class AsciiTextRenderer implements TextRenderer<String> {
      * {@inheritDoc}
      */
     @Override
-    public String render(Text text) {
+    public @NotNull String render(@NotNull Text text) {
         StringBuilder sb = new StringBuilder();
         this.renderComponent(sb, text);
         return sb.toString();
@@ -28,7 +29,10 @@ public class AsciiTextRenderer implements TextRenderer<String> {
      * @param sb the string builder
      * @param text the text component to render
      */
-    private void renderComponent(StringBuilder sb, Text text) {
+    private void renderComponent(
+            @NotNull StringBuilder sb,
+            @NotNull Text text
+    ) {
         sb.append(toAnsi(text.getStyle()));
         sb.append(text.asString());
         sb.append("\033[0m");
@@ -42,7 +46,7 @@ public class AsciiTextRenderer implements TextRenderer<String> {
      * @param style the style to convert
      * @return the ASCII escape code
      */
-    private String toAnsi(Style style) {
+    private @NotNull String toAnsi(@NotNull Style style) {
         if (style == Style.EMPTY) return "";
 
         List<String> codes = new ArrayList<>();

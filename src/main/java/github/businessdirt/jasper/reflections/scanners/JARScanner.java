@@ -2,6 +2,8 @@ package github.businessdirt.jasper.reflections.scanners;
 
 import github.businessdirt.jasper.reflections.exceptions.ScanningException;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.net.JarURLConnection;
@@ -18,14 +20,17 @@ import java.util.jar.JarFile;
  * @param basePackage the base package parsed from the ClasspathScanner
  * @param logger an optional logger to log debug events to
  */
-public record JARScanner(String basePackage, Logger logger) {
+public record JARScanner(
+        @NotNull String basePackage,
+        @Nullable Logger logger
+) {
 
     /**
      * Finds all classes for a given resource.
      * @param resource the resource to scan
      * @return a set of all class names
      */
-    public Set<String> findAll(URL resource) {
+    public @NotNull Set<String> findAll(@NotNull URL resource) {
         Set<String> classNames = new HashSet<>();
         try {
             URLConnection con = resource.openConnection();

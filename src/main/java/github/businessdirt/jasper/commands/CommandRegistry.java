@@ -4,6 +4,8 @@ package github.businessdirt.jasper.commands;
 import github.businessdirt.jasper.events.events.CommandRegistrationEvent;
 import github.businessdirt.jasper.reflections.Reflections;
 import org.apache.logging.log4j.Logger;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -22,17 +24,20 @@ public class CommandRegistry {
      * @param message the message to check
      * @return true if the message is a command, false otherwise
      */
-    public static boolean isMessageCommand(String message) {
+    public static boolean isMessageCommand(@NotNull String message) {
         return message.startsWith("/");
     }
 
-    public static void initialize(String basePackage, Logger logger) {
+    public static void initialize(
+            @NotNull String basePackage,
+            @Nullable Logger logger
+    ) {
         try {
             Reflections reflections = new Reflections(basePackage);
             reflections.getSubTypesOf(CommandSource.class).forEach(sourceClass ->
                 new CommandRegistrationEvent<>(CommandRegistry.get(sourceClass)).post());
         } catch (IOException e) {
-            if (logger != null) logger.atError().withThrowable(e).log("Cannot initialize command registry");
+            if (logger != null) logger.atError().withThrowable(e).log("Cannot initialize command registry"); // TODO
         }
     }
 
@@ -44,7 +49,7 @@ public class CommandRegistry {
      * @return the command registry instance
      */
     public static synchronized <S extends CommandSource> CommandDispatcher<S> get(
-            Class<S> type
+            @NotNull Class<S> type
     ) {
         if (!INSTANCES.containsKey(type)) {
             INSTANCES.put(type, new CommandDispatcher<>());
@@ -64,9 +69,9 @@ public class CommandRegistry {
      * @return the {@code CommandResult} of the executed command
      */
     public static synchronized <S extends CommandSource> CommandResult handle(
-            Class<S> type,
-            S source,
-            String command
+            @NotNull Class<S> type,
+            @NotNull S source,
+            @NotNull String command
     ) {
         if (command.startsWith("/")) command = command.substring(1);
         return get(type).execute(command, source);

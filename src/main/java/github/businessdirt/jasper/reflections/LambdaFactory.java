@@ -2,6 +2,7 @@ package github.businessdirt.jasper.reflections;
 
 import github.businessdirt.jasper.reflections.exceptions.InvalidConsumerException;
 import github.businessdirt.jasper.reflections.exceptions.InvalidRunnableException;
+import org.jetbrains.annotations.NotNull;
 
 import java.lang.invoke.*;
 import java.lang.reflect.Method;
@@ -23,9 +24,9 @@ public class LambdaFactory {
      * @throws InvalidConsumerException if the method is not a valid consumer (e.g., wrong number of arguments, static).
      */
     @SuppressWarnings("unchecked")
-    public static Consumer<Object> createConsumerFromMethod(
-            Object instance,
-            Method method
+    public static @NotNull Consumer<Object> createConsumerFromMethod(
+            @NotNull Object instance,
+            @NotNull Method method
     ) throws InvalidConsumerException {
         try {
             MethodHandles.Lookup lookup = MethodHandles.lookup();
@@ -53,9 +54,9 @@ public class LambdaFactory {
      * @return a {@link Runnable} that, when called, invokes the specified method.
      * @throws InvalidRunnableException if the method is not a valid runnable (e.g., wrong number of arguments, static).
      */
-    public static Runnable createRunnableFromMethod(
-            Object instance,
-            Method method
+    public static @NotNull Runnable createRunnableFromMethod(
+            @NotNull Object instance,
+            @NotNull Method method
     ) throws InvalidRunnableException {
         try {
             MethodHandles.Lookup lookup = MethodHandles.lookup();

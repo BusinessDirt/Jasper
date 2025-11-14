@@ -1,6 +1,7 @@
 package github.businessdirt.jasper.streams;
 
 import github.businessdirt.jasper.streams.charsets.BoxCharset;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -29,7 +30,12 @@ public class BoxPrintStream extends PrintStream {
      * @param autoFlush        If true, println will automatically flush.
      * @param charset          The charset to be used.
      */
-    public BoxPrintStream(OutputStream finalDestination, boolean autoFlush, Charset charset, BoxCharset boxCharset) {
+    public BoxPrintStream(
+            @NotNull OutputStream finalDestination,
+            boolean autoFlush,
+            @NotNull Charset charset,
+            @NotNull BoxCharset boxCharset
+    ) {
         super(new AutoFlushByteArrayOutputStream(), autoFlush, charset);
         this.internalBuffer = (AutoFlushByteArrayOutputStream) super.out;
         this.finalDestination = finalDestination;
@@ -98,7 +104,7 @@ public class BoxPrintStream extends PrintStream {
     /**
      * Helper method for formatting the content in a box.
      */
-    private String formatAsBox(String content) {
+    private @NotNull String formatAsBox(@NotNull String content) {
         // Remove a single trailing newline (typical from println)
         // to avoid an empty line at the end of the box.
         if (content.endsWith("\r\n")) {

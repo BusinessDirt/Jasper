@@ -17,6 +17,7 @@ public class ConfigHandler {
     private final FileConfig configFile;
     private boolean dirty;
 
+    @SuppressWarnings("this-escape")
     public ConfigHandler(
             @NotNull Path configFilePath
     ) {
@@ -82,7 +83,7 @@ public class ConfigHandler {
             List<String> propertyPath = ConfigHandler.generatePropertyPath(data.property());
             Object configObject = this.configFile.get(propertyPath);
 
-            if (configObject == null) configObject = data.getValue();
+            if (configObject == null) configObject = data.getValue(Object.class);
 
             // should not be null here anymore
             assert configObject != null;
@@ -95,7 +96,7 @@ public class ConfigHandler {
 
         this.properties.forEach(data -> {
             List<String> propertyPath = ConfigHandler.generatePropertyPath(data.property());
-            Object propertyValue = data.getValue();
+            Object propertyValue = data.getValue(Object.class);
 
             // should not be null here
             assert propertyValue != null;

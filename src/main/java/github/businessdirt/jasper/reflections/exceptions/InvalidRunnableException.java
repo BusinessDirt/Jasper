@@ -3,9 +3,13 @@ package github.businessdirt.jasper.reflections.exceptions;
 import github.businessdirt.jasper.reflections.ReflectionUtils;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serial;
 import java.lang.reflect.Method;
 
 public class InvalidRunnableException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     public InvalidRunnableException(
             @NotNull Method method,

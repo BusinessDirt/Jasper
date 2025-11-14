@@ -41,14 +41,14 @@ public class CommandRegistry {
      * @param <S> the command source type
      * @return the command registry instance
      */
+    @SuppressWarnings("unchecked")
     public static synchronized <S extends CommandSource> CommandDispatcher<S> get(
             @NotNull Class<S> type
     ) {
         if (!INSTANCES.containsKey(type)) {
-            INSTANCES.put(type, new CommandDispatcher<>());
+            INSTANCES.put(type, new CommandDispatcher<S>());
         }
 
-        //noinspection unchecked
         return (CommandDispatcher<S>) INSTANCES.get(type);
     }
 

@@ -12,13 +12,18 @@ public record PropertyData(
         @NotNull ConfigHandler instance
 ) {
 
-    public <T> @Nullable T getValue() {
+    public <T> @Nullable T getValue(Class<T> expectedType) {
         try {
-            //noinspection unchecked
-            return (T) this.field.get(instance);
-        } catch (IllegalAccessException _) { }
+            Object value = this.field.get(instance);
 
-        return null;
+            if (value == null) return null;
+            if (!expectedType.isInstance(value)) return null;
+
+            return expectedType.cast(value);
+
+        } catch (IllegalAccessException _) {
+            return null;
+        }
     }
 
     public void setValue(@NotNull Object value) {

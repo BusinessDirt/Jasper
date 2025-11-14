@@ -12,6 +12,7 @@ import java.util.function.Consumer;
 
 import static github.businessdirt.jasper.commands.builder.LiteralArgumentBuilder.literal;
 
+@SuppressWarnings("unused")
 public class CommandRegistrationEvent<S extends CommandSource> extends Event {
 
     private final CommandDispatcher<S> dispatcher;
@@ -19,11 +20,15 @@ public class CommandRegistrationEvent<S extends CommandSource> extends Event {
     public CommandRegistrationEvent(@NotNull CommandDispatcher<S> dispatcher) {
         this.dispatcher = dispatcher;
 
-        this.register("help", root ->
-                root.executes(new HelpCommand<>(this.dispatcher.getCommands()))
-                        .argument("page", new IntegerArgumentType(), page ->
-                                page.executes(new HelpCommand<>(this.dispatcher.getCommands())))
-                        .build());
+        LiteralArgumentBuilder<S> root = literal("help");
+        root.executes(new HelpCommand<>(dispatcher.getCommands()))
+                .argument("page", new IntegerArgumentType(), page ->
+                        page.executes(new HelpCommand<>(dispatcher.getCommands())))
+                .build();
+
+        this.dispatcher.register(root);
+
+
     }
 
     /**

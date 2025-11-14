@@ -36,6 +36,7 @@ public class RequiredArgumentBuilder<S extends CommandSource, T> extends Abstrac
      * @return the argument command node
      */
     @Override
+    @SuppressWarnings("unchecked") // needed for Xlint:all
     public @NotNull ArgumentCommandNode<S, T> build() {
         return (ArgumentCommandNode<S, T>) node;
     }

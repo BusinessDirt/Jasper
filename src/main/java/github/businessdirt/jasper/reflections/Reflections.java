@@ -94,10 +94,9 @@ public class Reflections {
     public <T> @NotNull Set<Class<? extends T>> getSubTypesOf(
             @NotNull Class<T> type
     ) {
-        //noinspection unchecked
         return this.stream()
                 .filter(type::isAssignableFrom)
-                .map(cls -> (Class<? extends T>) cls)
+                .map(cls -> cls.<T>asSubclass(type))
                 .collect(Collectors.toSet());
     }
 

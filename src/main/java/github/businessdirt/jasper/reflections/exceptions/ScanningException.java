@@ -4,7 +4,12 @@ import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.Serial;
+
 public class ScanningException extends RuntimeException {
+
+    @Serial
+    private static final long serialVersionUID = 1L;
 
     public ScanningException(
             @NotNull String message,

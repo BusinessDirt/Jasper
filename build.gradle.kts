@@ -39,6 +39,6 @@ tasks.test {
     }
 }
 
-tasks.test {
-    useJUnitPlatform()
+tasks.withType<JavaCompile> {
+    options.compilerArgs.add("-Xlint:all")
 }

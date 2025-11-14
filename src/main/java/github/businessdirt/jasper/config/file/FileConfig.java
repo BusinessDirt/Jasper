@@ -77,6 +77,7 @@ public class FileConfig {
      * @param path   The configuration path (e.g., ["window", "size", "width"])
      * @param value The value to store. Can be a string, number, boolean, map, list, etc.
      */
+    @SuppressWarnings("unchecked")
     public void set(@NotNull List<String> path, @NotNull Object value) {
         Map<String, Object> currentMap = this.store;
 
@@ -85,7 +86,6 @@ public class FileConfig {
             Object mapValue = currentMap.get(part);
 
             if (mapValue instanceof Map) {
-                //noinspection unchecked
                 currentMap = (Map<String, Object>) mapValue;
             } else {
                 Map<String, Object> newMap = new HashMap<>();
@@ -104,6 +104,7 @@ public class FileConfig {
      * @param path The configuration path.
      * @return The value as an Object, or null if not found.
      */
+    @SuppressWarnings("unchecked")
     public @Nullable Object get(@NotNull List<String> path) {
         Map<String, Object> currentMap = this.store;
 
@@ -112,7 +113,6 @@ public class FileConfig {
             Object mapValue = currentMap.get(part);
 
             if (mapValue instanceof Map) {
-                //noinspection unchecked
                 currentMap = (Map<String, Object>) mapValue;
             } else {
                 return null;

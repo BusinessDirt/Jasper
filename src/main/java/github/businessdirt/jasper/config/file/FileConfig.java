@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 
-import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -70,26 +69,61 @@ public class FileConfig {
 
     /**
      * Sets a value for a given key.
+     * The key is split by dots to create a nested map structure.
      *
      * @param key   The configuration key (e.g., "window.size.width")
      * @param value The value to store. Can be a string, number, boolean, map, list, etc.
      */
     public void set(String key, Object value) {
-        this.store.put(key, value);
+        String[] parts = key.split("\\.");
+        Map<String, Object> currentMap = this.store;
+
+        for (int i = 0; i < parts.length - 1; i++) {
+            String part = parts[i];
+            Object mapValue = currentMap.get(part);
+
+            if (mapValue instanceof Map) {
+                //noinspection unchecked
+                currentMap = (Map<String, Object>) mapValue;
+            } else {
+                Map<String, Object> newMap = new HashMap<>();
+                currentMap.put(part, newMap);
+                currentMap = newMap;
+            }
+        }
+
+        currentMap.put(parts[parts.length - 1], value);
     }
 
     /**
      * Gets a raw object value from the store.
+     * The key is split by dots to traverse a nested map structure.
      *
      * @param key The configuration key.
      * @return The value as an Object, or null if not found.
      */
     public Object get(String key) {
-        return this.store.get(key);
+        String[] parts = key.split("\\.");
+        Map<String, Object> currentMap = this.store;
+
+        for (int i = 0; i < parts.length - 1; i++) {
+            String part = parts[i];
+            Object mapValue = currentMap.get(part);
+
+            if (mapValue instanceof Map) {
+                //noinspection unchecked
+                currentMap = (Map<String, Object>) mapValue;
+            } else {
+                return null;
+            }
+        }
+
+        return currentMap.get(parts[parts.length - 1]);
     }
 
     /**
      * Gets a value, providing a default if the key is not found.
+     * The key is split by dots to traverse a nested map structure.
      *
      * @param key          The key.
      * @param defaultValue The default value.
@@ -97,7 +131,8 @@ public class FileConfig {
      */
     @SuppressWarnings("unchecked")
     public <T> T get(String key, T defaultValue) {
-        return (T) this.store.getOrDefault(key, defaultValue);
+        Object value = get(key);
+        return value != null ? (T) value : defaultValue;
     }
 
     /**

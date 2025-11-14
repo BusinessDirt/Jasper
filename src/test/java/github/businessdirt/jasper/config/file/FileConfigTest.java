@@ -8,6 +8,7 @@ import org.junit.jupiter.api.io.TempDir;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
@@ -28,9 +29,9 @@ class FileConfigTest {
 
     @Test
     void testSaveAndLoad() throws IOException {
-        fileConfig.set("database.host", "localhost");
-        fileConfig.set("database.port", 5432);
-        fileConfig.set("features.featureA.enabled", true);
+        fileConfig.set(List.of("database", "host"), "localhost");
+        fileConfig.set(List.of("database", "port"), 5432);
+        fileConfig.set(List.of("features", "featureA", "enabled"), true);
         fileConfig.save();
 
         assertTrue(Files.exists(configPath));
@@ -38,29 +39,38 @@ class FileConfigTest {
         FileConfig newConfig = new FileConfig(configPath);
         newConfig.load();
 
-        assertEquals("localhost", newConfig.get("database.host"));
+        assertEquals("localhost", newConfig.get(List.of("database", "host")));
+
         // Gson deserializes all numbers as Double
-        assertEquals(5432.0, newConfig.get("database.port"));
-        assertEquals(true, newConfig.get("features.featureA.enabled"));
-        assertEquals("{port=5432.0, host=localhost}", newConfig.get("database").toString());
+        assertEquals(5432.0, newConfig.get(List.of("database", "port")));
+        assertEquals(true, newConfig.get(List.of("features", "featureA", "enabled")));
+
+        // When getting a parent key, it should return the nested map
+        assertInstanceOf(Map.class, newConfig.get(List.of("database")));
+
+        @SuppressWarnings("unchecked")
+        Map<String, Object> databaseMap = (Map<String, Object>) newConfig.get(List.of("database"));
+
+        assertEquals("localhost", databaseMap.get("host"));
+        assertEquals(5432.0, databaseMap.get("port"));
     }
 
     @Test
     void testGetWithDefault() throws IOException {
         fileConfig.load(); // Load an empty/non-existent file
-        assertEquals("default", fileConfig.get("non.existent.key", "default"));
-        assertNull(fileConfig.get("non.existent.key"));
-        assertEquals("default", fileConfig.get("a.b.c", "default"));
+        assertEquals("default", fileConfig.getOrDefault(List.of("non", "existent", "key"), "default"));
+        assertNull(fileConfig.get(List.of("non", "existent", "key")));
+        assertEquals("default", fileConfig.getOrDefault(List.of("a", "b", "c"), "default"));
 
-        fileConfig.set("a.b.c", "value");
-        assertEquals("value", fileConfig.get("a.b.c", "default"));
+        fileConfig.set(List.of("a", "b", "c"), "value");
+        assertEquals("value", fileConfig.getOrDefault(List.of("a", "b", "c"), "default"));
     }
 
     @Test
     @SuppressWarnings("unchecked")
     void testGetAll() throws IOException {
-        fileConfig.set("a.x", 1);
-        fileConfig.set("b.y", "two");
+        fileConfig.set(List.of("a", "x"), 1);
+        fileConfig.set(List.of("b", "y"), "two");
         fileConfig.save();
 
         Map<String, Object> all = fileConfig.getAll();
@@ -76,7 +86,7 @@ class FileConfigTest {
     }
 
     @Test
-    void testLoadNonExistentFile() throws IOException {
+    void testLoadNonExistentFile() {
         assertDoesNotThrow(() -> {
             FileConfig config = new FileConfig(tempDir.resolve("non_existent.json"));
             config.load();
@@ -92,27 +102,33 @@ class FileConfigTest {
 
     @Test
     void testSetAndGet() {
-        fileConfig.set("a.b.c", "value1");
-        assertEquals("value1", fileConfig.get("a.b.c"));
+        fileConfig.set(List.of("a", "b", "c"), "value1");
+        assertEquals("value1", fileConfig.get(List.of("a", "b", "c")));
 
-        fileConfig.set("a.b.c", "value2");
-        assertEquals("value2", fileConfig.get("a.b.c"));
+        fileConfig.set(List.of("a", "b", "c"), "value2");
+        assertEquals("value2", fileConfig.get(List.of("a", "b", "c")));
 
-        fileConfig.set("a.b.d", "value3");
-        assertEquals("value2", fileConfig.get("a.b.c"));
-        assertEquals("value3", fileConfig.get("a.b.d"));
+        fileConfig.set(List.of("a", "b", "d"), "value3");
+        assertEquals("value2", fileConfig.get(List.of("a", "b", "c")));
+        assertEquals("value3", fileConfig.get(List.of("a", "b", "d")));
 
-        fileConfig.set("x", "value4");
-        assertEquals("value4", fileConfig.get("x"));
+        fileConfig.set(List.of("x"), "value4");
+        assertEquals("value4", fileConfig.get(List.of("x")));
     }
 
     @Test
+    @SuppressWarnings("unchecked")
     void testOverwrite() {
-        fileConfig.set("a.b", "not a map");
-        assertEquals("not a map", fileConfig.get("a.b"));
+        fileConfig.set(List.of("a", "b"), "not a map");
+        assertEquals("not a map", fileConfig.get(List.of("a", "b")));
 
-        fileConfig.set("a.b.c", "value");
-        assertEquals("value", fileConfig.get("a.b.c"));
-        assertEquals("{c=value}", fileConfig.get("a.b").toString());
+        fileConfig.set(List.of("a", "b", "c"), "value");
+        assertEquals("value", fileConfig.get(List.of("a", "b", "c")));
+
+        // After overwriting "a.b" with a map, "a.b" should now be a map
+        assertInstanceOf(Map.class, fileConfig.get(List.of("a", "b")));
+
+        Map<String, Object> abMap = (Map<String, Object>) fileConfig.get(List.of("a", "b"));
+        assertEquals("value", abMap.get("c"));
     }
 }

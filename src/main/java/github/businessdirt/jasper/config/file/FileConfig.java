@@ -13,6 +13,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class FileConfig {
@@ -71,15 +72,14 @@ public class FileConfig {
      * Sets a value for a given key.
      * The key is split by dots to create a nested map structure.
      *
-     * @param key   The configuration key (e.g., "window.size.width")
+     * @param path   The configuration path (e.g., ["window", "size", "width"])
      * @param value The value to store. Can be a string, number, boolean, map, list, etc.
      */
-    public void set(String key, Object value) {
-        String[] parts = key.split("\\.");
+    public void set(List<String> path, Object value) {
         Map<String, Object> currentMap = this.store;
 
-        for (int i = 0; i < parts.length - 1; i++) {
-            String part = parts[i];
+        for (int i = 0; i < path.size() - 1; i++) {
+            String part = path.get(i);
             Object mapValue = currentMap.get(part);
 
             if (mapValue instanceof Map) {
@@ -92,22 +92,21 @@ public class FileConfig {
             }
         }
 
-        currentMap.put(parts[parts.length - 1], value);
+        currentMap.put(path.getLast(), value);
     }
 
     /**
      * Gets a raw object value from the store.
      * The key is split by dots to traverse a nested map structure.
      *
-     * @param key The configuration key.
+     * @param path The configuration path.
      * @return The value as an Object, or null if not found.
      */
-    public Object get(String key) {
-        String[] parts = key.split("\\.");
+    public Object get(List<String> path) {
         Map<String, Object> currentMap = this.store;
 
-        for (int i = 0; i < parts.length - 1; i++) {
-            String part = parts[i];
+        for (int i = 0; i < path.size() - 1; i++) {
+            String part = path.get(i);
             Object mapValue = currentMap.get(part);
 
             if (mapValue instanceof Map) {
@@ -118,20 +117,20 @@ public class FileConfig {
             }
         }
 
-        return currentMap.get(parts[parts.length - 1]);
+        return currentMap.get(path.getLast());
     }
 
     /**
      * Gets a value, providing a default if the key is not found.
      * The key is split by dots to traverse a nested map structure.
      *
-     * @param key          The key.
+     * @param path          The path.
      * @param defaultValue The default value.
      * @return The found value or the default.
      */
     @SuppressWarnings("unchecked")
-    public <T> T get(String key, T defaultValue) {
-        Object value = get(key);
+    public <T> T getOrDefault(List<String> path, T defaultValue) {
+        Object value = get(path);
         return value != null ? (T) value : defaultValue;
     }
 

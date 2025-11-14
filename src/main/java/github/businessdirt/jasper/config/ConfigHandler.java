@@ -78,7 +78,7 @@ public class ConfigHandler {
         this.configFile.load();
 
         for (PropertyData propertyData : this.properties) {
-            String propertyPath = ConfigHandler.fullPropertyPath(propertyData.property());
+            List<String> propertyPath = ConfigHandler.generatePropertyPath(propertyData.property());
             Object configObject = this.configFile.get(propertyPath);
 
             if (configObject == null) configObject = propertyData.getValue();
@@ -90,7 +90,7 @@ public class ConfigHandler {
         if (!this.dirty) return;
 
         for (PropertyData propertyData : this.properties) {
-            String propertyPath = ConfigHandler.fullPropertyPath(propertyData.property());
+            List<String> propertyPath = ConfigHandler.generatePropertyPath(propertyData.property());
             Object propertyValue = propertyData.getValue();
 
             this.configFile.set(propertyPath, propertyValue);
@@ -100,16 +100,13 @@ public class ConfigHandler {
         this.dirty = false;
     }
 
-    private static @NotNull String fullPropertyPath(@NotNull Property fullPropertyPath) {
-        StringBuilder bobTheBuilder = new StringBuilder();
-        bobTheBuilder.append(fullPropertyPath.category()).append(".");
+    private static @NotNull List<String> generatePropertyPath(@NotNull Property property) {
+        List<String> path = new ArrayList<>(Collections.singleton(property.category()));
 
-        if (!Objects.equals(fullPropertyPath.subcategory(), "")) {
-            bobTheBuilder.append(fullPropertyPath.subcategory()).append(".");
-        }
+        if (!Objects.equals(property.subcategory(), "")) path.add(property.subcategory());
 
-        bobTheBuilder.append(fullPropertyPath.name());
-        return bobTheBuilder.toString();
+        path.add(property.name());
+        return path;
     }
 
     public final @NotNull List<PropertyData> getProperties() {

@@ -1,22 +1,12 @@
 package github.businessdirt.jasper.reflections.scanners;
 
-import github.businessdirt.jasper.reflections.exceptions.ScanningException;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
 import java.io.IOException;
-import java.net.JarURLConnection;
 import java.net.URL;
-import java.net.URLConnection;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.Enumeration;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.jar.JarEntry;
-import java.util.jar.JarFile;
-import java.util.stream.Collectors;
 
 /**
  * A simple classpath scanner that works both for JAR files and when running from a directory
@@ -36,69 +26,20 @@ public record ClasspathScanner(String basePackage, Logger logger) {
 
         Set<String> classNames = new HashSet<>();
 
+        DirectoryScanner directoryScanner = new DirectoryScanner(this.basePackage, this.logger);
+        JARScanner jarScanner = new JARScanner(this.basePackage, this.logger);
         while (resources.hasMoreElements()) {
             URL resource = resources.nextElement();
             String protocol = resource.getProtocol();
 
             if ("file".equals(protocol)) {
-                // Running from a directory (e.g., in an IDE)
-                classNames.addAll(findClassesInDirectory(resource, basePackage));
+                classNames.addAll(directoryScanner.findAll(resource));
             } else if ("jar".equals(protocol)) {
-                // Running from a JAR file
-                classNames.addAll(findClassesInJar(resource));
+                classNames.addAll(jarScanner.findAll(resource));
             }
         }
 
         return loadClasses(classNames, classLoader);
-    }
-
-    @SuppressWarnings("resource")
-    private Set<String> findClassesInDirectory(URL resource, String basePackage) {
-        try {
-            Path packageDir = Paths.get(resource.toURI());
-            // Walk the file tree and find all .class files
-            return Files.walk(packageDir)
-                    .filter(path -> path.toString().endsWith(".class"))
-                    .map(path -> toClassName(packageDir, path, basePackage))
-                    .collect(Collectors.toSet());
-        } catch (Exception e) {
-            throw new ScanningException("Error scanning directory", e, this.logger);
-        }
-    }
-
-    private String toClassName(Path baseDir, Path classFile, String basePackage) {
-        Path relativePath = baseDir.relativize(classFile);
-        String relativeName = relativePath.toString();
-        // Remove .class extension
-        String className = relativeName.substring(0, relativeName.length() - 6);
-        // Turn path (com/my/project/MyClass) into package (com.my.project.MyClass)
-        return basePackage + "." + className.replace(File.separatorChar, '.');
-    }
-
-    private Set<String> findClassesInJar(URL resource) {
-        Set<String> classNames = new HashSet<>();
-        try {
-            URLConnection con = resource.openConnection();
-            if (con instanceof JarURLConnection) {
-                JarFile jarFile = ((JarURLConnection) con).getJarFile();
-                String packagePath = ((JarURLConnection) con).getEntryName();
-
-                Enumeration<JarEntry> entries = jarFile.entries();
-                while (entries.hasMoreElements()) {
-                    JarEntry entry = entries.nextElement();
-                    String name = entry.getName();
-
-                    if (name.startsWith(packagePath) && name.endsWith(".class") && !entry.isDirectory()) {
-                        // Turn path (com/my/project/MyClass.class) into package
-                        String className = name.substring(0, name.length() - 6).replace('/', '.');
-                        classNames.add(className);
-                    }
-                }
-            }
-        } catch (IOException e) {
-            throw new ScanningException("Error scanning JAR", e, this.logger);
-        }
-        return classNames;
     }
 
     private Set<Class<?>> loadClasses(Set<String> classNames, ClassLoader classLoader) {
@@ -112,7 +53,7 @@ public record ClasspathScanner(String basePackage, Logger logger) {
             } catch (ClassNotFoundException | NoClassDefFoundError e) {
                 // This is common. The class might have dependencies that
                 // aren't available. We can just skip it.
-                if (logger != null) logger.atWarn().withThrowable(e).log("Could not load class {}", className);
+                if (logger != null) logger.atWarn().withThrowable(e).log("Could not load class '{}'.", className);
             }
         }
         return loadedClasses;

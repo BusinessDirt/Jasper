@@ -61,7 +61,7 @@ public class CommandRegistry {
      * @param <S> the command source type
      * @return the {@code CommandResult} of the executed command
      */
-    public static synchronized <S extends CommandSource> CommandResult handle(
+    public static synchronized <S extends CommandSource> int handle(
             @NotNull Class<S> type,
             @NotNull S source,
             @NotNull String command

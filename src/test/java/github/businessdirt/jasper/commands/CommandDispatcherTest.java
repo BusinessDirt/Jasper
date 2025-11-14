@@ -3,6 +3,8 @@ package github.businessdirt.jasper.commands;
 
 import github.businessdirt.jasper.commands.arguments.IntegerArgumentType;
 import github.businessdirt.jasper.commands.builder.LiteralArgumentBuilder;
+import github.businessdirt.jasper.commands.exceptions.CommandSyntaxException;
+import github.businessdirt.jasper.commands.exceptions.UnknownCommandException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -10,8 +12,7 @@ import org.junit.jupiter.api.Test;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.concurrent.atomic.AtomicInteger;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class CommandDispatcherTest {
 
@@ -28,20 +29,20 @@ class CommandDispatcherTest {
     @DisplayName("Should execute a simple literal command")
     void testSimpleLiteralCommand() {
         AtomicBoolean executed = new AtomicBoolean(false);
-        dispatcher.register(LiteralArgumentBuilder.<TestCommandSource>literal("test").executes(c -> {
+        dispatcher.register(LiteralArgumentBuilder.<TestCommandSource>literal("test").executes(_ -> {
             executed.set(true);
-            return CommandResult.SUCCESS;
+            return CommandResult.SUCCESS_STATUS;
         }));
 
-        CommandResult result = dispatcher.execute("test", source);
+        int result = dispatcher.execute("test", source);
         assertTrue(executed.get());
-        assertEquals(CommandResult.SUCCESS_STATUS, result.status());
+        assertEquals(CommandResult.SUCCESS_STATUS, result);
     }
 
     @Test
-    @DisplayName("Should return unknown command for an unknown command")
+    @DisplayName("Should throw exception for an unknown command")
     void testUnknownCommand() {
-        assertEquals(CommandResult.UNKNOWN_COMMAND_STATUS, dispatcher.execute("/unknown", source).status());
+        assertThrows(UnknownCommandException.class, () -> dispatcher.execute("/unknown", source));
     }
 
     @Test
@@ -51,7 +52,7 @@ class CommandDispatcherTest {
         dispatcher.register(LiteralArgumentBuilder.<TestCommandSource>literal("set").argument("value", new IntegerArgumentType(), arg ->
                 arg.executes(c -> {
                     received.set(c.getArgument("value", Integer.class));
-                    return CommandResult.SUCCESS;
+                    return CommandResult.SUCCESS_STATUS;
                 })
         ));
 
@@ -72,7 +73,7 @@ class CommandDispatcherTest {
                     assertEquals(10, x);
                     assertEquals(20, y);
                     executed.set(true);
-                    return CommandResult.SUCCESS;
+                    return CommandResult.SUCCESS_STATUS;
                 }))));
 
         dispatcher.execute("tp 10 20", source);
@@ -80,15 +81,14 @@ class CommandDispatcherTest {
     }
 
     @Test
-    @DisplayName("Should return incomplete command when not enough arguments are provided")
+    @DisplayName("Should throw exception when not enough arguments are provided")
     void testInvalidUsage_notEnoughArgs() {
         dispatcher.register(LiteralArgumentBuilder.<TestCommandSource>literal("set")
                 .argument("value", new IntegerArgumentType(), arg ->
-                        arg.executes(c -> CommandResult.SUCCESS))
+                        arg.executes(_ -> CommandResult.SUCCESS_STATUS))
         );
 
-        CommandResult result = dispatcher.execute("set", source);
-        assertEquals(CommandResult.INCOMPLETE_COMMAND, result);
+        assertThrows(CommandSyntaxException.class, () -> dispatcher.execute("set", source));
     }
 
     @Test
@@ -96,11 +96,10 @@ class CommandDispatcherTest {
     void testInvalidUsage_wrongArgumentType() {
         dispatcher.register(LiteralArgumentBuilder.<TestCommandSource>literal("set")
                 .argument("value", new IntegerArgumentType(), arg ->
-                        arg.executes(c -> CommandResult.SUCCESS))
+                        arg.executes(_ -> CommandResult.SUCCESS_STATUS))
         );
 
-        CommandResult result = dispatcher.execute("set abc", source);
-        assertEquals(CommandResult.INVALID_ARGUMENT, result);
+        assertThrows(CommandSyntaxException.class, () -> dispatcher.execute("set abc", source));
     }
     
     @Test
@@ -109,9 +108,9 @@ class CommandDispatcherTest {
         AtomicBoolean executed = new AtomicBoolean(false);
         dispatcher.register(LiteralArgumentBuilder.<TestCommandSource>literal("perm")
                 .literal("grant", grant ->
-                        grant.executes(c -> {
+                        grant.executes(_ -> {
                             executed.set(true);
-                            return CommandResult.SUCCESS;
+                            return CommandResult.SUCCESS_STATUS;
                         })
                 ));
         

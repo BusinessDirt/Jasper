@@ -2,6 +2,8 @@
 package github.businessdirt.jasper.commands;
 
 import github.businessdirt.jasper.commands.builder.LiteralArgumentBuilder;
+import github.businessdirt.jasper.commands.exceptions.CommandSyntaxException;
+import github.businessdirt.jasper.commands.exceptions.UnknownCommandException;
 import github.businessdirt.jasper.commands.tree.ArgumentCommandNode;
 import github.businessdirt.jasper.commands.tree.CommandNode;
 import github.businessdirt.jasper.commands.tree.LiteralCommandNode;
@@ -43,7 +45,7 @@ public class CommandDispatcher<S extends CommandSource> {
      * @param source the source of the command
      * @return the result of the command execution
      */
-    public CommandResult execute(
+    public int execute(
             @NotNull String input,
             @NotNull S source
     ) {
@@ -55,7 +57,7 @@ public class CommandDispatcher<S extends CommandSource> {
         String literal = reader.readString();
         CommandNode<S> nextNode = currentNode.getChildren().get(literal);
 
-        if (nextNode == null) return CommandResult.UNKNOWN_COMMAND;
+        if (nextNode == null) throw new UnknownCommandException();
         currentNode = nextNode;
 
         // Parse the arguments
@@ -66,31 +68,35 @@ public class CommandDispatcher<S extends CommandSource> {
             for (CommandNode<S> child : currentNode.getChildren().values()) {
                 if (child instanceof ArgumentCommandNode<S, ?> argumentNode) {
                     StringReader fork = new StringReader(reader);
+
                     try {
                         arguments.put(argumentNode.getName(), argumentNode.getType().parse(fork));
                         currentNode = argumentNode;
                         reader.setCursor(fork.getCursor());
                         found = true;
                         break;
-                    } catch (Exception ignored) {
+                    } catch (Exception _) {
                         // If parsing fails, ignore and try the next child
                     }
+
                 } else if (child instanceof LiteralCommandNode<S> literalNode) {
                     StringReader fork = new StringReader(reader);
                     String nextLiteral = fork.readString();
+
                     if (literalNode.getName().equals(nextLiteral)) {
                         currentNode = literalNode;
                         reader.setCursor(fork.getCursor());
                         found = true;
                         break;
                     }
+
                 }
             }
 
-            if (!found) return CommandResult.INVALID_ARGUMENT;
+            if (!found) throw new CommandSyntaxException("Invalid argument");
         }
 
-        if (currentNode.getCommand() == null) return CommandResult.INCOMPLETE_COMMAND;
+        if (currentNode.getCommand() == null) throw new CommandSyntaxException("Incomplete command");
 
         return currentNode.getCommand().run(new CommandContext<>(source, arguments));
     }

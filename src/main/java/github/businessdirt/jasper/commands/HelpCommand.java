@@ -22,7 +22,7 @@ public record HelpCommand<S extends CommandSource>(Map<String, CommandNode<S>> c
      * @return the {@link CommandResult}
      */
     @Override
-    public @NotNull CommandResult run(@NotNull CommandContext<S> context) {
+    public int run(@NotNull CommandContext<S> context) {
         Integer page = context.getArgument("page", Integer.class);
         if (page == null || page < 1) page = 1;
 
@@ -45,6 +45,6 @@ public record HelpCommand<S extends CommandSource>(Map<String, CommandNode<S>> c
         }
 
         context.out().println(builder);
-        return CommandResult.SUCCESS;
+        return CommandResult.SUCCESS_STATUS;
     }
 }

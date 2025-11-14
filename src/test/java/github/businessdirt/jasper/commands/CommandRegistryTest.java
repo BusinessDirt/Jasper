@@ -1,6 +1,7 @@
 /* (C) 2025 Maximilian Bollschweiler */
 package github.businessdirt.jasper.commands;
 
+import github.businessdirt.jasper.commands.exceptions.UnknownCommandException;
 import github.businessdirt.jasper.events.system.EventBus;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -41,21 +42,21 @@ class CommandRegistryTest {
     @Test
     @DisplayName("Should handle the help command")
     void handle_helpCommand() {
-        CommandResult result = CommandRegistry.handle(TestCommandSource.class, this.source, "/help");
-        assertEquals(CommandResult.SUCCESS, result);
+        int result = CommandRegistry.handle(TestCommandSource.class, this.source, "/help");
+        assertEquals(CommandResult.SUCCESS_STATUS, result);
     }
     
     @Test
     @DisplayName("Should handle a command with a leading slash stripped")
     void handle_stripsSlash() {
-        CommandResult result = CommandRegistry.handle(TestCommandSource.class, this.source, "help");
-        assertEquals(CommandResult.SUCCESS, result);
+        int result = CommandRegistry.handle(TestCommandSource.class, this.source, "help");
+        assertEquals(CommandResult.SUCCESS_STATUS, result);
     }
 
     @Test
     @DisplayName("Should handle an unknown command")
     void handle_unknownCommand() {
-        CommandResult result = CommandRegistry.handle(TestCommandSource.class, this.source, "/unknowncommand");
-        assertEquals(CommandResult.UNKNOWN_COMMAND, result);
+        assertThrows(UnknownCommandException.class, () ->
+                CommandRegistry.handle(TestCommandSource.class, this.source, "/unknowncommand"));
     }
 }

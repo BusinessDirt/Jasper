@@ -5,6 +5,7 @@ import github.businessdirt.jasper.commands.Command;
 import github.businessdirt.jasper.commands.CommandResult;
 import github.businessdirt.jasper.commands.TestCommandSource;
 import github.businessdirt.jasper.commands.arguments.IntegerArgumentType;
+import github.businessdirt.jasper.commands.arguments.StringArgumentType;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -48,7 +49,7 @@ class CommandNodeTest {
     @DisplayName("Should set the command to be executed")
     void executes() {
         CommandNode<TestCommandSource> node = new LiteralCommandNode<>("test");
-        Command<TestCommandSource> command = context -> CommandResult.SUCCESS;
+        Command<TestCommandSource> command = _ -> CommandResult.SUCCESS_STATUS;
         node.executes(command);
         assertEquals(command, node.getCommand());
     }
@@ -81,7 +82,7 @@ class CommandNodeTest {
     @DisplayName("Should get the usage for a node with an argument")
     void getUsage_argument() {
         LiteralCommandNode<TestCommandSource> root = new LiteralCommandNode<>("say");
-        root.addChild(new ArgumentCommandNode<>("message", null)); // type is not used in getUsage
+        root.addChild(new ArgumentCommandNode<>("message", new StringArgumentType()));
         assertEquals("/say <message>", root.getUsage());
     }
 }

@@ -26,7 +26,7 @@ class ArgumentBuilderTest {
     @DisplayName("Should build a literal command node with an executor")
     void testLiteralWithExecutor() {
         LiteralCommandNode<TestCommandSource> node = LiteralArgumentBuilder.<TestCommandSource>literal("test")
-                .executes(_ -> CommandResult.SUCCESS)
+                .executes(_ -> CommandResult.SUCCESS_STATUS)
                 .build();
 
         assertNotNull(node.getCommand());
@@ -37,7 +37,7 @@ class ArgumentBuilderTest {
     void testChainedLiterals() {
         LiteralCommandNode<TestCommandSource> node = LiteralArgumentBuilder.<TestCommandSource>literal("a")
                 .literal("b", b ->
-                        b.executes(_ -> CommandResult.SUCCESS))
+                        b.executes(_ -> CommandResult.SUCCESS_STATUS))
                 .build();
         assertEquals(1, node.getChildren().size());
         CommandNode<TestCommandSource> child = node.getChildren().get("b");
@@ -51,7 +51,7 @@ class ArgumentBuilderTest {
     void testLiteralWithArgument() {
         LiteralCommandNode<TestCommandSource> node = LiteralArgumentBuilder.<TestCommandSource>literal("set")
                 .argument("value", new IntegerArgumentType(), value ->
-                        value.executes(_ -> CommandResult.SUCCESS))
+                        value.executes(_ -> CommandResult.SUCCESS_STATUS))
                 .build();
 
         assertEquals(1, node.getChildren().size());
@@ -69,9 +69,9 @@ class ArgumentBuilderTest {
         LiteralCommandNode<TestCommandSource> node = LiteralArgumentBuilder.<TestCommandSource>literal("a")
                 .literal("b", b ->
                         b.argument("c", new StringArgumentType(), c ->
-                                c.executes(_ -> CommandResult.SUCCESS)))
+                                c.executes(_ -> CommandResult.SUCCESS_STATUS)))
                 .argument("d", new IntegerArgumentType(), d ->
-                    d.executes(_ -> CommandResult.SUCCESS))
+                    d.executes(_ -> CommandResult.SUCCESS_STATUS))
                 .build();
 
         assertEquals(2, node.getChildren().size());

@@ -13,5 +13,5 @@ public interface Command<S extends CommandSource> {
      * @param context The context in which the command is executed.
      * @return the {@link CommandResult} of the command.
      */
-    @NotNull CommandResult run(@NotNull CommandContext<S> context);
+    int run(@NotNull CommandContext<S> context);
 }

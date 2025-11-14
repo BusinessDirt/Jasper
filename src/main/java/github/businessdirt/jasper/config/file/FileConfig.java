@@ -4,6 +4,8 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.io.FileReader;
 import java.io.FileWriter;
@@ -27,7 +29,7 @@ public class FileConfig {
      *
      * @param configPath The path to the JSON file (e.g., Paths.get("config.json"))
      */
-    public FileConfig(Path configPath) {
+    public FileConfig(@NotNull Path configPath) {
         this.configPath = configPath;
         this.gson = new GsonBuilder().setPrettyPrinting().create();
         this.store = new HashMap<>();
@@ -75,7 +77,7 @@ public class FileConfig {
      * @param path   The configuration path (e.g., ["window", "size", "width"])
      * @param value The value to store. Can be a string, number, boolean, map, list, etc.
      */
-    public void set(List<String> path, Object value) {
+    public void set(@NotNull List<String> path, @NotNull Object value) {
         Map<String, Object> currentMap = this.store;
 
         for (int i = 0; i < path.size() - 1; i++) {
@@ -102,7 +104,7 @@ public class FileConfig {
      * @param path The configuration path.
      * @return The value as an Object, or null if not found.
      */
-    public Object get(List<String> path) {
+    public @Nullable Object get(@NotNull List<String> path) {
         Map<String, Object> currentMap = this.store;
 
         for (int i = 0; i < path.size() - 1; i++) {
@@ -129,7 +131,10 @@ public class FileConfig {
      * @return The found value or the default.
      */
     @SuppressWarnings("unchecked")
-    public <T> T getOrDefault(List<String> path, T defaultValue) {
+    public <T> @NotNull T getOrDefault(
+            @NotNull List<String> path,
+            @NotNull T defaultValue
+    ) {
         Object value = get(path);
         return value != null ? (T) value : defaultValue;
     }
@@ -137,7 +142,7 @@ public class FileConfig {
     /**
      * Returns an immutable copy of the entire configuration map.
      */
-    public Map<String, Object> getAll() {
-        return Collections.unmodifiableMap(store);
+    public @NotNull Map<String, Object> getAll() {
+        return Collections.unmodifiableMap(this.store);
     }
 }

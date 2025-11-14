@@ -1,23 +1,27 @@
 package github.businessdirt.jasper.config.data;
 
 import github.businessdirt.jasper.config.ConfigHandler;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 
 public record PropertyData(
-        Property property,
-        Field field,
-        ConfigHandler instance
+        @NotNull Property property,
+        @NotNull Field field,
+        @NotNull ConfigHandler instance
 ) {
 
-    public <T> T getValue() {
+    public <T> @Nullable T getValue() {
         try {
+            //noinspection unchecked
             return (T) this.field.get(instance);
         } catch (IllegalAccessException _) { }
+
         return null;
     }
 
-    public void setValue(Object value) {
+    public void setValue(@NotNull Object value) {
         try {
             Class<?> fieldType = this.field.getType();
 
@@ -47,9 +51,5 @@ public record PropertyData(
             // the default set() will work.
             this.field.set(instance, value);
         } catch (IllegalAccessException _) { }
-    }
-
-    public static PropertyData fromField(Property property, Field field, ConfigHandler instance) {
-        return new PropertyData(property, field, instance);
     }
 }

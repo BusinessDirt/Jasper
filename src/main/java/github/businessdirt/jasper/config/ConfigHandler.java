@@ -17,7 +17,9 @@ public class ConfigHandler {
     private final FileConfig configFile;
     private boolean dirty;
 
-    public ConfigHandler(@NotNull Path configFilePath) {
+    public ConfigHandler(
+            @NotNull Path configFilePath
+    ) {
         this.configFile = new FileConfig(configFilePath);
         this.properties = new ArrayList<>();
 
@@ -27,7 +29,7 @@ public class ConfigHandler {
                     field.setAccessible(true);
 
                     Property property = field.getAnnotation(Property.class);
-                    PropertyData data = PropertyData.fromField(property, field, this);
+                    PropertyData data = new PropertyData(property, field, this);
                     this.properties.add(data);
                 });
     }
@@ -53,7 +55,6 @@ public class ConfigHandler {
 
     public final @NotNull List<Category> getCategories() {
         Map<String, List<PropertyData>> categoryMap = new LinkedHashMap<>();
-
         this.properties.stream()
                 .filter(data -> !data.property().hidden())
                 .forEach(propertyData -> {
@@ -77,30 +78,37 @@ public class ConfigHandler {
     private void readData() throws IOException {
         this.configFile.load();
 
-        for (PropertyData propertyData : this.properties) {
-            List<String> propertyPath = ConfigHandler.generatePropertyPath(propertyData.property());
+        this.properties.forEach(data -> {
+            List<String> propertyPath = ConfigHandler.generatePropertyPath(data.property());
             Object configObject = this.configFile.get(propertyPath);
 
-            if (configObject == null) configObject = propertyData.getValue();
-            propertyData.setValue(configObject);
-        }
+            if (configObject == null) configObject = data.getValue();
+
+            // should not be null here anymore
+            assert configObject != null;
+            data.setValue(configObject);
+        });
     }
 
     public final void writeData() throws IOException {
         if (!this.dirty) return;
 
-        for (PropertyData propertyData : this.properties) {
-            List<String> propertyPath = ConfigHandler.generatePropertyPath(propertyData.property());
-            Object propertyValue = propertyData.getValue();
+        this.properties.forEach(data -> {
+            List<String> propertyPath = ConfigHandler.generatePropertyPath(data.property());
+            Object propertyValue = data.getValue();
 
+            // should not be null here
+            assert propertyValue != null;
             this.configFile.set(propertyPath, propertyValue);
-        }
+        });
 
         this.configFile.save();
         this.dirty = false;
     }
 
-    private static @NotNull List<String> generatePropertyPath(@NotNull Property property) {
+    private static @NotNull List<String> generatePropertyPath(
+            @NotNull Property property
+    ) {
         List<String> path = new ArrayList<>(Collections.singleton(property.category()));
 
         if (!Objects.equals(property.subcategory(), "")) path.add(property.subcategory());

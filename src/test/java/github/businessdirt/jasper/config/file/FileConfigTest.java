@@ -51,6 +51,7 @@ class FileConfigTest {
         @SuppressWarnings("unchecked")
         Map<String, Object> databaseMap = (Map<String, Object>) newConfig.get(List.of("database"));
 
+        assertNotNull(databaseMap);
         assertEquals("localhost", databaseMap.get("host"));
         assertEquals(5432.0, databaseMap.get("port"));
     }
@@ -129,6 +130,8 @@ class FileConfigTest {
         assertInstanceOf(Map.class, fileConfig.get(List.of("a", "b")));
 
         Map<String, Object> abMap = (Map<String, Object>) fileConfig.get(List.of("a", "b"));
+
+        assertNotNull(abMap);
         assertEquals("value", abMap.get("c"));
     }
 }

@@ -1,20 +1,37 @@
 package github.businessdirt.jasper.config.render;
 
 import github.businessdirt.jasper.config.ConfigHandler;
+import github.businessdirt.jasper.config.data.Category;
+import github.businessdirt.jasper.config.data.PropertyData;
 
-public abstract class ConfigRenderer<T extends ConfigHandler> {
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+public abstract class ConfigRenderer<C extends ConfigHandler, T> {
 
     protected final ConfigHandler config;
-    protected String searchQuery;
 
-    public ConfigRenderer(T config) {
+    public ConfigRenderer(C config) {
         this.config = config;
-        this.searchQuery = "";
     }
 
-    public abstract void render();
+    public abstract T render();
 
-    public void search(String query) {
-        this.searchQuery = query;
+    public Map<Category, List<PropertyData>> filter(String searchQuery) {
+        HashMap<Category, List<PropertyData>> result = new HashMap<>();
+
+        this.config.getCategories().forEach(category ->
+                result.put(category, category.items().stream()
+                        .filter(data -> {
+                            if (searchQuery.isBlank()) return true;
+                            return data.property().name().contains(searchQuery)
+                                    || data.property().description().contains(searchQuery)
+                                    || data.property().category().contains(searchQuery)
+                                    || data.property().subcategory().contains(searchQuery);
+                        })
+                        .toList()));
+
+        return result;
     }
 }

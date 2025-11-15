@@ -24,6 +24,7 @@ It provides a collection of loosely-coupled modules for command-line argument pa
     *   Gson: For JSON serialization/deserialization in the config module.
     *   Log4j: For logging.
     *   JUnit 5: For testing.
+    *   JavaFX: For GUI. 
 
 ## Installation and Setup
 

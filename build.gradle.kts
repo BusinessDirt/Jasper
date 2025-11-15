@@ -2,6 +2,7 @@ plugins {
     java
     idea
     application
+    id ("org.openjfx.javafxplugin") version "0.1.0"
 }
 
 group = "github.businessdirt"
@@ -30,6 +31,18 @@ dependencies {
     implementation("org.apache.logging.log4j:log4j-api:2.21.0")
     implementation("org.apache.logging.log4j:log4j-core:2.21.0")
     implementation("org.apache.logging.log4j:log4j-slf4j2-impl:2.21.0")
+
+    implementation("com.jfoenix:jfoenix:9.0.10")
+    implementation("de.jensd:fontawesomefx-fontawesome:4.7.0-9.1.2")
+    implementation("org.kordamp.bootstrapfx:bootstrapfx-core:0.4.0")
+    implementation("fr.brouillard.oss:cssfx:11.5.0")
+    implementation("org.controlsfx:controlsfx:11.2.1")
+    implementation("com.github.almasb:fxgl:25+dev-SNAPSHOT")
+}
+
+javafx {
+    version = "25"
+    modules = listOf("javafx.controls", "javafx.fxml", "javafx.web")
 }
 
 tasks.test {

@@ -15,7 +15,7 @@ import java.util.function.Consumer;
 public class LambdaFactory {
 
     /**
-     * Creates a {@link Consumer} that invokes the given method on the provided instance.
+     * Creates a {@link Consumer} that invokes the given method on the provided owner.
      * The method must be public, non-static, and take exactly one argument.
      *
      * @param instance the object on which the method will be invoked.
@@ -46,7 +46,7 @@ public class LambdaFactory {
     }
 
     /**
-     * Creates a {@link Runnable} that invokes the given method on the provided instance.
+     * Creates a {@link Runnable} that invokes the given method on the provided owner.
      * The method must be public, non-static, and take no arguments.
      *
      * @param instance the object on which the method will be invoked.

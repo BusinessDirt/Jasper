@@ -4,35 +4,25 @@ import github.businessdirt.jasper.config.render.ConfigRenderer;
 
 public class DummyConfigRenderer extends ConfigRenderer<DummyConfig, String> {
 
-    private String query;
-
-    public DummyConfigRenderer(DummyConfig config) {
-        super(config);
-
-        this.query = "";
-    }
-
     @Override
-    public String render() {
+    public String render(DummyConfig config, String searchQuery) {
         StringBuilder sb = new StringBuilder();
 
-        this.filter(this.query).forEach((category, properties) ->
-                properties.forEach(property -> {
+        this.filter(config, searchQuery).forEach((category) ->
+                category.items().forEach(property -> {
                     sb.append(category.name());
                     sb.append(".");
 
-                    if (!property.property().subcategory().isBlank()) {
-                        sb.append(property.property().subcategory());
+                    if (!property.options().subcategory().isBlank()) {
+                        sb.append(property.options().subcategory());
                         sb.append(".");
                     }
 
-                    sb.append(property.property().name()).append("\n");
+                    sb.append(property.options().name()).append("\n");
                 }));
 
         return sb.toString();
     }
 
-    public void setQuery(String query) {
-        this.query = query;
-    }
+
 }

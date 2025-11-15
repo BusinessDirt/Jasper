@@ -26,7 +26,7 @@ class CommandRegistryTest {
     }
 
     @Test
-    @DisplayName("Should get the same registry instance for the same class")
+    @DisplayName("Should get the same registry owner for the same class")
     void get() {
         assertNotNull(CommandRegistry.get(TestCommandSource.class));
         assertEquals(CommandRegistry.get(TestCommandSource.class), CommandRegistry.get(TestCommandSource.class));

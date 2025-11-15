@@ -31,7 +31,7 @@ public record EventListener(
      * @param name    the name of the listener method.
      * @param invoker a {@link Consumer} that invokes the listener method.
      * @param options the {@link HandleEvent} annotation of the listener method.
-     * @return a new {@link EventListener} instance.
+     * @return a new {@link EventListener} owner.
      */
     public static @NotNull EventListener of(
             @NotNull String name,

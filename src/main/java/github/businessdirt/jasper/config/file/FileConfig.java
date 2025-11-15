@@ -18,6 +18,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * A utility class for managing a configuration file in JSON format.
+ * <p>
+ * This class handles the reading and writing of a configuration file using the {@link Gson} library.
+ * It stores configuration data in a nested map structure, allowing for hierarchical properties.
+ */
 public class FileConfig {
 
     private final Path configPath;
@@ -25,9 +31,9 @@ public class FileConfig {
     private final Map<String, Object> store;
 
     /**
-     * Creates a new FileConfig instance.
+     * Creates a new {@code FileConfig} instance.
      *
-     * @param configPath The path to the JSON file (e.g., Paths.get("config.json"))
+     * @param configPath the path to the JSON configuration file (e.g., {@code Paths.get("config.json")}).
      */
     public FileConfig(@NotNull Path configPath) {
         this.configPath = configPath;
@@ -36,16 +42,18 @@ public class FileConfig {
     }
 
     /**
-     * Loads the configuration from disk.
-     * Starts with defaults, then overlays the file's content.
+     * Loads the configuration from the JSON file on disk.
+     * <p>
+     * If the file does not exist, the configuration store remains empty. If the file exists, its contents
+     * are parsed and loaded into the in-memory store.
+     *
+     * @throws IOException         if an I/O error occurs while reading the file.
+     * @throws JsonSyntaxException if the file contains invalid JSON.
      */
     public void load() throws IOException, JsonSyntaxException {
-        // Start with the provided defaults
         this.store.clear();
         if (!Files.exists(configPath)) return;
 
-        // Define the type for Gson. This is crucial for deserializing
-        // a generic Map<String, Object>.
         Type mapType = new TypeToken<Map<String, Object>>() {}.getType();
 
         try (FileReader reader = new FileReader(configPath.toFile())) {
@@ -55,27 +63,31 @@ public class FileConfig {
     }
 
     /**
-     * Saves the entire current configuration map to the JSON file.
+     * Saves the current configuration to the JSON file on disk.
+     * <p>
+     * This method ensures that the parent directory exists before writing the file.
+     *
+     * @throws IOException if an I/O error occurs while writing the file.
      */
     public void save() throws IOException {
-        // Ensure parent directory exists
         Path parentDir = configPath.getParent();
         if (parentDir != null && !Files.exists(parentDir)) {
             Files.createDirectories(parentDir);
         }
 
-        // Write the 'store' map to the file
         try (FileWriter writer = new FileWriter(configPath.toFile())) {
             gson.toJson(this.store, writer);
         }
     }
 
     /**
-     * Sets a value for a given key.
-     * The key is split by dots to create a nested map structure.
+     * Sets a value for a given hierarchical path.
+     * <p>
+     * The path is used to create or traverse a nested map structure. For example, a path of
+     * {@code ["window", "size", "width"]} will result in a structure like {@code { "window": { "size": { "width": value } } } }.
      *
-     * @param path   The configuration path (e.g., ["window", "size", "width"])
-     * @param value The value to store. Can be a string, number, boolean, map, list, etc.
+     * @param path  the list of strings representing the configuration path.
+     * @param value the value to store (e.g., string, number, boolean, map, list).
      */
     @SuppressWarnings("unchecked")
     public void set(@NotNull List<String> path, @NotNull Object value) {
@@ -98,11 +110,10 @@ public class FileConfig {
     }
 
     /**
-     * Gets a raw object value from the store.
-     * The key is split by dots to traverse a nested map structure.
+     * Retrieves a raw object value from a given hierarchical path.
      *
-     * @param path The configuration path.
-     * @return The value as an Object, or null if not found.
+     * @param path the list of strings representing the configuration path.
+     * @return the value as an {@link Object}, or {@code null} if the path does not exist.
      */
     @SuppressWarnings("unchecked")
     public @Nullable Object get(@NotNull List<String> path) {
@@ -123,12 +134,12 @@ public class FileConfig {
     }
 
     /**
-     * Gets a value, providing a default if the key is not found.
-     * The key is split by dots to traverse a nested map structure.
+     * Retrieves a value from a given path, returning a default value if the path does not exist.
      *
-     * @param path          The path.
-     * @param defaultValue The default value.
-     * @return The found value or the default.
+     * @param path         the list of strings representing the configuration path.
+     * @param defaultValue the default value to return if the path is not found.
+     * @param <T>          the type of the value.
+     * @return the found value cast to the specified type, or the default value.
      */
     @SuppressWarnings("unchecked")
     public <T> @NotNull T getOrDefault(
@@ -140,7 +151,9 @@ public class FileConfig {
     }
 
     /**
-     * Returns an immutable copy of the entire configuration map.
+     * Returns an immutable view of the entire configuration map.
+     *
+     * @return an unmodifiable map of the configuration store.
      */
     public @NotNull Map<String, Object> getAll() {
         return Collections.unmodifiableMap(this.store);

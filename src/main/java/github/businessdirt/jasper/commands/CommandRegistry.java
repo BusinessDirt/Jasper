@@ -35,11 +35,11 @@ public class CommandRegistry {
     }
 
     /**
-     * Returns the CommandDispatcher instance for the given command source type.
+     * Returns the CommandDispatcher owner for the given command source type.
      *
      * @param type the class of the command source type
      * @param <S> the command source type
-     * @return the command registry instance
+     * @return the command registry owner
      */
     @SuppressWarnings("unchecked")
     public static synchronized <S extends CommandSource> CommandDispatcher<S> get(

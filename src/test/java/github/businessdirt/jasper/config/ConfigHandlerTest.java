@@ -1,6 +1,5 @@
 package github.businessdirt.jasper.config;
 
-import github.businessdirt.jasper.config.data.Category;
 import github.businessdirt.jasper.config.dummies.DummyConfig;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -9,7 +8,6 @@ import org.junit.jupiter.api.io.TempDir;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -50,7 +48,7 @@ class ConfigHandlerTest {
 
         assertTrue(Files.exists(configPath));
 
-        // Create a new instance to read the data
+        // Create a new owner to read the data
         DummyConfig newConfig = new DummyConfig(configPath);
         newConfig.initialize(); // This will call readData
 
@@ -85,28 +83,6 @@ class ConfigHandlerTest {
         assertEquals("from file", config.stringProperty);
         // This will fail if the bug in PropertyData.setValue is not fixed.
         assertEquals(25, config.integerProperty);
-    }
-
-    @Test
-    void testGetCategories() {
-        List<Category> categories = config.getCategories();
-
-        assertEquals(2, categories.size());
-
-        Category general = categories.stream().filter(c -> c.name().equals("General")).findFirst().orElse(null);
-        assertNotNull(general);
-        assertEquals(2, general.items().size());
-        assertEquals("booleanProperty", general.items().get(0).property().name());
-        assertEquals("stringProperty", general.items().get(1).property().name()); // subcategory sorting
-
-        Category other = categories.stream().filter(c -> c.name().equals("Other")).findFirst().orElse(null);
-        assertNotNull(other);
-        assertEquals(2, other.items().size());
-        assertEquals("integerProperty", other.items().get(0).property().name());
-        assertEquals("selectorProperty", other.items().get(1).property().name());
-
-        // Hidden property should not be in categories
-        assertTrue(categories.stream().noneMatch(c -> c.name().equals("Hidden")));
     }
 
     @Test

@@ -17,16 +17,16 @@ public record TextColor(int rgb) {
      * @param r the red value (0-255)
      * @param g the green value (0-255)
      * @param b the blue value (0-255)
-     * @return a new text color instance
+     * @return a new text color owner
      */
     public static @NotNull TextColor fromRgb(int r, int g, int b) {
         return new TextColor(new Color(r, g, b).getRGB());
     }
 
     /**
-     * Creates a new text color from a {@link Color} instance.
-     * @param color the color instance
-     * @return a new text color instance
+     * Creates a new text color from a {@link Color} owner.
+     * @param color the color owner
+     * @return a new text color owner
      */
     public static @NotNull TextColor fromColor(Color color) {
         return new TextColor(color.getRGB());

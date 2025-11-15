@@ -19,20 +19,20 @@ public class ConfigRendererTest {
     Path tempDir;
 
     private DummyConfigRenderer renderer;
+    private DummyConfig config;
 
     @BeforeEach
     void setUp() throws IOException {
-        Path configPath = this.tempDir.resolve("dummy_config.json");
-        DummyConfig config = new DummyConfig(configPath);
-        this.renderer = new DummyConfigRenderer(config);
+        this.config = new DummyConfig(this.tempDir.resolve("dummy_config.json"));
+        this.renderer = new DummyConfigRenderer();
 
-        config.initialize();
+        this.config.initialize();
     }
 
     @Test
     @DisplayName("Should render all visible properties.")
     void testRender() {
-        String result = this.renderer.render();
+        String result = this.renderer.render(this.config, "");
 
         assertTrue(result.contains("General.booleanProperty"));
         assertTrue(result.contains("General.Sub.stringProperty"));
@@ -44,8 +44,7 @@ public class ConfigRendererTest {
     @Test
     @DisplayName("Should filter properties correctly with a search query.")
     void testRenderWithSearchQuery() {
-        this.renderer.setQuery("General");
-        String result = this.renderer.render();
+        String result = this.renderer.render(this.config, "General");
 
         assertTrue(result.contains("General.booleanProperty"));
         assertTrue(result.contains("General.Sub.stringProperty"));

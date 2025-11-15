@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  * It is responsible for posting events to the appropriate listeners.
  * <p>
  * The EventBus must be initialized with {@link #initialize(String)} before use.
- * After initialization, the singleton instance can be retrieved with {@link #get()}.
+ * After initialization, the singleton owner can be retrieved with {@link #get()}.
  */
 public class EventBus {
 
@@ -156,7 +156,7 @@ public class EventBus {
     }
 
     /**
-     * Initializes the singleton instance of the {@link EventBus}.
+     * Initializes the singleton owner of the {@link EventBus}.
      * This method must be called before {@link #get()} is called.
      * <p>The {@link EventBus} will scan all classes in the give package for listener methods
      * i.e. methods annotated with {@link HandleEvent}.
@@ -180,10 +180,10 @@ public class EventBus {
     }
 
     /**
-     * Gets the singleton instance of the {@link EventBus}.
+     * Gets the singleton owner of the {@link EventBus}.
      * {@link #initialize(String)} must be called before this method.
      *
-     * @return the singleton instance of the {@link EventBus}.
+     * @return the singleton owner of the {@link EventBus}.
      * @throws EventBusNotInitializedException if the EventBus has not been initialized.
      */
     public static EventBus get() throws EventBusNotInitializedException {

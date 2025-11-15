@@ -23,7 +23,7 @@ public class Reflections {
     private final Set<Class<?>> foundClasses;
 
     /**
-     * Constructs a new {@link Reflections} instance and scans the given base package
+     * Constructs a new {@link Reflections} owner and scans the given base package
      * for all classes.
      *
      * @param basePackage the base package to scan (e.g., "com.example.myproject").
@@ -36,7 +36,7 @@ public class Reflections {
     }
 
     /**
-     * Constructs a new {@link Reflections} instance and scans the given base package
+     * Constructs a new {@link Reflections} owner and scans the given base package
      * for all classes.
      *
      * @param basePackage the base package to scan (e.g., "com.example.myproject").

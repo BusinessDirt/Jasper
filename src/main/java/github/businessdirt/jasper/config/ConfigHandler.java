@@ -24,15 +24,15 @@ public class ConfigHandler {
         this.configFile = new FileConfig(configFilePath);
         this.properties = new ArrayList<>();
 
-            Arrays.stream(this.getClass().getDeclaredFields())
-                .filter(field -> field.isAnnotationPresent(Property.class))
-                .forEach(field -> {
-                    field.setAccessible(true);
+        Arrays.stream(this.getClass().getDeclaredFields())
+            .filter(field -> field.isAnnotationPresent(Property.class))
+            .forEach(field -> {
+                field.setAccessible(true);
 
-                    Property property = field.getAnnotation(Property.class);
-                    PropertyData data = new PropertyData(property, field, this);
-                    this.properties.add(data);
-                });
+                Property property = field.getAnnotation(Property.class);
+                PropertyData data = new PropertyData(property, field, this);
+                this.properties.add(data);
+            });
     }
 
     public final void initialize() throws IOException {
@@ -52,28 +52,6 @@ public class ConfigHandler {
 
     public final void markDirty() {
         this.dirty = true;
-    }
-
-    public final @NotNull List<Category> getCategories() {
-        Map<String, List<PropertyData>> categoryMap = new LinkedHashMap<>();
-        this.properties.stream()
-                .filter(data -> !data.property().hidden())
-                .forEach(propertyData -> {
-                    String category = propertyData.property().category();
-
-                    List<PropertyData> dataList = categoryMap.get(category);
-                    if (dataList == null) dataList = new ArrayList<>();
-                    dataList.add(propertyData);
-
-                    categoryMap.put(category, dataList);
-                });
-
-        return categoryMap.entrySet().stream()
-                .map(entry -> {
-                    entry.getValue().sort(new SubcategoryComparator());
-                    return new Category(entry.getKey(), entry.getValue());
-                })
-                .toList();
     }
 
     private void readData() throws IOException {
@@ -122,6 +100,18 @@ public class ConfigHandler {
         return this.properties;
     }
 
+    public final @NotNull List<Category> getCategories() {
+        Map<String, List<PropertyData>> categoryMap = new LinkedHashMap<>();
+        this.properties.stream().filter(data -> !data.property().hidden())
+                .forEach(propertyData ->
+                        Objects.requireNonNull(categoryMap.putIfAbsent(
+                                        propertyData.property().category(),
+                                        new ArrayList<>()))
+                                .add(propertyData));
+
+        return categoryMap.entrySet().stream().map(Category::of).toList();
+    }
+
     private static class InitializationTimerTask extends TimerTask {
 
         private final ConfigHandler instance;
@@ -137,14 +127,6 @@ public class ConfigHandler {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        }
-    }
-
-    private static class SubcategoryComparator implements Comparator<PropertyData> {
-
-        @Override
-        public int compare(PropertyData o1, PropertyData o2) {
-            return o1.property().subcategory().compareTo(o2.property().subcategory());
         }
     }
 }

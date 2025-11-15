@@ -24,7 +24,7 @@ public @interface Property {
     int max() default 0;
 
     // Options for Selectors
-    String[] options() default {};
+    @NotNull String[] options() default {};
 
     boolean hidden() default false;
 }

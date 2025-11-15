@@ -52,8 +52,6 @@ public record PropertyData(
                 }
             }
 
-            // For all other types (Boolean->boolean, String->String, etc.)
-            // the default set() will work.
             this.field.set(instance, value);
         } catch (IllegalAccessException _) { }
     }

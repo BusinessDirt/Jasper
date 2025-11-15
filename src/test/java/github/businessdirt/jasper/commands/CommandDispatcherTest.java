@@ -1,4 +1,3 @@
-/* (C) 2025 Maximilian Bollschweiler */
 package github.businessdirt.jasper.commands;
 
 import github.businessdirt.jasper.commands.arguments.IntegerArgumentType;

@@ -1,4 +1,4 @@
-/* (C) 2025 Maximilian Bollschweiler */
+
 package github.businessdirt.jasper.commands;
 
 import org.jetbrains.annotations.NotNull;

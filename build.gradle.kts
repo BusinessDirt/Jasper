@@ -37,7 +37,7 @@ dependencies {
     implementation("org.kordamp.bootstrapfx:bootstrapfx-core:0.4.0")
     implementation("fr.brouillard.oss:cssfx:11.5.0")
     implementation("org.controlsfx:controlsfx:11.2.1")
-    implementation("com.github.almasb:fxgl:25+dev-SNAPSHOT")
+    implementation("com.github.almasb:fxgl:21.1")
 }
 
 javafx {

@@ -33,19 +33,9 @@ public class EventHandler {
         String lastPart = parts.length > 0 ? parts[parts.length - 1] : eventName;
         this.name = lastPart.replace("$", ".");
 
-        List<EventListener> sortedListeners = new ArrayList<>(listeners);
-        sortedListeners.sort(Comparator.comparingInt(listener -> listener.priority().asInt()));
-        this.listeners = sortedListeners;
-
-        boolean anyCanReceiveCancelled = false;
-        for (EventListener listener : listeners) {
-            if (listener.canReceiveCancelled()) {
-                anyCanReceiveCancelled = true;
-                break;
-            }
-        }
-
-        this.canReceiveCancelled = anyCanReceiveCancelled;
+        this.listeners = new ArrayList<>(listeners);
+        this.listeners.sort(Comparator.comparingInt(listener -> listener.priority().asInt()));
+        this.canReceiveCancelled = this.listeners.stream().anyMatch(EventListener::canReceiveCancelled);
     }
 
     /**

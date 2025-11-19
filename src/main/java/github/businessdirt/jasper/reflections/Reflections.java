@@ -9,7 +9,6 @@ import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * A simple classpath scanner that finds all classes in a given package.
@@ -39,17 +38,8 @@ public class Reflections {
      *
      * @return a {@link Set} of {@link Class} objects.
      */
-    public @NotNull Set<Class<?>> getClasses() {
+    public @NotNull Set<Class<?>> getAllClasses() {
         return this.foundClasses;
-    }
-
-    /**
-     * Returns a {@link Stream} of all classes found during the scan.
-     *
-     * @return a {@link Stream} of {@link Class} objects.
-     */
-    public @NotNull Stream<Class<?>> stream() {
-        return this.foundClasses.stream();
     }
 
     /**
@@ -62,9 +52,22 @@ public class Reflections {
     public @NotNull Set<Method> getMethodsAnnotatedWith(
             @NotNull Class<? extends Annotation> annotation
     ) {
-        return this.stream()
-                .flatMap(c -> Arrays.stream(c.getMethods())
-                        .filter(m -> m.isAnnotationPresent(annotation)))
+        return this.foundClasses.stream()
+                .flatMap(cls ->
+                    Arrays.stream(cls.getMethods()).filter(m -> m.isAnnotationPresent(annotation))
+                ).collect(Collectors.toSet());
+    }
+
+    /**
+     * Retrieves all classes annotated with the specified annotation.
+     * @param annotation the annotation the classes need to be annotated with.
+     * @return all classes with the given annotation.
+     */
+    public @NotNull Set<Class<?>> getClassesAnnotatedWith(
+            @NotNull Class<? extends Annotation> annotation
+    ) {
+        return this.foundClasses.stream()
+                .filter(c -> c.isAnnotationPresent(annotation))
                 .collect(Collectors.toSet());
     }
 
@@ -77,22 +80,9 @@ public class Reflections {
     public <T> @NotNull Set<Class<? extends T>> getSubTypesOf(
             @NotNull Class<T> type
     ) {
-        return this.stream()
+        return this.foundClasses.stream()
                 .filter(type::isAssignableFrom)
                 .map(cls -> cls.<T>asSubclass(type))
-                .collect(Collectors.toSet());
-    }
-
-    /**
-     * Retrieves all classes annotated with the specified annotation.
-     * @param annotation the annotation the classes need to be annotated with.
-     * @return all classes with the given annotation.
-     */
-    public @NotNull Set<Class<?>> getClassesAnnotatedWith(
-            @NotNull Class<? extends Annotation> annotation
-    ) {
-        return this.stream()
-                .filter(c -> c.isAnnotationPresent(annotation))
                 .collect(Collectors.toSet());
     }
 }

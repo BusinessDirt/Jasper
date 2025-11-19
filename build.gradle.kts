@@ -11,7 +11,7 @@ repositories {
     mavenCentral()
 }
 
-java.toolchain.languageVersion.set(JavaLanguageVersion.of(23))
+java.toolchain.languageVersion.set(JavaLanguageVersion.of(24))
 
 dependencies {
     compileOnly("org.jetbrains:annotations:26.0.2-1")

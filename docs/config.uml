@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>D:/Dev/java/Jasper/src/main/java/github/businessdirt/jasper/config</OriginalElement>
+  <nodes>
+    <node x="111.5" y="-13.5">github.businessdirt.jasper.config.data.Property</node>
+    <node x="-141.0" y="698.5">github.businessdirt.jasper.config.ConfigHandler.AutoSaveTimer</node>
+    <node x="-126.0" y="1119.0">github.businessdirt.jasper.config.ConfigHandler</node>
+    <node x="278.0" y="613.5">github.businessdirt.jasper.config.file.FileConfig</node>
+    <node x="182.5" y="936.0">github.businessdirt.jasper.config.render.Category</node>
+    <node x="33.0" y="367.5">github.businessdirt.jasper.config.data.PropertyData</node>
+    <node x="304.0" y="41.0">github.businessdirt.jasper.config.data.PropertyType</node>
+    <node x="-81.0" y="1490.0">github.businessdirt.jasper.config.render.ConfigRenderer</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="github.businessdirt.jasper.config.ConfigHandler.AutoSaveTimer" target="github.businessdirt.jasper.config.ConfigHandler" relationship="INNER_CLASS">
+      <point x="-94.0" y="33.5" />
+      <point x="-94.0" y="1092.0" />
+      <point x="-70.66666666666663" y="1092.0" />
+      <point x="-110.66666666666663" y="-133.0" />
+    </edge>
+    <edge source="github.businessdirt.jasper.config.ConfigHandler" target="github.businessdirt.jasper.config.data.PropertyData" relationship="TO_MANY">
+      <point x="0.0" y="-133.0" />
+      <point x="40.0" y="912.0" />
+      <point x="460.0" y="912.0" />
+      <point x="460.0" y="872.0" />
+      <point x="540.0" y="872.0" />
+      <point x="540.0" y="332.0" />
+      <point x="200.0" y="332.0" />
+      <point x="0.0" y="-104.5" />
+    </edge>
+    <edge source="github.businessdirt.jasper.config.data.PropertyData" target="github.businessdirt.jasper.config.data.Property" relationship="TO_ONE">
+      <point x="0.0" y="-104.5" />
+      <point x="0.0" y="145.5" />
+    </edge>
+    <edge source="github.businessdirt.jasper.config.ConfigHandler.AutoSaveTimer" target="github.businessdirt.jasper.config.ConfigHandler" relationship="TO_ONE">
+      <point x="0.0" y="33.5" />
+      <point x="0.0" y="892.0" />
+      <point x="40.0" y="892.0" />
+      <point x="0.0" y="-133.0" />
+    </edge>
+    <edge source="github.businessdirt.jasper.config.ConfigHandler" target="github.businessdirt.jasper.config.file.FileConfig" relationship="CREATE">
+      <point x="110.66666666666666" y="-133.0" />
+      <point x="150.66666666666663" y="1092.0" />
+      <point x="160.0" y="1092.0" />
+      <point x="160.0" y="872.0" />
+      <point x="339.0" y="872.0" />
+      <point x="-61.0" y="118.5" />
+    </edge>
+    <edge source="github.businessdirt.jasper.config.render.ConfigRenderer" target="github.businessdirt.jasper.config.ConfigHandler" relationship="DEPENDENCY">
+      <point x="0.0" y="-62.0" />
+      <point x="0.0" y="133.0" />
+    </edge>
+    <edge source="github.businessdirt.jasper.config.ConfigHandler" target="github.businessdirt.jasper.config.file.FileConfig" relationship="TO_ONE">
+      <point x="0.0" y="-133.0" />
+      <point x="40.0" y="912.0" />
+      <point x="460.0" y="912.0" />
+      <point x="460.0" y="872.0" />
+      <point x="461.0" y="872.0" />
+      <point x="61.0" y="118.5" />
+    </edge>
+    <edge source="github.businessdirt.jasper.config.ConfigHandler" target="github.businessdirt.jasper.config.data.PropertyData" relationship="CREATE">
+      <point x="110.66666666666666" y="-133.0" />
+      <point x="150.66666666666663" y="1092.0" />
+      <point x="160.0" y="1092.0" />
+      <point x="160.0" y="872.0" />
+      <point x="200.0" y="872.0" />
+      <point x="0.0" y="104.5" />
+    </edge>
+    <edge source="github.businessdirt.jasper.config.ConfigHandler" target="github.businessdirt.jasper.config.ConfigHandler.AutoSaveTimer" relationship="CREATE">
+      <point x="110.66666666666666" y="-133.0" />
+      <point x="150.66666666666663" y="1092.0" />
+      <point x="160.0" y="1092.0" />
+      <point x="160.0" y="872.0" />
+      <point x="94.0" y="872.0" />
+      <point x="94.0" y="33.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="0.5297330097087378" showDependencies="true" x="228.5" y="810.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+    <Category>Inner Classes</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

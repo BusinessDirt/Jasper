@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>D:/Dev/java/Jasper/src/main/java/github/businessdirt/jasper/events</OriginalElement>
+  <nodes>
+    <node x="-116.0" y="734.5">github.businessdirt.jasper.events.system.Event.Cancellable</node>
+    <node x="793.0" y="1534.5">github.businessdirt.jasper.events.system.exceptions.MethodNotPublicException</node>
+    <node x="66.5" y="403.0">github.businessdirt.jasper.events.system.Event</node>
+    <node x="77.5" y="720.0">github.businessdirt.jasper.events.events.CommandRegistrationEvent</node>
+    <node x="-115.5" y="-13.5">github.businessdirt.jasper.events.system.HandleEvent</node>
+    <node x="543.5" y="734.5">github.businessdirt.jasper.events.events.application.ApplicationShutdownEvent</node>
+    <node x="-117.0" y="1736.0">github.businessdirt.jasper.events.system.EventBus</node>
+    <node x="599.0" y="1394.5">github.businessdirt.jasper.events.system.exceptions.ClassNotInstantiableException</node>
+    <node x="624.0" y="934.5">github.businessdirt.jasper.events.events.application.ApplicationStartEvent</node>
+    <node x="433.0" y="1534.5">github.businessdirt.jasper.events.system.exceptions.ParameterException</node>
+    <node x="-101.5" y="212.0">github.businessdirt.jasper.events.system.HandleEvent.Priority</node>
+    <node x="-121.5" y="1036.0">github.businessdirt.jasper.events.system.EventListener</node>
+    <node x="-98.5" y="934.5">github.businessdirt.jasper.events.system.CancellableEvent</node>
+    <node x="242.5" y="1394.5">github.businessdirt.jasper.events.system.exceptions.EventBusNotInitializedException</node>
+    <node x="-150.5" y="1491.0">github.businessdirt.jasper.events.system.EventHandler</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="github.businessdirt.jasper.events.events.CommandRegistrationEvent" target="github.businessdirt.jasper.events.system.Event" relationship="GENERALIZATION">
+      <point x="0.0" y="-48.0" />
+      <point x="294.0" y="648.0" />
+      <point x="287.75" y="648.0" />
+      <point x="73.75" y="105.0" />
+    </edge>
+    <edge source="github.businessdirt.jasper.events.events.application.ApplicationShutdownEvent" target="github.businessdirt.jasper.events.system.Event" relationship="GENERALIZATION">
+      <point x="0.0" y="-33.5" />
+      <point x="674.0" y="708.0" />
+      <point x="294.0" y="708.0" />
+      <point x="294.0" y="648.0" />
+      <point x="287.75" y="648.0" />
+      <point x="73.75" y="105.0" />
+    </edge>
+    <edge source="github.businessdirt.jasper.events.system.EventBus" target="github.businessdirt.jasper.events.system.exceptions.EventBusNotInitializedException" relationship="CREATE">
+      <point x="105.5" y="-132.0" />
+      <point x="199.5" y="1708.0" />
+      <point x="574.0" y="1708.0" />
+      <point x="574.0" y="1668.0" />
+      <point x="394.0" y="1668.0" />
+      <point x="0.0" y="33.5" />
+    </edge>
+    <edge source="github.businessdirt.jasper.events.system.CancellableEvent" target="github.businessdirt.jasper.events.system.Event.Cancellable" relationship="REALIZATION">
+      <point x="-46.25" y="-33.5" />
+      <point x="-52.25" y="908.0" />
+      <point x="-46.0" y="908.0" />
+      <point x="0.0" y="33.5" />
+    </edge>
+    <edge source="github.businessdirt.jasper.events.system.EventBus" target="github.businessdirt.jasper.events.system.exceptions.ClassNotInstantiableException" relationship="CREATE">
+      <point x="105.5" y="-132.0" />
+      <point x="199.5" y="1708.0" />
+      <point x="574.0" y="1708.0" />
+      <point x="574.0" y="1668.0" />
+      <point x="754.0" y="1668.0" />
+      <point x="0.0" y="33.5" />
+    </edge>
+    <edge source="github.businessdirt.jasper.events.system.CancellableEvent" target="github.businessdirt.jasper.events.system.Event" relationship="GENERALIZATION">
+      <point x="46.25" y="-33.5" />
+      <point x="40.25" y="908.0" />
+      <point x="54.0" y="908.0" />
+      <point x="54.0" y="708.0" />
+      <point x="294.0" y="708.0" />
+      <point x="294.0" y="648.0" />
+      <point x="287.75" y="648.0" />
+      <point x="73.75" y="105.0" />
+    </edge>
+    <edge source="github.businessdirt.jasper.events.system.EventHandler" target="github.businessdirt.jasper.events.system.EventListener" relationship="TO_MANY">
+      <point x="0.0" y="-77.0" />
+      <point x="34.0" y="1448.0" />
+      <point x="94.0" y="1448.0" />
+      <point x="0.0" y="132.0" />
+    </edge>
+    <edge source="github.businessdirt.jasper.events.system.HandleEvent.Priority" target="github.businessdirt.jasper.events.system.HandleEvent" relationship="INNER_CLASS">
+      <point x="0.0" y="-76.0" />
+      <point x="0.0" y="61.5" />
+    </edge>
+    <edge source="github.businessdirt.jasper.events.system.EventBus" target="github.businessdirt.jasper.events.system.EventHandler" relationship="CREATE">
+      <point x="105.5" y="-132.0" />
+      <point x="199.5" y="1708.0" />
+      <point x="574.0" y="1708.0" />
+      <point x="574.0" y="1668.0" />
+      <point x="34.0" y="1668.0" />
+      <point x="0.0" y="77.0" />
+    </edge>
+    <edge source="github.businessdirt.jasper.events.system.Event.Cancellable" target="github.businessdirt.jasper.events.system.Event" relationship="INNER_CLASS">
+      <point x="0.0" y="-33.5" />
+      <point x="-46.0" y="688.0" />
+      <point x="140.25" y="688.0" />
+      <point x="-73.75" y="105.0" />
+    </edge>
+    <edge source="github.businessdirt.jasper.events.events.application.ApplicationStartEvent" target="github.businessdirt.jasper.events.system.Event" relationship="GENERALIZATION">
+      <point x="55.0" y="-33.5" />
+      <point x="789.0" y="908.0" />
+      <point x="834.0" y="908.0" />
+      <point x="834.0" y="708.0" />
+      <point x="294.0" y="708.0" />
+      <point x="294.0" y="648.0" />
+      <point x="287.75" y="648.0" />
+      <point x="73.75" y="105.0" />
+    </edge>
+    <edge source="github.businessdirt.jasper.events.system.EventBus" target="github.businessdirt.jasper.events.system.EventHandler" relationship="TO_MANY">
+      <point x="-105.5" y="-132.0" />
+      <point x="-11.5" y="1708.0" />
+      <point x="-166.0" y="1708.0" />
+      <point x="-166.0" y="1468.0" />
+      <point x="34.0" y="1468.0" />
+      <point x="0.0" y="-77.0" />
+    </edge>
+    <edge source="github.businessdirt.jasper.events.system.EventBus" target="github.businessdirt.jasper.events.system.exceptions.ParameterException" relationship="CREATE">
+      <point x="105.5" y="-132.0" />
+      <point x="199.5" y="1708.0" />
+      <point x="574.0" y="1708.0" />
+      <point x="0.0" y="33.5" />
+    </edge>
+    <edge source="github.businessdirt.jasper.events.system.EventBus" target="github.businessdirt.jasper.events.system.exceptions.MethodNotPublicException" relationship="CREATE">
+      <point x="105.5" y="-132.0" />
+      <point x="199.5" y="1708.0" />
+      <point x="574.0" y="1708.0" />
+      <point x="574.0" y="1668.0" />
+      <point x="934.0" y="1668.0" />
+      <point x="0.0" y="33.5" />
+    </edge>
+    <edge source="github.businessdirt.jasper.events.events.application.ApplicationStartEvent" target="github.businessdirt.jasper.events.events.application.ApplicationShutdownEvent" relationship="CREATE">
+      <point x="-55.0" y="-33.5" />
+      <point x="679.0" y="908.0" />
+      <point x="674.0" y="908.0" />
+      <point x="0.0" y="33.5" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="0.42920353982300885" showDependencies="true" x="464.5" y="1003.0" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+    <Category>Inner Classes</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

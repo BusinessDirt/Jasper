@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Diagram>
+  <ID>JAVA</ID>
+  <OriginalElement>D:/Dev/java/Jasper/src/main/java/github/businessdirt/jasper/reflections</OriginalElement>
+  <nodes>
+    <node x="116.5" y="704.0">github.businessdirt.jasper.reflections.scanners.ClasspathScanner</node>
+    <node x="380.0" y="424.0">github.businessdirt.jasper.reflections.scanners.DirectoryScanner</node>
+    <node x="1.0" y="-14.0">github.businessdirt.jasper.reflections.exceptions.InvalidRunnableException</node>
+    <node x="-122.5" y="220.5">github.businessdirt.jasper.reflections.exceptions.ScanningException</node>
+    <node x="259.0" y="192.0">github.businessdirt.jasper.reflections.LambdaFactory</node>
+    <node x="-128.0" y="1135.5">github.businessdirt.jasper.reflections.Reflections</node>
+    <node x="378.0" y="-14.0">github.businessdirt.jasper.reflections.exceptions.InvalidConsumerException</node>
+    <node x="-63.5" y="438.0">github.businessdirt.jasper.reflections.scanners.JARScanner</node>
+    <node x="198.0" y="972.0">github.businessdirt.jasper.reflections.ReflectionUtils</node>
+  </nodes>
+  <notes />
+  <edges>
+    <edge source="github.businessdirt.jasper.reflections.scanners.JARScanner" target="github.businessdirt.jasper.reflections.exceptions.ScanningException" relationship="CREATE">
+      <point x="0.0" y="-76.0" />
+      <point x="0.0" y="33.5" />
+    </edge>
+    <edge source="github.businessdirt.jasper.reflections.scanners.DirectoryScanner" target="github.businessdirt.jasper.reflections.exceptions.ScanningException" relationship="CREATE">
+      <point x="0.0" y="-90.0" />
+      <point x="513.0" y="374.0" />
+      <point x="53.0" y="374.0" />
+      <point x="0.0" y="33.5" />
+    </edge>
+    <edge source="github.businessdirt.jasper.reflections.LambdaFactory" target="github.businessdirt.jasper.reflections.exceptions.InvalidConsumerException" relationship="CREATE">
+      <point x="0.0" y="-62.0" />
+      <point x="493.0" y="114.0" />
+      <point x="553.0" y="114.0" />
+      <point x="0.0" y="48.0" />
+    </edge>
+    <edge source="github.businessdirt.jasper.reflections.Reflections" target="github.businessdirt.jasper.reflections.scanners.ClasspathScanner" relationship="CREATE">
+      <point x="0.0" y="-118.5" />
+      <point x="93.0" y="674.0" />
+      <point x="313.0" y="674.0" />
+      <point x="0.0" y="-90.0" />
+    </edge>
+    <edge source="github.businessdirt.jasper.reflections.scanners.ClasspathScanner" target="github.businessdirt.jasper.reflections.scanners.JARScanner" relationship="CREATE">
+      <point x="0.0" y="-90.0" />
+      <point x="313.0" y="414.0" />
+      <point x="53.0" y="414.0" />
+      <point x="0.0" y="-76.0" />
+    </edge>
+    <edge source="github.businessdirt.jasper.reflections.LambdaFactory" target="github.businessdirt.jasper.reflections.exceptions.InvalidRunnableException" relationship="CREATE">
+      <point x="0.0" y="-62.0" />
+      <point x="493.0" y="114.0" />
+      <point x="173.0" y="114.0" />
+      <point x="0.0" y="48.0" />
+    </edge>
+    <edge source="github.businessdirt.jasper.reflections.scanners.ClasspathScanner" target="github.businessdirt.jasper.reflections.scanners.DirectoryScanner" relationship="CREATE">
+      <point x="0.0" y="-90.0" />
+      <point x="313.0" y="654.0" />
+      <point x="353.0" y="654.0" />
+      <point x="353.0" y="394.0" />
+      <point x="513.0" y="394.0" />
+      <point x="0.0" y="-90.0" />
+    </edge>
+  </edges>
+  <settings layout="Hierarchic Compact" zoom="0.6204690831556503" showDependencies="true" x="310.0" y="689.5" />
+  <SelectedNodes />
+  <Categories>
+    <Category>Constructors</Category>
+    <Category>Fields</Category>
+    <Category>Inner Classes</Category>
+    <Category>Methods</Category>
+    <Category>Properties</Category>
+  </Categories>
+  <SCOPE>All</SCOPE>
+  <VISIBILITY>private</VISIBILITY>
+</Diagram>
+

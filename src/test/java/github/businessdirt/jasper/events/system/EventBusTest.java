@@ -14,6 +14,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class EventBusTest {
 
+    private final String NL = System.lineSeparator();
+
     @BeforeAll
     static void init() throws IOException {
         EventBus.initialize("github.businessdirt.jasper");
@@ -36,15 +38,17 @@ class EventBusTest {
     void testEventPost() {
         String output = postEvent(new DummyEvent());
 
-        assertTrue(output.contains("eventType=null, event=DummyEvent\n"));
-        assertTrue(output.contains("eventType=DummyEvent, event=null\n"));
-        assertTrue(output.contains("eventType=DummyEvent, event=DummyEvent\n"));
+        assertTrue(output.contains("eventType=null, event=DummyEvent" + NL));
+        assertTrue(output.contains("eventType=DummyEvent, event=null" + NL));
+        assertTrue(output.contains("eventType=DummyEvent, event=DummyEvent" + NL));
     }
 
     @Test
     @DisplayName("Should prioritize events correctly")
     void testEventPostPriority() {
-        assertEquals("eventType=null, event=DummyEvent\neventType=DummyEvent, event=null\neventType=DummyEvent, event=DummyEvent\n",
+        assertEquals("eventType=null, event=DummyEvent"  + NL +
+                        "eventType=DummyEvent, event=null"  + NL +
+                        "eventType=DummyEvent, event=DummyEvent" + NL,
                 postEvent(new DummyEvent()));
     }
 

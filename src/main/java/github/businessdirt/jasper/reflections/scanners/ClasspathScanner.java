@@ -1,8 +1,6 @@
 package github.businessdirt.jasper.reflections.scanners;
 
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.net.URL;
@@ -15,8 +13,7 @@ import java.util.Set;
  * @param basePackage the package to scan
  */
 public record ClasspathScanner(
-        @NotNull String basePackage,
-        @Nullable Logger logger
+        @NotNull String basePackage
 ) {
 
     /**
@@ -31,8 +28,8 @@ public record ClasspathScanner(
 
         Set<String> classNames = new HashSet<>();
 
-        DirectoryScanner directoryScanner = new DirectoryScanner(this.basePackage, this.logger);
-        JARScanner jarScanner = new JARScanner(this.basePackage, this.logger);
+        DirectoryScanner directoryScanner = new DirectoryScanner(this.basePackage);
+        JARScanner jarScanner = new JARScanner(this.basePackage);
         while (resources.hasMoreElements()) {
             URL resource = resources.nextElement();
             String protocol = resource.getProtocol();
@@ -61,7 +58,6 @@ public record ClasspathScanner(
             } catch (ClassNotFoundException | NoClassDefFoundError e) {
                 // This is common. The class might have dependencies that
                 // aren't available. We can just skip it.
-                if (logger != null) logger.atWarn().withThrowable(e).log("Could not load class '{}'.", className);
             }
         }
         return loadedClasses;

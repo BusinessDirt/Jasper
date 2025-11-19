@@ -1,8 +1,6 @@
 package github.businessdirt.jasper.reflections.exceptions;
 
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.Serial;
 
@@ -13,10 +11,8 @@ public class ScanningException extends RuntimeException {
 
     public ScanningException(
             @NotNull String message,
-            @NotNull Throwable cause,
-            @Nullable Logger logger
+            @NotNull Throwable cause
     ) {
         super(message, cause);
-        if (logger != null) logger.atError().withThrowable(cause).log(message);
     }
 }

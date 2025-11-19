@@ -1,9 +1,7 @@
 package github.businessdirt.jasper.reflections;
 
 import github.businessdirt.jasper.reflections.scanners.ClasspathScanner;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.lang.annotation.Annotation;
@@ -32,22 +30,7 @@ public class Reflections {
     public Reflections(
             @NotNull String basePackage
     ) throws IOException {
-        this(basePackage, null);
-    }
-
-    /**
-     * Constructs a new {@link Reflections} owner and scans the given base package
-     * for all classes.
-     *
-     * @param basePackage the base package to scan (e.g., "com.example.myproject").
-     * @param logger a logger to log errors to
-     * @throws IOException if an I/O error occurs during scanning.
-     */
-    public Reflections(
-            @NotNull String basePackage,
-            @Nullable Logger logger
-    ) throws IOException {
-        ClasspathScanner scanner = new ClasspathScanner(basePackage, logger);
+        ClasspathScanner scanner = new ClasspathScanner(basePackage);
         this.foundClasses = scanner.scan();
     }
 

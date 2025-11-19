@@ -1,9 +1,7 @@
 package github.businessdirt.jasper.reflections.scanners;
 
 import github.businessdirt.jasper.reflections.exceptions.ScanningException;
-import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
 import java.net.JarURLConnection;
@@ -18,11 +16,9 @@ import java.util.jar.JarFile;
 /**
  * A scanner that scans a JAR file for any classes
  * @param basePackage the base package parsed from the ClasspathScanner
- * @param logger an optional logger to log debug events to
  */
 public record JARScanner(
-        @NotNull String basePackage,
-        @Nullable Logger logger
+        @NotNull String basePackage
 ) {
 
     /**
@@ -48,12 +44,11 @@ public record JARScanner(
                         String className = name.substring(0, name.length() - 6).replace('/', '.');
 
                         classNames.add(className);
-                        if (this.logger != null) this.logger.atDebug().log("Found class '{}' in JAR.", className);
                     }
                 }
             }
         } catch (IOException e) {
-            throw new ScanningException("Error scanning JAR", e, this.logger);
+            throw new ScanningException("Error scanning JAR", e);
         }
 
         return classNames;

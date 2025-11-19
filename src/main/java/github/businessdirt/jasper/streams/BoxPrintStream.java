@@ -16,6 +16,8 @@ import java.nio.charset.Charset;
  */
 public class BoxPrintStream extends PrintStream {
 
+    private static final String NL = System.lineSeparator();
+
     private final AutoFlushByteArrayOutputStream internalBuffer;
     private final OutputStream finalDestination;
     private final Charset charset;
@@ -139,7 +141,7 @@ public class BoxPrintStream extends PrintStream {
 
         // Top border
         sb.append(topLeftCorner).append(horizontal).append(horizontalBar)
-                .append(horizontal).append(topRightCorner).append("\n");
+                .append(horizontal).append(topRightCorner).append(NL);
 
         // Content lines
         for (String line : lines) {
@@ -148,7 +150,7 @@ public class BoxPrintStream extends PrintStream {
             if (line.length() < maxWidth) {
                 sb.append(String.valueOf(spacing).repeat(maxWidth - line.length()));
             }
-            sb.append(spacing).append(vertical).append("\n");
+            sb.append(spacing).append(vertical).append(NL);
         }
 
         // Bottom border

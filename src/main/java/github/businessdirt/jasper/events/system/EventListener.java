@@ -19,7 +19,7 @@ import java.util.function.Predicate;
  */
 public record EventListener(
     @NotNull String name,
-    @NotNull Consumer<Object> invoker,
+    @NotNull Consumer<Event> invoker,
     @NotNull HandleEvent.Priority priority,
     boolean canReceiveCancelled,
     @NotNull List<Predicate<Event>> predicates
@@ -35,7 +35,7 @@ public record EventListener(
      */
     public static @NotNull EventListener of(
             @NotNull String name,
-            @NotNull Consumer<Object> invoker,
+            @NotNull Consumer<Event> invoker,
             @NotNull HandleEvent options
     ) {
         List<Predicate<Event>> predicates = new ArrayList<>();

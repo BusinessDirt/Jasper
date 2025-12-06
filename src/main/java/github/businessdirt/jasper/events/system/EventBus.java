@@ -109,13 +109,13 @@ public class EventBus {
         };
     }
 
-    private @Nonnull Consumer<Object> getEventConsumer(
+    private @Nonnull Consumer<Event> getEventConsumer(
             @NotNull Method method,
             @NotNull Object instance
     ) throws ParameterException {
         return switch (method.getParameterCount()) {
-            case 1 -> LambdaFactory.createConsumerFromMethod(instance, method);
-            case 0 -> _ -> LambdaFactory.createRunnableFromMethod(instance, method).run();
+            case 1 -> LambdaFactory.createSingleParameterConsumer(instance, method);
+            case 0 -> LambdaFactory.createZeroParameterConsumer(instance, method);
 
             default -> throw new ParameterException(method, "must have either 0 or 1 parameters");
         };

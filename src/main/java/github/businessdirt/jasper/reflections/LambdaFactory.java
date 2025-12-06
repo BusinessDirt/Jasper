@@ -24,7 +24,7 @@ public class LambdaFactory {
      * @throws InvalidConsumerException if the method is not a valid consumer (e.g., wrong number of arguments, static).
      */
     @SuppressWarnings("unchecked")
-    public static @NotNull Consumer<Object> createConsumerFromMethod(
+    public static <T> @NotNull Consumer<T> createSingleParameterConsumer(
             @NotNull Object instance,
             @NotNull Method method
     ) throws InvalidConsumerException {
@@ -39,7 +39,7 @@ public class LambdaFactory {
                     handle,
                     MethodType.methodType(void.class, method.getParameterTypes()[0])
             );
-            return (Consumer<Object>) site.getTarget().bindTo(instance).invokeExact();
+            return (Consumer<T>) site.getTarget().bindTo(instance).invokeExact();
         } catch (Throwable e) {
             throw new InvalidConsumerException(method, e);
         }
@@ -54,7 +54,7 @@ public class LambdaFactory {
      * @return a {@link Runnable} that, when called, invokes the specified method.
      * @throws InvalidRunnableException if the method is not a valid runnable (e.g., wrong number of arguments, static).
      */
-    public static @NotNull Runnable createRunnableFromMethod(
+    public static <T> @NotNull Consumer<T> createZeroParameterConsumer(
             @NotNull Object instance,
             @NotNull Method method
     ) throws InvalidRunnableException {
@@ -69,7 +69,9 @@ public class LambdaFactory {
                     handle,
                     MethodType.methodType(void.class)
             );
-            return (Runnable) site.getTarget().bindTo(instance).invokeExact();
+
+            Runnable fastRunnable = (Runnable) site.getTarget().bindTo(instance).invokeExact();
+            return _ -> fastRunnable.run();
         } catch (Throwable e) {
             throw new InvalidRunnableException(method, e);
         }

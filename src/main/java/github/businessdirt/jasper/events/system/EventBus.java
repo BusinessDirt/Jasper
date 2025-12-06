@@ -1,5 +1,6 @@
 package github.businessdirt.jasper.events.system;
 
+import github.businessdirt.jasper.events.events.application.ApplicationStartEvent;
 import github.businessdirt.jasper.events.system.exceptions.ClassNotInstantiableException;
 import github.businessdirt.jasper.events.system.exceptions.EventBusNotInitializedException;
 import github.businessdirt.jasper.events.system.exceptions.MethodNotPublicException;
@@ -174,9 +175,8 @@ public class EventBus {
     public static void initialize(
             @NotNull String basePackage
     ) throws IOException, MethodNotPublicException, ClassNotInstantiableException, ParameterException {
-        if (INSTANCE == null) {
-            INSTANCE = new EventBus(basePackage);
-        }
+        if (INSTANCE == null) INSTANCE = new EventBus(basePackage);
+        new ApplicationStartEvent().post();
     }
 
     /**
